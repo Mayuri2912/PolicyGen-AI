@@ -1,0 +1,5 @@
+-r requirements.txt
+
+# Test runner and linter (httpx, used by the tests and scripts/e2e_demo.py, comes from requirements.txt)
+pytest==9.1.1
+ruff

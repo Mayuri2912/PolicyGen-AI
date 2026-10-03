@@ -1,0 +1,151 @@
+export const extractedFile = {
+  id: 'f1',
+  file_name: 'security.txt',
+  extension: 'txt',
+  type_label: 'Plain text',
+  size_bytes: 2048,
+  status: 'extracted',
+  status_label: 'Extracted',
+  error_code: null,
+  error_message: null,
+  warnings: [],
+  source_deleted: false,
+  created_at: '2026-10-01T10:00:00+00:00',
+  document: { id: 'd1', title: 'Security', characters: 1200, sections: 4, tables: 0, metadata: {} },
+};
+
+export const failedFile = {
+  ...extractedFile,
+  id: 'f2',
+  file_name: 'scan.png',
+  type_label: 'PNG image',
+  status: 'failed',
+  status_label: 'Failed',
+  error_code: 'ocr_unavailable',
+  error_message: 'OCR is not available on this server.',
+  document: null,
+};
+
+const source = { file_name: 'security.txt', location: '3. Access Control', evidence: 'Passwords must be at least 14 characters long.', evidence_verified: true };
+
+export const analysis = {
+  id: 'a1',
+  job_id: 'j1',
+  status: 'analysis_completed',
+  completed: true,
+  simulated: true,
+  provider: 'mock',
+  model: 'mock-rule-engine',
+  created_at: '2026-10-01T10:05:00+00:00',
+  source_files: [{ file_id: 'f1', file_name: 'security.txt', file_type: 'txt' }],
+  summary: {
+    overall_summary: 'Simulated analysis of one file.',
+    document_summaries: [{ file_name: 'security.txt', summary: 'Security requirements.', category: 'Security document' }],
+    document_category: 'Security document',
+    subject_areas: ['Access control requirements'],
+    organization_name: 'Brightwater Analytics Pvt. Ltd.',
+    stakeholders: ['CISO'],
+    systems: ['SIEM'],
+  },
+  requirements: [
+    { id: 1, ref_id: 'REQ-001', statement: 'Passwords must be at least 14 characters long.', category: 'access_control', category_label: 'Access control requirements', basis: 'documented', confidence: 'medium', source, user_edited: false, excluded: false },
+    { id: 2, ref_id: 'REQ-002', statement: 'Access reviews must be performed quarterly.', category: 'access_control', category_label: 'Access control requirements', basis: 'documented', confidence: 'medium', source, user_edited: false, excluded: false },
+  ],
+  risks: [
+    { id: 3, ref_id: 'RSK-001', title: 'Shared accounts are still in use', description: 'Shared accounts are still in use by engineering.', category: 'Unauthorized access', origin: 'documented', likelihood: 4, impact: 4, score: 16, level: 'critical', scoring_basis: 'documented', existing_controls: [], recommended_mitigation: 'Replace shared accounts.', residual_score: 0, residual_level: 'unrated', confidence: 'high', source, user_edited: false, excluded: false },
+    { id: 4, ref_id: 'RSK-002', title: 'Data leakage', description: 'Inferred from the absence of evidence.', category: 'Data leakage', origin: 'inferred', likelihood: 3, impact: 5, score: 15, level: 'high', scoring_basis: 'estimated', existing_controls: [], recommended_mitigation: 'Encrypt data.', residual_score: 0, residual_level: 'unrated', confidence: 'low', source: { file_name: 'security.txt', location: '', evidence: '', evidence_verified: false }, user_edited: false, excluded: false },
+  ],
+  controls: [
+    { id: 5, ref_id: 'CTL-001', name: 'Multi-factor authentication', objective: '', description: 'MFA is required for remote access.', control_type: 'technical', control_function: 'preventive', status: 'implemented', status_label: 'Implemented', basis: 'existing', owner: '', related_requirements: ['REQ-001'], related_risks: ['RSK-001'], recommended_action: '', confidence: 'medium', source, user_edited: false, excluded: false },
+  ],
+  gaps: [
+    { id: 6, ref_id: 'GAP-001', requirement_id: 'REQ-002', requirement: 'Access reviews must be performed quarterly.', existing_evidence: '', status: 'not_evidenced', status_label: 'Not Evidenced', identified_gap: 'No control evidenced.', associated_risk_ids: ['RSK-001'], recommended_control_ids: [], recommended_control: '', priority: 'high', suggested_action: 'Define a review process.', user_edited: false, excluded: false },
+  ],
+  responsibilities: [{ id: 7, ref_id: 'RSP-001', role: 'CISO', responsibility: 'Maintains the requirements', basis: 'documented', source, user_edited: false, excluded: false }],
+  recommendations: [{ id: 8, ref_id: 'REC-001', title: 'Treat risk RSK-001', description: 'Replace shared accounts.', priority: 'critical', related_ids: ['RSK-001'], user_edited: false, excluded: false }],
+  contradictions: [{ topic: 'Minimum password length', description: "The documents give different values: '14'; '12'.", sources: [{ file_name: 'security.txt', detail: '14 characters' }] }],
+  missing_information: [{ item: 'Exception and approval process', why_it_matters: 'People need a route for exceptions.', suggested_owner: 'Policy owner' }],
+  assumptions: ['The documents are current.'],
+  standards_mentioned: [],
+  security_flags: [],
+  processing: { chunks_total: 1, chunks_failed: 0, failed_chunks: [], warnings: [] },
+  source_references: [{ ref_id: 'REQ-001', kind: 'requirement', title: 'Passwords must be at least 14 characters long.', ...source }],
+  risk_summary: { total: 2, by_level: { critical: 1, high: 1, medium: 0, low: 0, unrated: 0 }, by_category: { 'Unauthorized access': 1, 'Data leakage': 1 }, by_origin: { documented: 1, inferred: 1 }, matrix: [[0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]] },
+  gap_summary: { total: 1, by_status: { compliant: 0, partially_addressed: 0, not_evidenced: 1, not_applicable: 0 }, by_priority: { high: 1 } },
+  control_summary: { total: 1, existing: 1, recommended: 0, by_type: { technical: 1 }, by_function: { preventive: 1 }, by_status: { implemented: 1 } },
+  control_matrix: [],
+  scoring_method: { formula: 'score = likelihood x impact', levels: [{ level: 'low', label: 'Low', range: '1-4' }, { level: 'medium', label: 'Medium', range: '5-9' }, { level: 'high', label: 'High', range: '10-15' }, { level: 'critical', label: 'Critical', range: '16-25' }] },
+  disclaimer: 'Statuses are AI-assisted assessments, not a formal audit.',
+};
+
+const block = (type, extra) => ({ type, text: '', items: [], statements: [], columns: [], rows: [], ...extra });
+
+export const report = {
+  id: 'r1',
+  title: 'Access Control Policy',
+  policy_type: 'access_control',
+  policy_type_name: 'Access Control Policy',
+  analysis_id: 'a1',
+  job_id: 'j2',
+  status: 'completed',
+  error_message: null,
+  review_status: 'draft',
+  approved_version: null,
+  current_version: 1,
+  version_count: 1,
+  source_files: ['security.txt'],
+  provider: 'mock',
+  model: 'mock-rule-engine',
+  simulated: true,
+  output_formats: ['docx', 'pdf'],
+  created_at: '2026-10-01T10:10:00+00:00',
+  config: {},
+  versions: [{ version_number: 1, origin: 'generated', change_note: 'Initial draft generated from the analysis.', created_at: '2026-10-01T10:10:00+00:00', quality: { passed: true, score: 100, counts: { error: 0, warning: 0, info: 1 } } }],
+  review_events: [],
+  version: { version_number: 1, origin: 'generated', change_note: '', created_at: '2026-10-01T10:10:00+00:00', quality: {} },
+  quality_report: {
+    passed: true,
+    score: 100,
+    counts: { error: 0, warning: 0, info: 1 },
+    statement_count: 1,
+    correction_rounds: 0,
+    issues: [{ code: 'unresolved_placeholders', severity: 'info', section_id: null, message: '1 placeholder(s) mark information the documents did not provide.' }],
+    placeholders: [{ section_id: 'scope', section: 'Scope', text: '[To be confirmed: list of systems in scope]' }],
+  },
+  sections: [
+    { id: 'purpose', heading: 'Purpose', origin: 'simulated', markup: 'The purpose of this policy is to control access.' },
+    { id: 'scope', heading: 'Scope', origin: 'simulated', markup: 'Systems: [To be confirmed: list of systems in scope].' },
+  ],
+  document: {
+    meta: { title: 'Access Control Policy', organization: 'Brightwater Analytics Pvt. Ltd.', simulated: true },
+    notices: ['SIMULATED OUTPUT (mock mode). Rule-based templates.', 'AI-assisted draft. It must be reviewed and approved before adoption.'],
+    document_control: [['Organization', 'Brightwater Analytics Pvt. Ltd.'], ['Policy owner', '[To be confirmed: policy owner]'], ['Status', 'Draft - not approved']],
+    version_history: [['1', '01 Oct 2026', 'Generated', 'Initial draft generated from the analysis.']],
+    sections: [
+      { id: 'purpose', number: '1', title: 'Purpose', kind: 'section', origin: 'simulated', elements: [block('paragraph', { text: 'The purpose of this policy is to control access to systems.' })] },
+      {
+        id: 'scope', number: '2', title: 'Scope', kind: 'section', origin: 'simulated',
+        elements: [
+          block('paragraph', { text: 'Systems: [To be confirmed: list of systems in scope].' }),
+          block('statements', { statements: [{ id: 'ACP-001', text: 'Access to systems must be approved by the System Owner.', basis: 'documented', refs: ['REQ-001'] }] }),
+        ],
+      },
+      { id: 'appendix_risk_register', number: 'Appendix A', title: 'Risk Register', kind: 'appendix', origin: 'system', elements: [block('table', { columns: ['ID', 'Risk'], rows: [['RSK-001', 'Shared accounts are still in use']] })] },
+    ],
+  },
+};
+
+export const job = (overrides = {}) => ({
+  id: 'j1',
+  type: 'analysis',
+  status: 'running',
+  stage: 'analyzing',
+  stage_label: 'Analyzing',
+  progress: 40,
+  message: 'Analyzing security.txt.',
+  error_message: null,
+  result: {},
+  cancel_requested: false,
+  attempts: 1,
+  ...overrides,
+});

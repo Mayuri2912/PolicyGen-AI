@@ -1,0 +1,48 @@
+{
+  "title": "Security Incident Log 2026",
+  "organization": "Brightwater Analytics Pvt. Ltd.",
+  "reporting_requirement": "Security incidents must be reported to the CISO within 24 hours of detection.",
+  "incidents": [
+    {
+      "id": "INC-2026-004",
+      "date": "2026-02-18",
+      "type": "Phishing",
+      "severity": "Medium",
+      "reported_within_hours": 3,
+      "root_cause": "User entered credentials on a fake login page",
+      "status": "Closed"
+    },
+    {
+      "id": "INC-2026-009",
+      "date": "2026-04-02",
+      "type": "Lost laptop",
+      "severity": "Low",
+      "reported_within_hours": 30,
+      "root_cause": "Device left in a taxi; disk was encrypted",
+      "status": "Closed"
+    },
+    {
+      "id": "INC-2026-013",
+      "date": "2026-06-21",
+      "type": "Public storage bucket",
+      "severity": "High",
+      "reported_within_hours": 52,
+      "root_cause": "Bucket created without the approved template",
+      "status": "Open"
+    },
+    {
+      "id": "INC-2026-017",
+      "date": "2026-08-05",
+      "type": "Unauthorized access",
+      "severity": "High",
+      "reported_within_hours": 20,
+      "root_cause": "Shared account password reused by a leaver",
+      "status": "Open"
+    }
+  ],
+  "lessons_learned": [
+    "Incidents were not always reported within the required time.",
+    "The on-call contact list was out of date during two incidents.",
+    "There is no formal post-incident review for medium severity incidents."
+  ]
+}

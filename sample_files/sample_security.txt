@@ -1,0 +1,45 @@
+BRIGHTWATER ANALYTICS PVT. LTD.
+INFORMATION SECURITY REQUIREMENTS
+Version 0.9 (working draft) - Internal
+
+1. Purpose and Background
+Brightwater Analytics Pvt. Ltd. provides data analytics services to retail and logistics customers. This document records the information security requirements agreed by the Security Steering Group. It is a working draft and has not been formally approved. The requirements are modelled on ISO/IEC 27001 control objectives; Brightwater is not currently certified against any standard.
+
+2. Governance
+The Chief Information Security Officer is responsible for maintaining these requirements and reporting security status to Executive Management every quarter.
+System Owners are accountable for the security of the systems they own and must approve all access to them.
+All employees must complete security awareness training within 30 days of joining and annually thereafter.
+Security policies must be reviewed annually.
+
+3. Access Control
+Access to information systems must be granted on the principle of least privilege and approved by the System Owner.
+Passwords must be at least 14 characters long and must not be shared between users.
+Multi-factor authentication is required for all remote access and for all administrator accounts.
+User access reviews must be performed quarterly for all systems that hold customer data.
+Accounts of leavers must be disabled within one working day of the leaving date.
+The IT Security Team reviews privileged accounts every month.
+
+4. Data Protection
+Customer data must be classified as Confidential and encrypted at rest and in transit.
+Laptops are encrypted using full-disk encryption.
+Removable media must not be used to store customer data without approval from the CISO.
+Personal data must be retained only for as long as required by the customer contract.
+
+5. Operations Security
+Security patches rated critical must be applied within 14 days of release.
+Security logs are collected centrally in the SIEM and are retained for 12 months.
+Backups of production databases are taken daily and stored in a separate cloud region.
+Restore tests have not been performed since the migration to the new backup platform.
+Vulnerability scans are conducted monthly by the IT Security Team.
+
+6. Incident Management
+All employees must report suspected security incidents to the Service Desk immediately.
+Security incidents must be reported to the CISO within 24 hours of detection.
+The incident response plan has not been tested in the last two years.
+There is no formal process for notifying customers of a data breach.
+
+7. Known Weaknesses Recorded by the Security Steering Group
+Several shared accounts are still used by the data engineering team for nightly batch jobs.
+The asset inventory is outdated and does not include cloud workloads created in the last year.
+Awareness training completion is low in the sales department, and no phishing simulation has been run.
+Ownership of the customer reporting portal is unclear following the reorganisation.

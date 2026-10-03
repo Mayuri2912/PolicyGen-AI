@@ -1,0 +1,21 @@
+User ID,Name,Department,System,Privilege Level,MFA Enabled,Employment Status,Account Status,Last Login,Last Access Review
+U1001,Anika Rao,Analytics,Data Warehouse,Standard,Yes,Active,Active,2026-09-22,2026-07-01
+U1002,Dev Malhotra,Analytics,Data Warehouse,Standard,Yes,Active,Active,2026-09-25,2026-07-01
+U1003,Farah Sheikh,Data Engineering,Data Warehouse,Administrator,No,Active,Active,2026-09-27,2025-06-15
+U1004,Gaurav Nair,Data Engineering,Cloud Console,Administrator,Yes,Active,Active,2026-09-28,2026-07-01
+U1005,Helena Costa,Sales,CRM,Standard,No,Active,Active,2026-09-19,2025-03-10
+U1006,Imran Qureshi,Sales,CRM,Standard,No,Terminated,Active,2026-05-02,2025-03-10
+U1007,Jaya Menon,Finance,ERP,Standard,Yes,Active,Active,2026-09-26,2026-07-01
+U1008,Karan Bhatia,Finance,ERP,Administrator,Yes,Active,Active,2026-09-27,2026-07-01
+U1009,Leela Varma,HR,HRIS,Administrator,Yes,Active,Active,2026-09-24,2026-07-01
+U1010,Manoj Pillai,IT Operations,Cloud Console,Administrator,Yes,Active,Active,2026-09-28,2026-07-01
+U1011,Nisha Kapoor,IT Operations,Reporting Portal,Administrator,No,Active,Active,2026-09-21,2024-11-30
+U1012,Omar Siddiqui,Customer Support,Ticketing,Standard,Yes,Active,Active,2026-09-26,2026-07-01
+U1013,Priya Deshmukh,Customer Support,Ticketing,Standard,Yes,Resigned,Active,2026-06-11,2026-01-10
+U1014,Rohan Iyer,Analytics,Reporting Portal,Standard,No,Active,Active,2026-09-18,2024-11-30
+U1015,Sana Mirza,Marketing,CRM,Standard,Yes,Active,Active,2026-09-23,2026-07-01
+U1016,Tarun Joshi,Data Engineering,Data Warehouse,Administrator,Yes,Active,Active,2026-09-27,2026-07-01
+U1017,batch_shared,Data Engineering,Data Warehouse,Administrator,No,Active,Active,2026-09-28,2025-06-15
+U1018,Uma Krishnan,Legal,Document Management,Standard,Yes,Active,Active,2026-09-20,2026-07-01
+U1019,Vikram Shah,Sales,CRM,Standard,Yes,Active,Disabled,2026-02-14,2026-07-01
+U1020,Yamini Reddy,Finance,ERP,Standard,Yes,Active,Active,2026-09-25,2026-07-01

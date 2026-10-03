@@ -1,0 +1,30 @@
+# Optional: run PolicyGen AI in one container (API + built web app + Tesseract OCR).
+#
+#   docker compose up --build        then open http://localhost:8000
+#
+# Put the key of the provider you use (ANTHROPIC_API_KEY, GEMINI_API_KEY or
+# OPENROUTER_API_KEY) in a file named ".env" next to this file, or leave them
+# unset to run in mock mode.  Not built or run in the development environment.
+services:
+  policygen:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      LLM_PROVIDER: ${LLM_PROVIDER:-auto}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-opus-5-5}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.8-flash}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-openrouter/free}
+      OPENROUTER_REASONING: ${OPENROUTER_REASONING:-off}
+      API_ACCESS_TOKEN: ${API_ACCESS_TOKEN:-}
+      RETENTION_HOURS: ${RETENTION_HOURS:-0}
+      CORS_ORIGINS: http://localhost:8000
+    volumes:
+      - policygen-data:/data
+    restart: unless-stopped
+
+volumes:
+  policygen-data:

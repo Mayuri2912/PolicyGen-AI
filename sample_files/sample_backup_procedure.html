@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Backup and Recovery Procedure</title>
+<style>body { font-family: sans-serif; }</style>
+<script>console.log("this script must never be extracted or run");</script></head>
+<body>
+<h1>Backup and Recovery Procedure</h1>
+<p>Brightwater Analytics Pvt. Ltd. - IT Operations. This procedure describes how production data is backed up and restored.</p>
+<h2>Backup Schedule</h2>
+<ul>
+  <li>Production databases must be backed up daily.</li>
+  <li>File shares are backed up weekly.</li>
+  <li>Backups must be retained for 90 days.</li>
+</ul>
+<h2>Recovery Objectives</h2>
+<table>
+  <tr><th>System</th><th>RTO</th><th>RPO</th><th>Last Restore Test</th></tr>
+  <tr><td>Data Warehouse</td><td>8 hours</td><td>24 hours</td><td>2024-10-12</td></tr>
+  <tr><td>CRM</td><td>24 hours</td><td>24 hours</td><td>Never</td></tr>
+  <tr><td>ERP</td><td>12 hours</td><td>24 hours</td><td>2026-05-20</td></tr>
+</table>
+<h2>Responsibilities</h2>
+<p>IT Operations is responsible for monitoring backup jobs and investigating failures on the next working day.</p>
+<p>Backup failures are not reported to System Owners.</p>
+</body>
+</html>

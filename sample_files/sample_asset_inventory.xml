@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<asset_inventory>
+  <title>Asset Inventory Extract</title>
+  <organization>Brightwater Analytics Pvt. Ltd.</organization>
+  <policy_statement>Every asset must have a named owner and must be reviewed annually.</policy_statement>
+  <assets>
+    <asset>
+      <id>AST-001</id>
+      <name>Data Warehouse</name>
+      <type>Database</type>
+      <classification>Confidential</classification>
+      <owner>Farah Sheikh</owner>
+      <support_status>Supported</support_status>
+    </asset>
+    <asset>
+      <id>AST-002</id>
+      <name>Reporting Portal</name>
+      <type>Web application</type>
+      <classification>Confidential</classification>
+      <owner></owner>
+      <support_status>End of support</support_status>
+    </asset>
+    <asset>
+      <id>AST-003</id>
+      <name>CRM</name>
+      <type>SaaS application</type>
+      <classification>Internal</classification>
+      <owner>Helena Costa</owner>
+      <support_status>Supported</support_status>
+    </asset>
+    <asset>
+      <id>AST-004</id>
+      <name>Backup Platform</name>
+      <type>Infrastructure</type>
+      <classification>Confidential</classification>
+      <owner>Manoj Pillai</owner>
+      <support_status>Supported</support_status>
+    </asset>
+    <asset>
+      <id>AST-005</id>
+      <name>Legacy File Server</name>
+      <type>Server</type>
+      <classification>Internal</classification>
+      <owner></owner>
+      <support_status>End of support</support_status>
+    </asset>
+  </assets>
+</asset_inventory>

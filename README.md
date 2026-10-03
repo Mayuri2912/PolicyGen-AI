@@ -1,0 +1,680 @@
+# PolicyGen AI – Intelligent Policy Generation Agent
+
+PolicyGen AI turns an organization's own documents into a policy draft. You
+upload files (assessments, risk registers, procedures, records), the system
+extracts and analyzes them, shows the requirements, risks, controls and gaps it
+found with the evidence for each, and generates a policy as Word and PDF.
+
+Every draft is an **AI-assisted draft**: it must be reviewed and approved by
+authorized people in the organization before it is adopted. The tool does not
+certify compliance with any law, regulation or standard.
+
+```
+File Upload → Validation → Extraction → Structuring → AI Analysis → Requirements
+→ Risk and Control Mapping → Policy Generation → Formatting → Preview → Download
+```
+
+## Contents
+
+1. [Main features](#main-features) · 2. [Architecture](#architecture) · 3. [Technology stack](#technology-stack) ·
+4. [Team modules](#team-modules) · 5. [Folder structure](#folder-structure) · 6. [Installation](#installation-windows-powershell) ·
+7. [Configuration](#environment-configuration) · 8. [Running](#running-the-application) · 9. [Mock mode](#mock-mode) ·
+10. [AI provider](#ai-provider-configuration) · 11. [File formats](#file-format-support) · 12. [Workflow](#policy-generation-workflow) ·
+13. [API](#api-documentation) · 14. [Testing](#testing) · 15. [Troubleshooting](#troubleshooting) ·
+16. [Security](#security-considerations) · 17. [Limitations](#known-limitations) · 18. [Future work](#future-enhancements)
+
+## Main features
+
+- **Upload** by drag-and-drop or file picker, several files at once, with per-file validation, duplicate detection and clear errors.
+- **Extraction** from 19 extensions: TXT, MD, PDF, DOCX, DOC, XLSX, XLS, CSV, JSON, XML, HTML/HTM, PPTX, PPT, PNG, JPG/JPEG, TIF/TIFF (images and scanned PDFs through OCR).
+- **AI analysis** with Claude, Google Gemini or any model on OpenRouter: document summary, requirements in 12 categories, risks scored on a documented 5×5 scale, existing and recommended controls, gap analysis, responsibilities, contradictions between documents, missing information and assumptions.
+- **Traceability**: every finding carries its file, location and a quote; quotes are checked against the extracted text and flagged if they cannot be found.
+- **Review before generation**: edit or exclude any finding. Edits are marked and the original AI finding can be restored.
+- **Policy recommendation** with the reasons shown, and a manual selector with 15 policy types.
+- **Policy generation** with organization details, writing style, level of detail, optional appendices and output formats. Unknown details become highlighted `[To be confirmed: …]` placeholders rather than invented values.
+- **Quality validation** of each draft, with one bounded automatic correction.
+- **A fixed, professional structure**: Purpose, then an Abbreviations table, then Scope; no Executive Summary;
+  roles and departments instead of people's names. The rules are enforced by the application, not left to the model.
+- **Preview** with section navigation and search, **section editing**, **section regeneration**, **version history and comparison**.
+- **Review workflow**: submit, approve, request changes, reopen – recorded per version and printed in the document.
+- **Downloads** as DOCX and PDF with cover page, document control, version history, table of contents, headers/footers, page numbers, risk matrix and appendices.
+- **Dashboard and history** of files, analyses, reports and background jobs.
+- **Mock mode** to run the whole workflow without an API key (results clearly labelled as simulated).
+
+## Architecture
+
+```
+React (Vite)  ──/api──►  FastAPI
+                          ├─ file_processing      validate → parse → normalize        (Aditi)
+                          ├─ ai_analysis          chunk → extract → merge → consolidate (Samay)
+                          ├─ risk_analysis        scoring, control mapping, gaps        (Samay)
+                          ├─ policy_generation    templates → draft → quality → versions (Suraj)
+                          ├─ document_generation  one document model → DOCX, PDF, preview (Suraj)
+                          ├─ jobs + API + state machine + tests                          (Mayuri)
+                          └─ SQLite (SQLAlchemy) + files under backend/data/
+```
+
+Long-running work runs as persisted background jobs; the UI polls the real
+stage. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the data flow
+between modules, the analysis schema, the generation pipeline and the security design.
+
+## Technology stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, Vite 5, React Router 6, lucide-react icons, plain CSS |
+| Backend | Python 3.11, FastAPI, Pydantic 2, SQLAlchemy 2 |
+| Database | SQLite by default (any SQLAlchemy URL, e.g. PostgreSQL) |
+| LLM | Anthropic Claude via the official `anthropic` SDK (default `claude-opus-5-5`), Google Gemini via the official `google-genai` SDK (default `gemini-3.8-flash`), or OpenRouter over `httpx` (default `openrouter/free`) |
+| Extraction | pypdf, pdfplumber, pypdfium2, python-docx, openpyxl, xlrd, python-pptx, BeautifulSoup, defusedxml, olefile, Pillow, pytesseract |
+| Documents | python-docx (DOCX), ReportLab (PDF) |
+| Tests | pytest (backend), Vitest + Testing Library (frontend) |
+
+## Team modules
+
+| # | Module | Owner | Responsibility | Where |
+|---|---|---|---|---|
+| 1 | Input File Processing | **Aditi** | Upload validation, one parser per format, OCR, normalization into a common document structure with source locations | `backend/app/services/file_processing/` |
+| 2 | AI Analysis Logic | **Samay** | Provider abstraction, prompts, chunking, validated structured output, requirement/risk/control/gap identification, risk scoring, prompt-injection defences | `backend/app/services/ai_analysis/`, `risk_analysis/`, `prompts/analysis_*` |
+| 3 | Policy Generation | **Suraj** | Policy templates, recommendation, generation, quality validation, versions, review, DOCX and PDF rendering | `backend/app/services/policy_generation/`, `document_generation/`, `templates/`, `prompts/policy_*` |
+| 4 | Integration and Testing | **Mayuri** | REST API, background jobs and state machine, database, React app, error handling, automated tests, end-to-end script | `backend/app/api/`, `services/jobs.py`, `core/`, `frontend/`, `backend/tests/`, `scripts/` |
+
+**How they work together.** Module 1 hands Module 2 a `NormalizedDocument` in
+which every section and table has a location. Module 2 hands Module 3 validated
+findings with permanent ids (`REQ-001`, `RSK-004`, `CTL-012`) and sources.
+Module 3 writes policy statements that reference those ids and builds one
+document model that the DOCX renderer, the PDF renderer and the preview share.
+Module 4 exposes each step as an API endpoint, runs it as a tracked job and
+connects the screens to it.
+
+## Folder structure
+
+```
+policygen-ai/
+├── backend/
+│   ├── app/
+│   │   ├── api/                    REST routes and response shapes
+│   │   ├── core/                   config, logging, errors, security, stages
+│   │   ├── database/               engine, sessions, init_db
+│   │   ├── models/                 SQLAlchemy entities
+│   │   ├── schemas/                Pydantic schemas (documents, analysis, policy, API)
+│   │   ├── prompts/                system and task prompts (Markdown)
+│   │   ├── templates/              sections.json, abbreviations.json, given_names.json, policy_types/*.json
+│   │   ├── services/
+│   │   │   ├── file_processing/    validation, ocr, parsers/, service
+│   │   │   ├── ai_analysis/        providers/, chunking, structured, safety, engine
+│   │   │   ├── risk_analysis/      scoring, mapping
+│   │   │   ├── policy_generation/  templates, recommender, generator, quality, versioning
+│   │   │   ├── document_generation/ model, docx_renderer, pdf_renderer
+│   │   │   ├── jobs.py  retention.py  storage.py
+│   │   └── main.py
+│   ├── tests/                      pytest suites + legacy Office fixtures
+│   ├── requirements.txt  requirements-dev.txt  .env.example  pytest.ini
+├── frontend/
+│   ├── src/ components/ pages/ layouts/ hooks/ context/ services/ utils/ test/
+│   ├── package.json  vite.config.js  index.html
+├── sample_files/                   fictional documents in 12 formats
+├── scripts/                        create_sample_files.py, e2e_demo.py
+├── docs/ARCHITECTURE.md
+├── generated_reports/              output of scripts/e2e_demo.py (git-ignored)
+├── Dockerfile  docker-compose.yml  .gitignore  README.md
+```
+
+Runtime data (uploads, extracted text, rendered reports, the SQLite file) lives
+in `backend/data/`, which is git-ignored and is not served by the web server.
+
+## Installation (Windows PowerShell)
+
+Run these from the `policygen-ai` folder.
+
+**1. Check Python and Node.js** (Python 3.10+ and Node.js 18+ are required; 3.11 and 22 were used):
+
+```powershell
+python --version
+node --version
+npm --version
+```
+
+If `python` is not found, try `py --version` and use `py` in place of `python` below.
+
+**2. Create and activate a virtual environment:**
+
+```powershell
+cd backend
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+If activation is blocked by the execution policy, either run
+`Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` first, or skip
+activation and call `.\.venv\Scripts\python.exe` directly (cmd.exe users: `.venv\Scripts\activate.bat`).
+
+**3. Install backend dependencies** (`requirements-dev.txt` adds the test tools):
+
+```powershell
+python -m pip install --upgrade pip
+python -m pip install -r requirements-dev.txt
+```
+
+**4. Install frontend dependencies:**
+
+```powershell
+cd ..\frontend
+npm install
+```
+
+**5. Configure environment variables:**
+
+```powershell
+cd ..\backend
+Copy-Item .env.example .env
+notepad .env
+```
+
+**6. Initialize the database** (optional – the server also does this on start):
+
+```powershell
+python -m app.database.init_db
+```
+
+## Environment configuration
+
+All settings are in `backend/.env` (documented in `backend/.env.example`). The important ones:
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `LLM_PROVIDER` | `auto` | `auto` (Claude if `ANTHROPIC_API_KEY` is set, else Gemini if `GEMINI_API_KEY` is set, else OpenRouter if `OPENROUTER_API_KEY` is set, else mock), `anthropic`, `gemini`, `openrouter`, `mock` |
+| `ANTHROPIC_API_KEY` | empty | Your key. Server-side only; never sent to the browser |
+| `GEMINI_API_KEY` | empty | Google Gemini key. Server-side only; never sent to the browser or logged |
+| `GEMINI_MODEL` | `gemini-3.8-flash` | Gemini model id |
+| `GEMINI_MAX_OUTPUT_TOKENS` | 65536 | Output limit per response (thinking tokens count towards it) |
+| `OPENROUTER_API_KEY` | empty | OpenRouter key. Server-side only; never sent to the browser or logged |
+| `OPENROUTER_MODEL` | `openrouter/free` | Any OpenRouter model id; `openrouter/free` or an id ending in `:free` costs nothing |
+| `OPENROUTER_MAX_OUTPUT_TOKENS` | 32000 | Output limit per response (0 = leave it to the model) |
+| `OPENROUTER_STRUCTURED_OUTPUTS` | true | Ask for schema-constrained JSON; falls back automatically for models that cannot |
+| `OPENROUTER_REASONING` | `off` | `off`, `low`, `medium`, `high` or `default`. Free reasoning models can think for minutes before answering; `off` asks them not to |
+| `OPENROUTER_CHUNK_MAX_CHARS` | 5000 | Size of the document parts sent to OpenRouter (never above `CHUNK_MAX_CHARS`). Smaller parts mean more, but shorter, requests |
+| `OPENROUTER_TIMEOUT_SECONDS` | 600 | Total time allowed for one request, including the whole answer. 0 uses `LLM_TIMEOUT_SECONDS` |
+| `ANTHROPIC_MODEL` | `claude-opus-5-5` | Model id |
+| `ANTHROPIC_EFFORT` | `high` | `low`, `medium`, `high`, `xhigh`, `max` |
+| `MAX_UPLOAD_MB` / `MAX_FILES_PER_UPLOAD` | 25 / 10 | Upload limits |
+| `CHUNK_MAX_CHARS` / `MAX_CHUNKS_PER_ANALYSIS` | 48000 / 40 | Context management |
+| `LLM_TIMEOUT_SECONDS` / `LLM_MAX_RETRIES` | 300 / 2 | Provider timeout and SDK retries |
+| `LLM_JSON_REPAIR_ATTEMPTS` / `QUALITY_CORRECTION_ROUNDS` | 1 / 1 | Bounded repair and correction |
+| `OCR_ENGINE` / `TESSERACT_CMD` | `auto` / empty | OCR selection and path to `tesseract.exe` |
+| `DATA_DIR` / `DATABASE_URL` | `backend/data` / SQLite | Storage and database |
+| `RETENTION_HOURS` | 0 | Auto-delete data older than this (0 = keep until deleted) |
+| `DELETE_SOURCE_AFTER_EXTRACTION` | false | Remove the uploaded file once its text is extracted |
+| `CORS_ORIGINS` | Vite dev origins | Allowed browser origins |
+| `API_ACCESS_TOKEN` | empty | Optional shared secret for the whole API |
+| `RATE_LIMIT_PER_MINUTE` / `RATE_LIMIT_HEAVY_PER_MINUTE` | 300 / 40 | Per-client request limits |
+| `RISK_LEVEL_THRESHOLDS` | `4,9,15` | Upper bounds of Low, Medium, High scores |
+
+**Database.** SQLite needs no setup; the file is `backend/data/policygen.db`.
+For PostgreSQL set `DATABASE_URL=postgresql+psycopg://user:pass@host/db` and
+`pip install "psycopg[binary]"`; tables are created on start.
+
+## Running the application
+
+Use two terminals.
+
+**7. Start the backend** (terminal 1):
+
+```powershell
+cd backend
+.\.venv\Scripts\Activate.ps1
+python -m uvicorn app.main:app --reload --port 8000
+```
+
+**8. Start the frontend** (terminal 2):
+
+```powershell
+cd frontend
+npm run dev
+```
+
+Open <http://localhost:5173>. The Vite dev server proxies `/api` to
+`http://127.0.0.1:8000` (change with `VITE_BACKEND_URL`). API documentation is
+at <http://localhost:8000/api/docs>.
+
+**10. Build the frontend for production:**
+
+```powershell
+cd frontend
+npm run build
+```
+
+When `frontend/dist` exists, the backend serves the built app itself, so
+`python -m uvicorn app.main:app --port 8000` alone gives you the whole
+application at <http://localhost:8000>.
+
+**Docker (optional, not tested here):** `docker compose up --build`, then open <http://localhost:8000>.
+
+## Mock mode
+
+With no provider key set (`ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `OPENROUTER_API_KEY`), or with `LLM_PROVIDER=mock`, the server runs in mock
+mode so the complete workflow can be tried offline:
+
+- A **rule-based engine** replaces the model. It reads the real extracted
+  content with keyword and pattern rules (requirement sentences, risk-register
+  columns, yes/no and date columns in records, weakness phrases) and assembles
+  the policy from the findings with sentence templates.
+- It is **not AI** and has no understanding of meaning. It will miss and
+  misclassify things, and it cannot follow free-text editing instructions (it
+  says so in the regenerated section).
+- Everything it produces is labelled: a banner in the app, a **Simulated**
+  badge on analyses and reports, and a "SIMULATED OUTPUT (mock mode)" notice on
+  the cover of the generated documents.
+- No document content leaves the server in mock mode.
+
+## AI provider configuration
+
+Three real providers are supported. All use the same prompts, JSON schemas, validation and repair, so the
+analysis and policy output have the same structure whichever you choose.
+
+| `LLM_PROVIDER` | Behaviour |
+|---|---|
+| `auto` (default) | Claude if `ANTHROPIC_API_KEY` is set, otherwise Gemini if `GEMINI_API_KEY` is set, otherwise OpenRouter if `OPENROUTER_API_KEY` is set, otherwise mock |
+| `anthropic` | Always Claude; jobs fail with a clear message if no key is set |
+| `gemini` | Always Gemini; jobs fail with a clear message if no key is set |
+| `openrouter` | Always OpenRouter; jobs fail with a clear message if no key is set |
+| `mock` | Always the rule-based mock, even if keys are present |
+
+### Claude (Anthropic)
+
+1. Create a key at <https://console.anthropic.com/> and put it in `backend/.env` as `ANTHROPIC_API_KEY=...`.
+2. Keep `LLM_PROVIDER=auto` (or set `anthropic`) and restart the backend. The top bar shows the model instead of "Mock mode".
+
+With Claude enabled, **extracted document text and the analysis findings are
+sent to the Anthropic API**; the upload page and Help page say so. The
+integration uses streaming, adaptive thinking, `output_config.effort`,
+structured outputs constrained to each task's JSON schema, and the server-side
+refusal fallback. If your account rejects structured outputs or the fallback
+header, the provider drops that feature automatically and continues.
+
+### Gemini (Google)
+
+1. Create a key at <https://aistudio.google.com/apikey> and put it in `backend/.env` as `GEMINI_API_KEY=...`.
+2. Set `LLM_PROVIDER=gemini` (or leave `auto` with no Anthropic key) and, optionally, `GEMINI_MODEL`. Restart the backend.
+3. The top bar shows `Google Gemini: gemini-3.8-flash` and the dashboard shows "Google Gemini API ready".
+
+With Gemini enabled, **extracted document text and the analysis findings are sent to the Google Gemini API**;
+the upload page and Help page name the provider. The integration (`providers/gemini_provider.py`) requests JSON
+constrained to each task's schema (`response_json_schema`), sets the timeout from `LLM_TIMEOUT_SECONDS` and
+retries 408/429/5xx up to `LLM_MAX_RETRIES` times. If a model rejects the schema or the output-token limit, the
+provider drops that one feature and continues; the response is validated by the application either way.
+
+**Choosing a model.** Google retires model ids over time: on 2 October 2026 `gemini-2.5-flash` returned
+"no longer available to new users" and Google recommended `gemini-3.8-flash`, which is why that is the default.
+If the model id is not available the job fails with "The model … is not available to this API key"; set
+`GEMINI_MODEL` to a current id. To list the models your key can use:
+
+```powershell
+cd backend
+.\.venv\Scripts\python.exe -c "from dotenv import dotenv_values; from google import genai; c = genai.Client(api_key=dotenv_values('.env')['GEMINI_API_KEY']); print('\n'.join(sorted(m.name for m in c.models.list() if 'generateContent' in (m.supported_actions or []))))"
+```
+
+### OpenRouter (one key, many models, including free ones)
+
+1. Create a key at <https://openrouter.ai/keys> and put it in `backend/.env` as `OPENROUTER_API_KEY=...`.
+2. Set `LLM_PROVIDER=openrouter` and choose a model with `OPENROUTER_MODEL` (ids are listed at
+   <https://openrouter.ai/models>). Save the file: the server re-reads the AI provider settings when
+   `backend/.env` changes, so no restart is needed (other settings still need one).
+3. The top bar shows `OpenRouter: <model>` and the dashboard shows "OpenRouter API ready". Without a key it
+   shows "OpenRouter not configured"; an explicit `LLM_PROVIDER` never falls back to another provider or to
+   mock mode.
+4. Check the setup from the project root (it never prints the key, and sends only a fixed test sentence):
+
+   ```powershell
+   backend\.venv\Scripts\python.exe scripts\check_openrouter.py
+   ```
+
+```
+LLM_PROVIDER=openrouter
+OPENROUTER_API_KEY=...
+OPENROUTER_MODEL=openrouter/free
+```
+
+**Free models.** `openrouter/free` (the default) lets OpenRouter pick a free model; an id ending in `:free`
+names a specific one. The OpenRouter account must allow free models under *Settings → Privacy*. Free models
+are limited per minute and per day (about 50 requests a day, or 1000 a day once the account has bought at
+least 10 credits). An analysis uses one request per document segment plus one to consolidate; a policy uses
+one or two. A per-minute limit is waited out, up to a minute per attempt. The daily limit cannot be waited
+out, so the job stops at once with "The OpenRouter daily limit for free models was reached" instead of
+spending further requests; finished segments are kept and reused when you press Retry after the reset. A
+paid model needs credit on the account (otherwise: "no credit left").
+
+**Which model.** Measured on 2 October 2026 with this application's real requests and a fictional document:
+
+| `OPENROUTER_MODEL` | Result |
+|---|---|
+| `nvidia/nemotron-3-super-120b-a12b:free` (**recommended**) | Accepts the JSON schema; every answer valid first time; about 120 tokens a second. Analysis plus policy for a one-page document: 2 min 06 s |
+| `openrouter/free` (the default; works with any account) | A different free model answers each request, so speed and quality vary: 40-110 tokens a second, some answers needed the automatic repair, one model stalled. The same run took 9 min 13 s |
+| `dots-studio/dots-3-note-preview:free` | Accepts the JSON schema; valid answer; about 108 tokens a second |
+| `qwen/qwen3.8-27b:free` | Valid answers in JSON mode, slower (40-65 tokens a second) and at times rate-limited by its host |
+
+Free models come and go: list the current ones with `scripts\check_openrouter.py` (it also says whether
+the configured model accepts a JSON schema). A model without schema support still works; the application
+falls back to JSON mode and validates the answer itself.
+
+**Speed and what to expect.** Free models are slow, and the findings for a page are several times longer
+than the page (a 3 KB document produced about 8,000 output tokens). Documents therefore go to OpenRouter in
+parts of `OPENROUTER_CHUNK_MAX_CHARS` characters, one request each, followed by one consolidation request. A
+30 KB PDF is about 8 requests; allow roughly a minute per request on the recommended model. The progress
+card shows the part being analyzed and what the model is doing ("... is writing its answer (1 min 15 s)"),
+and Cancel stops a request that is in flight within a few seconds.
+
+**How it works** (`providers/openrouter_provider.py`). Requests go to
+`https://openrouter.ai/api/v1/chat/completions` with `Authorization: Bearer <key>` using `httpx`. The
+prompts and JSON schemas are the same as for the other providers. Models differ in what they accept, so the
+response format is requested as strict `json_schema` first and stepped down to `json_object`, then to no
+constraint, only when OpenRouter says the model cannot do it. Schemas are sent self-contained (`$ref`s
+expanded) because several hosts behind OpenRouter do not resolve references. An output limit above the
+model's maximum is dropped the same way, and an answer from a free model that is cut off at the limit is
+asked for once more without it (a paid model keeps its limit, which is what bounds its cost). Reasoning
+text some models put in front of the answer is removed. Whatever the model returns is still parsed, validated against the schema and repaired
+once by the application, so a weak model produces a clear "did not match the required structure" failure
+rather than bad data.
+
+The answer is read as a stream under one total time limit (`OPENROUTER_TIMEOUT_SECONDS`). OpenRouter keeps a
+waiting connection alive with a few bytes every few seconds, so a read timeout alone never ends a request
+that a model does not finish: before this limit existed, such a request left the job on "Analyzing" for
+ever. A model that starts its answer and then sends nothing for 90 seconds is given up on at once. A request
+that hits either limit is tried once more (often reaching another model), then the job fails with a message
+naming the model and what it was doing. Reasoning is switched off by default (`OPENROUTER_REASONING=off`),
+because free reasoning models were observed thinking for more than four minutes without writing a character;
+a model that cannot switch it off is detected and used with its default.
+
+Timeouts, per-minute 429 and 5xx are retried up to `LLM_MAX_RETRIES` times, honouring
+`Retry-After` and `X-RateLimit-Reset`; a rejected key, missing credit, the daily limit and an unknown model
+are never retried.
+
+With OpenRouter enabled, **extracted document text and the analysis findings are sent to OpenRouter and on to
+the model provider it routes to**; some free models may log or train on prompts, so do not use them for
+confidential documents.
+
+Another vendor can be added by subclassing `LLMProvider`
+(`backend/app/services/ai_analysis/providers/base.py`) and registering it in `providers/factory.py`.
+
+## File format support
+
+| Format | Extensions | What is extracted | Notes |
+|---|---|---|---|
+| Text, Markdown | txt, md | Headings, paragraphs, Markdown tables | Encoding detection |
+| PDF | pdf | Text per page, tables, metadata | Scanned PDFs need OCR; password-protected PDFs are rejected |
+| Word | docx | Headings, lists, tables, properties | |
+| Word 97-2003 | doc | Text | No heading styles; tables flattened |
+| Excel | xlsx, xls | Every worksheet as a table | Formula results as last saved |
+| CSV | csv | One table | `, ; tab |` delimiters |
+| JSON | json | Nested values as sections, record lists as tables | |
+| XML | xml | Elements as sections, repeated records as tables | DTDs/entities blocked |
+| HTML | html, htm | Headings, paragraphs, lists, tables | Scripts and styles discarded |
+| PowerPoint | pptx | Slides, tables, speaker notes | |
+| PowerPoint 97-2003 | ppt | Slide text | Tables flattened |
+| Images | png, jpg, jpeg, tif, tiff | Text via OCR | Needs Tesseract (or `OCR_ENGINE=claude`) |
+
+**OCR.** Install [Tesseract OCR](https://github.com/UB-Mannheim/tesseract/wiki)
+and, if it is not on `PATH`, set
+`TESSERACT_CMD=C:\Program Files\Tesseract-OCR\tesseract.exe`. Without it,
+images and scanned PDFs fail with a clear "OCR is not available" message and
+every other format works normally.
+
+## Policy generation workflow
+
+1. **Upload** – `/new`. Files are validated and extracted in the background.
+2. **Analyze** – select the extracted files and start. Files analyzed together are compared.
+3. **Review findings** – tabs for Summary, Requirements, Risks, Controls, Gap Analysis, Recommendations, Missing Information, Source References. Edit or exclude findings.
+4. **Configure** – recommended type with reasons, type selector, organization details, style, detail level, appendices, formats.
+5. **Generate** – draft → quality checks → one correction round if needed → DOCX and PDF.
+6. **Preview** – navigate, search, edit a section, regenerate sections, compare versions, record the review decision.
+7. **Download** – DOCX and PDF of any version.
+
+### Policy structure
+
+Every policy is written with the sections of `backend/app/templates/sections.json`, in that order (a policy
+type can leave optional ones out with `exclude_sections`):
+
+1. Purpose
+2. Abbreviations
+3. Scope
+4. Definitions
+5. Policy Objectives
+6. Policy Principles
+7. Roles and Responsibilities
+8. Policy Requirements
+9. Procedures and Implementation Guidelines
+10. Risk Management and Security Controls
+11. Monitoring and Compliance
+12. Incident Reporting and Escalation
+13. Exceptions and Approval Process
+14. Review and Maintenance
+15. References
+
+followed by the appendices the application builds from the analysis (risk register, control matrix, gap
+analysis, evidence mapping, outstanding information). Headings are numbered from this order, and the table
+of contents and the PDF bookmarks are built from the headings, so they always match.
+
+Three rules hold for every version, whether it comes from the first draft, a quality correction, an AI
+revision, a regeneration or a manual edit (`policy_generation/structure.py`):
+
+- **No Executive Summary.** It is marked `retired` in `sections.json`: it is not requested, a model that
+  writes one anyway has it dropped, and a policy saved by an earlier release loses it in its next version
+  while its earlier versions stay exactly as they were (it can no longer be edited or regenerated there).
+- **Abbreviations immediately before Scope**, as a table with the columns *Abbreviation* and *Full Form /
+  Description*. The model proposes the rows; the application lists an abbreviation only if the policy's other
+  sections use it and its full form is known: given in the section, spelled out in the policy text
+  ("Change Advisory Board (CAB)") or found in `templates/abbreviations.json` (add your own there). Each is
+  listed once, in alphabetical order. An abbreviation that is used but cannot be expanded is reported in the
+  quality panel rather than given an invented meaning, and when the policy uses none the section says so.
+  Definitions is kept for terms: an entry that only expands an abbreviation is left out of it.
+- **No personal names in the policy.** Roles and Responsibilities is a table of *Role / Department*,
+  *Responsibilities* and *Basis*. A person named in the documents ("Priya Sharma (IT Manager)") or entered as
+  policy owner or approver appears in the policy text as the role, or as `[To be confirmed: role title]` when
+  the documents do not say which role the person holds. A name is replaced only on evidence: an honorific, a
+  common given name (`templates/given_names.json`), a role title beside it, or the analysis or configuration
+  naming the person. A role label that merely looks like a name is reported for review and not rewritten, so
+  organization, product and standard names are never altered. The analysis, the evidence appendix, the
+  References section and the document control table (what you typed as owner and approver) are not changed.
+
+Supported policy types: Information Security, Access Control, Risk Management,
+Data Privacy, Data Protection, Vendor Management, Cloud Security, Incident
+Management, Password, Acceptable Use, Business Continuity, Asset Management,
+Change Management, Backup and Recovery, Remote Work Security.
+
+**Adding a policy type:** drop a JSON file into
+`backend/app/templates/policy_types/` (or a folder named by
+`POLICY_TEMPLATES_DIR`) with `id`, `name`, `code`, `description`, `purpose`,
+`keywords` and optionally `categories`, `exclude_sections`, `topics`,
+`objectives`, `principles`, `definitions`, `monitoring`. No code changes.
+
+## API documentation
+
+Interactive: <http://localhost:8000/api/docs>. Summary (full table in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#7-api)):
+
+| Method | Path | Purpose |
+|---|---|---|
+| POST | `/api/upload` | Upload files |
+| GET / DELETE | `/api/files/{file_id}` | File status / delete |
+| GET | `/api/files/{file_id}/content` | Extracted content |
+| POST | `/api/extract/{file_id}` | Re-run extraction |
+| POST | `/api/analyses` · `/api/analyze/{file_id}` | Start analysis (several files / one file) |
+| GET | `/api/analyses/{id}` | Analysis results |
+| PATCH | `/api/analyses/{id}/findings/{finding_id}` | Edit / exclude / restore a finding |
+| POST | `/api/policies/recommend` · `/api/policies/generate` | Recommend / generate |
+| GET | `/api/jobs/{job_id}` (+ `/cancel`, `/retry`) | Job status and control |
+| GET | `/api/reports` · `/api/reports/{id}` | History / preview |
+| PUT | `/api/reports/{id}/sections/{section_id}` | Edit a section (new version) |
+| POST | `/api/reports/{id}/sections/regenerate` | Regenerate sections |
+| GET | `/api/reports/{id}/compare?from=&to=` | Compare versions |
+| POST | `/api/reports/{id}/review` | Review decision |
+| GET | `/api/reports/{id}/download?format=docx\|pdf` | Download |
+| DELETE | `/api/reports/{id}` | Delete report |
+| GET | `/api/health` · `/api/config` · `/api/dashboard` · `/api/history` | System |
+
+## Testing
+
+**9. Run the tests:**
+
+```powershell
+# Backend (from backend/, virtual environment active)
+python -m pytest
+
+# Frontend (from frontend/)
+npm test
+
+# End-to-end over real HTTP against a running backend (from the project root)
+backend\.venv\Scripts\python.exe scripts\e2e_demo.py
+
+# Regenerate the sample documents
+backend\.venv\Scripts\python.exe scripts\create_sample_files.py
+```
+
+| Suite | File | Covers |
+|---|---|---|
+| File processing | `tests/test_file_processing.py` | Every format incl. real legacy `.doc/.xls/.ppt`, OCR path, empty/corrupted/encrypted/unsupported/oversized files, signature and MIME checks, zip and XML bombs, path traversal, timeout, duplicates, multi-file upload, deletion |
+| AI analysis | `tests/test_ai_analysis.py` | Requirements, risks, controls, gaps, multi-document, contradictions, invalid LLM output and repair, missing API key, timeout, rate limit, refusal, truncation, chunking, failed chunks, retry cache, prompt injection, fabricated evidence, invented references, finding edits |
+| Policy generation | `tests/test_policy_generation.py` | Recommendation, all 15 types, use of findings, placeholders, contradictions, appendices, DOCX and PDF validity, DOCX/PDF consistency, traceability, quality checks, bounded correction, template extensibility, markup, versions, regeneration, review |
+| Integration | `tests/test_integration.py` | Upload→download, file combinations, thread-mode background jobs, state machine, generation and formatting failure recovery, restart recovery, cancellation, API errors, rate limits, access token, CORS, frontend/backend route match, log privacy, retention, secrets scan |
+| Gemini provider | `tests/test_gemini_provider.py` | Request shape, invalid key, quota, unsupported model, network failure, timeouts, blocked/truncated/empty responses, schema fallback, provider selection, key never in responses or logs, full pipeline through the provider |
+| Policy structure | `tests/test_policy_structure.py` | Section order and absence of the Executive Summary in every policy type, in DOCX and in PDF; abbreviations filtered, corrected, completed, deduplicated and placed before Scope; no personal names in roles, statements, lists or tables while organization and product names are kept; correction round for a doubtful name; structure after AI revision, regeneration and manual edits; a policy saved with an Executive Summary |
+| OpenRouter provider | `tests/test_openrouter_provider.py` | Endpoint, Bearer header and body; free-model compatibility (schema → JSON → plain); authentication, credit, quota, rate-limit, model and network errors; bounded retries and `Retry-After`; errors sent with HTTP 200; provider selection; key never in responses or logs; full pipeline through the provider |
+| Live (opt-in) | `tests/test_live_anthropic.py`, `tests/test_live_gemini.py`, `tests/test_live_openrouter.py` | Real Claude / Gemini / OpenRouter call with a fictional document |
+| Frontend | `frontend/src/test/*.test.jsx` | File selection and drag-and-drop, validation feedback, processing status, policy selection, customization, analysis preview and edits, policy preview, search, downloads, edit confirmation, review, history, error and empty states, layout |
+
+**Results when the project was delivered (1 October 2026, Windows 11, Python 3.11, Node 22):**
+backend 191 passed, 2 skipped (`test_real_tesseract_ocr` – Tesseract not
+installed; `test_live_analysis_and_policy_generation` – no API key);
+frontend 40 passed; `scripts/e2e_demo.py` passed against a running server in mock mode.
+
+**After adding Gemini (2 October 2026):** backend 217 passed, 1 skipped, 2 live tests deselected; the live Gemini
+test passed against the real API with `gemini-3.5-flash-lite` (the default `gemini-3.8-flash` was answering
+503 "high demand" at the time; a single direct call to it had succeeded).
+
+**After adding OpenRouter (2 October 2026):** backend 246 passed, 1 skipped, 3 live tests deselected; frontend 48
+passed. OpenRouter has **not** been run against the real API (no key was configured); its request building
+and response handling are tested through `httpx`'s mock transport.
+
+**After fixing the stuck OpenRouter analysis (2 October 2026):** backend 269 passed, 1 skipped, 3 live tests
+deselected; frontend 51 passed. **OpenRouter was run live** with a real key and fictional documents:
+
+- `pytest -m live -k openrouter` passed with `openrouter/free` (9 min 13 s, including one request that stalled
+  and was retried) and with `nvidia/nemotron-3-super-120b-a12b:free` (2 min 06 s): analysis, consolidation,
+  policy generation, quality correction and PDF rendering.
+- Over HTTP against a running server with background jobs: a PDF was analyzed to completion (10 requirements,
+  8 risks, 13 controls) with the progress messages updating every few seconds; a second click on Start
+  returned the same job; Cancel stopped a request in flight in about 2 seconds; the key appeared in no log.
+
+**After the policy report corrections (3 October 2026):** backend 287 passed, 1 skipped, 3 live tests deselected; frontend 52 passed;
+frontend production build succeeds. A test policy was generated and its DOCX and PDF checked: no Executive
+Summary, Abbreviations before Scope, no names in Roles and Responsibilities, contents entries and bookmarks on
+the right pages, appendices intact. `scripts/e2e_demo.py` passed over HTTP in mock mode, and the live OpenRouter
+test passed with a real model (`nvidia/nemotron-3-super-120b-a12b:free`, 40 s): it wrote Purpose, Abbreviations,
+Scope in that order and named the person in the test document only by role.
+
+The automated tests use the mock provider and scripted providers; nothing
+calls a real model, and they do not read `backend/.env`. Live tests are deselected unless you ask for them. **Live test** (needs a key, costs a few cents, sends one
+fictional document to Anthropic):
+
+```powershell
+cd backend
+$env:ANTHROPIC_API_KEY = "sk-ant-..."
+python -m pytest -m live -k anthropic -s
+```
+
+**Live Gemini test** (uses `GEMINI_API_KEY` and `GEMINI_MODEL` from the environment or from `backend/.env`,
+and sends one fictional document to Google):
+
+```powershell
+cd backend
+python -m pytest -m live -k gemini -s
+```
+
+**Live OpenRouter test** (uses `OPENROUTER_API_KEY` and `OPENROUTER_MODEL` from the environment or from
+`backend/.env`, and sends one fictional document to OpenRouter):
+
+```powershell
+cd backend
+python -m pytest -m live -k openrouter -s
+```
+
+One file-processing test (`test_real_tesseract_ocr`) is skipped when Tesseract
+is not installed; the OCR code path itself is tested with a stand-in engine.
+
+## Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| `Activate.ps1 cannot be loaded because running scripts is disabled` | `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`, or use `.\.venv\Scripts\python.exe` directly |
+| "The server could not be reached" in the web app | Start the backend on port 8000; if you use another port set `VITE_BACKEND_URL` before `npm run dev` |
+| Port 8000 or 5173 already in use | `--port 8001` for uvicorn (and `VITE_BACKEND_URL=http://127.0.0.1:8001`); Vite picks the next free port by itself |
+| Top bar shows "Mock mode" although a key is set | The key must be in `backend/.env` (not `.env.example`) and `LLM_PROVIDER` must not be `mock`. The AI provider settings are re-read when the file is saved; click back into the browser tab to refresh the top bar |
+| Errors mention a different provider than the one in `LLM_PROVIDER` (for example Gemini quota errors with `LLM_PROVIDER=openrouter`) | The server was still running with the settings it started with. This version re-reads `backend/.env` when it changes; with an older server, restart the backend |
+| "OpenRouter not configured" / "No OpenRouter API key is configured" | `LLM_PROVIDER=openrouter` needs `OPENROUTER_API_KEY` in `backend/.env`. A key for another provider (Gemini, Anthropic) is not used instead. Run `scripts\check_openrouter.py` |
+| "The Anthropic API key was rejected" | Check the key and that the account has credit |
+| "The Gemini API key was rejected" | Check `GEMINI_API_KEY` in `backend/.env` (no quotes or spaces) and that the key is enabled for the Gemini API |
+| "The model … is not available to this API key" | Set `ANTHROPIC_MODEL` / `GEMINI_MODEL` to a current model your key can use (older Gemini ids are retired) |
+| "The Gemini quota or rate limit was reached" | Wait a minute, check the quota of your Google AI project, or use a lighter model |
+| "The AI provider is temporarily unavailable" | The provider is overloaded (Gemini returns 503 "high demand" at busy times). Press Retry; completed parts of the analysis are reused. Raising `LLM_MAX_RETRIES` or choosing another model also helps |
+| "No Gemini API key is configured" | `LLM_PROVIDER=gemini` needs `GEMINI_API_KEY`; or set `LLM_PROVIDER=mock` |
+| "The OpenRouter API key was rejected" | `OPENROUTER_API_KEY` must be a key from <https://openrouter.ai/keys> (they start with `sk-or-`), not a Gemini or Anthropic key, and must be enabled |
+| "The model … is not available to this OpenRouter key" | Check the id against <https://openrouter.ai/models>; for free models also allow them under Settings → Privacy in the OpenRouter account |
+| "The OpenRouter rate limit was reached" | The per-minute limit, or a busy free model limited by its host. Wait a minute and press Retry, or choose another model |
+| An analysis stays on "Analyzing" for a long time | The progress card says what the model is doing and for how long. Free models need about a minute per document part; set `OPENROUTER_MODEL=nvidia/nemotron-3-super-120b-a12b:free` for the fastest verified one. A request can no longer wait for ever: it ends at `OPENROUTER_TIMEOUT_SECONDS` |
+| "The model … spent the whole time limit reasoning" / "did not answer within the time limit" / "stopped part-way through its answer" | The free model that answered was too slow or stalled. Press Retry (finished parts are reused), keep `OPENROUTER_REASONING=off`, or set `OPENROUTER_MODEL` to the recommended model |
+| "The model … was still writing its answer when the time limit was reached" | Lower `OPENROUTER_CHUNK_MAX_CHARS`, raise `OPENROUTER_TIMEOUT_SECONDS`, or use a faster model |
+| "The OpenRouter daily limit for free models was reached" | Retrying today will not help. Press Retry after the limit resets (finished segments are reused), buy credits to raise the limit, or set `OPENROUTER_MODEL` to a paid model |
+| "The OpenRouter account has no credit left" | Add credit, or set `OPENROUTER_MODEL` to `openrouter/free` or an id ending in `:free` |
+| "The AI returned a response that did not match the required structure" | The model could not produce the required JSON even after one repair. Common with small free models; choose a stronger model |
+| "OCR is not available on this server" | Install Tesseract and set `TESSERACT_CMD`, or upload a text-based file |
+| "The PDF appears to be scanned" | Same as above |
+| "The file is password-protected or encrypted" | Remove the password in Word/Excel/Acrobat and upload again |
+| "These documents need N AI requests, above the configured limit" | Analyze fewer files at once or raise `MAX_CHUNKS_PER_ANALYSIS` |
+| "The AI response was cut off at the output limit" | Raise `ANTHROPIC_MAX_OUTPUT_TOKENS` / `GEMINI_MAX_OUTPUT_TOKENS` / `OPENROUTER_MAX_OUTPUT_TOKENS` or lower `CHUNK_MAX_CHARS` |
+| A job shows "interrupted by an application restart" | Press Retry; work in flight during a restart is marked failed on purpose |
+| 429 Too many requests | Wait a minute or raise `RATE_LIMIT_*` |
+| Word shows the table of contents without page numbers | Right-click it → Update Field (the PDF has page numbers already) |
+| Start again from scratch | Stop the backend and delete `backend/data/` |
+
+## Security considerations
+
+- **Uploads**: extension, MIME and signature checks; size, page, row and decompression limits; generated storage names outside any served directory; macros and scripts never executed; XML parsed with defusedxml; extraction timeout.
+- **API**: explicit CORS origins; request bodies validated (unknown fields rejected); sliding-window rate limits; generic error messages with no stack traces or paths; optional `API_ACCESS_TOKEN`.
+- **AI**: uploaded text is treated as untrusted data – fenced in tags with a random id, with the model told not to follow instructions inside it; instruction-like text is flagged to the reviewer; all model output is schema-validated; quoted evidence is verified against the source; finding ids referenced by the model must exist; generated policies are checked for unsupported certification/compliance claims. No model-generated code or command is ever executed.
+- **Secrets**: API keys (Anthropic, Gemini, OpenRouter) are read from the server environment only and is never included in responses or frontend code.
+- **Privacy**: logs contain ids, sizes and stages, never document content; deleting a file, analysis or report removes its stored files; optional automatic retention and immediate source deletion.
+- **Single workspace**: there are no user accounts. Everyone who can reach the server (and has the optional token) sees the same data. Do not expose it to the internet as it is.
+
+These controls reduce risk; they are not a claim of legal compliance or certification.
+
+## Known limitations
+
+- **Claude has not been run live**: no Anthropic API key was available. The Claude integration is implemented and unit-tested against a stand-in client (request shape, error mapping, fallbacks); run `pytest -m live -k anthropic` with a key to verify it against the real API.
+- **Gemini was run live once, on a small document**, with `gemini-3.5-flash-lite`. It has not been exercised on large multi-file analyses, and the default `gemini-3.8-flash` was overloaded (503) during testing. Output quality depends on the model chosen; lighter models find fewer findings.
+- **OpenRouter was run live on small fictional documents only** (one to two pages). Large documents and several files at once were not run live: they need many requests (one per 5,000 characters), which a free account's daily limit (about 50 requests) restricts, and the consolidation request grows with the number of findings, so on a slow free model it can reach the time limit. Free models change often; the recommended model is the one measured on 2 October 2026. Results vary by model, and `openrouter/free` uses a different one for each request.
+- The refusal fallback and `effort` settings are Claude-only. OCR through an LLM (`OCR_ENGINE=claude`) is Claude-only.
+- **Personal names are recognised from evidence, not by understanding.** A name with no honorific, an uncommon given name and no role beside it (for example in the middle of a sentence) is not recognised. In the Role column such a label is flagged for review; elsewhere it can pass unnoticed, so the reviewer should still read the draft for names.
+- **Abbreviation full forms from a model are checked against the letters only.** A wrong expansion that happens to fit the letters is kept. Abbreviations outside `templates/abbreviations.json` that the policy does not spell out are reported, not listed.
+- **Policies saved before the structure change keep their Executive Summary** in existing versions and documents; it disappears when a new version is created.
+- **Mock mode is not AI.** Its findings come from keyword rules and its risk ratings are estimates; treat its output as a demonstration only.
+- **OCR was not available** on the development machine (Tesseract not installed). The OCR path is covered with a stand-in engine; real recognition is untested here.
+- **Docker files were written but not built** (Docker not installed).
+- Legacy `.doc` and `.ppt` extraction is text-only (no heading styles, tables flattened); slide order follows storage order.
+- PDF tables are detected when they have ruling lines; borderless tables are read as text. Multi-column page layouts may be read out of order.
+- Extraction timeout is a soft limit: Python cannot kill a parser thread, so the job fails promptly while the hard limits bound the leftover work.
+- Jobs run in-process. Restarting the server interrupts running jobs (they are marked failed and can be retried); there is no distributed queue.
+- Rate limiting is per process and in memory.
+- No user accounts or per-user data separation.
+- The Word table of contents needs "Update Field" to show page numbers.
+- The PDF uses Arial (Windows) or DejaVu Sans (Linux) when present; scripts those fonts lack (for example Devanagari or CJK) will not render in the PDF.
+- Quality checks for contradictions and unsupported claims are pattern-based and will not catch everything; human review remains essential.
+
+## Future enhancements
+
+- User accounts, roles and per-user workspaces; audit log of who changed what.
+- A persistent job queue (Celery/RQ) and streaming progress over WebSockets.
+- Retrieval over large document sets instead of chunk-by-chunk extraction.
+- Mapping of controls to frameworks the organization selects (ISO/IEC 27001, NIST CSF, SOC 2).
+- Inline AI editing in the preview and tracked changes in the Word export.
+- Policy template editor in the UI; organization branding (logo, colours) in documents.
+- Better scanned-document handling (layout-aware OCR, table recognition).
+- Additional LLM providers and per-task model selection.

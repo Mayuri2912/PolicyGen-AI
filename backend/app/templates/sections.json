@@ -1,0 +1,98 @@
+[
+  {
+    "id": "purpose",
+    "heading": "Purpose",
+    "mandatory": true,
+    "guidance": "Why the policy exists and what it is intended to achieve for the organization."
+  },
+  {
+    "id": "abbreviations",
+    "heading": "Abbreviations",
+    "mandatory": true,
+    "guidance": "One table with exactly two columns, \"Abbreviation\" and \"Full Form / Description\", listing the abbreviations this policy itself uses (for example MFA, RBAC, ISMS), one per row, each once, with its accurate full form in this policy's context. List only abbreviations that appear in the other sections. Do not invent abbreviations for the organization, and do not list ordinary terms here; those belong in Definitions. If the policy uses no abbreviations, write a single sentence saying so instead of a table."
+  },
+  {
+    "id": "scope",
+    "heading": "Scope",
+    "mandatory": true,
+    "guidance": "Who and what the policy applies to: roles, departments, systems, data, locations and third parties named in the analysis. State anything explicitly out of scope if the documents say so."
+  },
+  {
+    "id": "definitions",
+    "heading": "Definitions",
+    "mandatory": false,
+    "guidance": "A table of the specialist terms this policy uses, with plain definitions. Include only terms the policy actually uses. Abbreviations are expanded in the Abbreviations section, so do not repeat them here; define the full term instead when it needs explaining."
+  },
+  {
+    "id": "objectives",
+    "heading": "Policy Objectives",
+    "mandatory": true,
+    "guidance": "Specific outcomes the policy must deliver, tied to the requirements and risks in the analysis."
+  },
+  {
+    "id": "principles",
+    "heading": "Policy Principles",
+    "mandatory": true,
+    "guidance": "The guiding principles behind the detailed requirements."
+  },
+  {
+    "id": "roles_responsibilities",
+    "heading": "Roles and Responsibilities",
+    "mandatory": true,
+    "guidance": "A table with the columns \"Role / Department\", \"Responsibilities\" and \"Basis\" (Documented or Proposed). Name role titles, departments, teams or designations only, such as IT Manager, Information Security Team or Department Heads. Never write the name of an individual person: where the documents name a person, give the role or department that person holds if the documents state it, and otherwise use a placeholder for the role. Use the roles the documents establish; label any role or duty you introduce as Proposed."
+  },
+  {
+    "id": "policy_requirements",
+    "heading": "Policy Requirements",
+    "mandatory": true,
+    "guidance": "The binding requirements, as statements blocks grouped under topic subheadings. Convert the identified requirements into clear, testable statements and add proposed statements for significant risks and gaps. Reference supporting finding ids. Assign duties to roles, never to named individuals."
+  },
+  {
+    "id": "procedures",
+    "heading": "Procedures and Implementation Guidelines",
+    "mandatory": true,
+    "guidance": "Practical guidance on putting the requirements into effect: steps, sequencing and which role acts, drawing on the recommended controls and suggested actions."
+  },
+  {
+    "id": "risk_controls",
+    "heading": "Risk Management and Security Controls",
+    "mandatory": true,
+    "guidance": "How risks relevant to this policy are identified, scored and treated, the key risks from the analysis, and the existing and recommended controls that address them. Refer to risk and control ids."
+  },
+  {
+    "id": "monitoring_compliance",
+    "heading": "Monitoring and Compliance",
+    "mandatory": true,
+    "guidance": "How adherence to the policy is monitored, measured and reported, and the consequences of non-compliance. Mention open gaps that must be tracked to closure."
+  },
+  {
+    "id": "incident_reporting",
+    "heading": "Incident Reporting and Escalation",
+    "mandatory": false,
+    "guidance": "How suspected breaches of this policy or related security incidents are reported and escalated, including time limits and the roles or contact points if the documents give them."
+  },
+  {
+    "id": "exceptions",
+    "heading": "Exceptions and Approval Process",
+    "mandatory": true,
+    "guidance": "How exceptions to the policy are requested, risk-assessed, approved, time-limited and recorded, and which role approves them."
+  },
+  {
+    "id": "review_maintenance",
+    "heading": "Review and Maintenance",
+    "mandatory": true,
+    "guidance": "How often the policy is reviewed, what triggers an out-of-cycle review, and which role maintains it."
+  },
+  {
+    "id": "references",
+    "heading": "References",
+    "mandatory": false,
+    "guidance": "The source documents this policy was drafted from, and any standards, laws or internal documents that those sources themselves cite. Do not add standards or laws the sources do not mention."
+  },
+  {
+    "id": "executive_summary",
+    "heading": "Executive Summary",
+    "retired": true,
+    "guidance": "No longer part of a policy. It is listed here so that the application recognises it in policies saved by earlier versions and in model output, and leaves it out of every new version."
+  }
+]

@@ -1,0 +1,1678 @@
+[
+  {
+    "id": "information_security",
+    "name": "Information Security Policy",
+    "code": "ISP",
+    "description": "Overall framework for protecting the confidentiality, integrity and availability of information.",
+    "purpose": "establish the framework, principles and mandatory requirements for protecting the confidentiality, integrity and availability of information and information systems",
+    "keywords": [
+      "information security",
+      "security policy",
+      "confidentiality",
+      "integrity",
+      "availability",
+      "isms",
+      "classification",
+      "encryption",
+      "security awareness",
+      "security requirement",
+      "security control"
+    ],
+    "categories": [
+      "information_security",
+      "technical_operational",
+      "employee_responsibilities",
+      "organizational"
+    ],
+    "broad": true,
+    "signals": [
+      "breadth"
+    ],
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Governance and Accountability",
+        "keywords": [
+          "governance",
+          "management",
+          "accountab",
+          "owner",
+          "committee",
+          "approve",
+          "policy"
+        ]
+      },
+      {
+        "title": "Access and Authentication",
+        "keywords": [
+          "access",
+          "authenticat",
+          "password",
+          "mfa",
+          "multi-factor",
+          "privilege",
+          "account"
+        ]
+      },
+      {
+        "title": "Data Protection and Classification",
+        "keywords": [
+          "classif",
+          "encrypt",
+          "confidential",
+          "data",
+          "retention",
+          "disposal"
+        ]
+      },
+      {
+        "title": "System and Network Security",
+        "keywords": [
+          "patch",
+          "vulnerab",
+          "network",
+          "firewall",
+          "malware",
+          "endpoint",
+          "configuration",
+          "logging",
+          "monitor"
+        ]
+      },
+      {
+        "title": "Awareness and Personnel Security",
+        "keywords": [
+          "training",
+          "awareness",
+          "employee",
+          "staff",
+          "onboarding",
+          "screening"
+        ]
+      },
+      {
+        "title": "Incident and Continuity Management",
+        "keywords": [
+          "incident",
+          "breach",
+          "backup",
+          "recovery",
+          "continuity"
+        ]
+      }
+    ],
+    "objectives": [
+      "Protect information assets against unauthorized access, disclosure, alteration and loss.",
+      "Define clear accountability for information security across the organization.",
+      "Ensure security requirements are applied consistently to systems, data and people.",
+      "Provide a basis for measuring and improving the security posture."
+    ],
+    "principles": [
+      "Security measures are proportionate to the sensitivity of the information and the risks it faces.",
+      "Access is granted on the basis of least privilege and business need.",
+      "Security is a shared responsibility of everyone who handles the organization's information.",
+      "Controls are layered so that the failure of one does not expose the information."
+    ],
+    "definitions": {
+      "Information asset": "Any information, or system that stores or processes it, that has value to the organization.",
+      "Confidentiality": "Ensuring information is accessible only to those authorized to see it.",
+      "Integrity": "Safeguarding the accuracy and completeness of information.",
+      "Availability": "Ensuring authorized users can access information when they need it.",
+      "Control": "A measure that reduces the likelihood or impact of a risk."
+    },
+    "monitoring": [
+      "Security controls are reviewed periodically for design and operating effectiveness.",
+      "Security metrics and open findings are reported to management.",
+      "Non-compliance is investigated and may lead to corrective or disciplinary action."
+    ]
+  },
+  {
+    "id": "access_control",
+    "name": "Access Control Policy",
+    "code": "ACP",
+    "description": "Rules for granting, reviewing and revoking access to systems and information.",
+    "purpose": "define how access to information and systems is requested, approved, granted, reviewed and removed so that only authorized individuals have the access they need",
+    "keywords": [
+      "access control",
+      "access review",
+      "access right",
+      "authentication",
+      "authorization",
+      "privilege",
+      "privileged",
+      "least privilege",
+      "role-based",
+      "rbac",
+      "mfa",
+      "multi-factor",
+      "user account",
+      "joiner",
+      "leaver",
+      "provisioning",
+      "deprovisioning",
+      "single sign-on",
+      "last login"
+    ],
+    "categories": [
+      "access_control"
+    ],
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "User Access Provisioning",
+        "keywords": [
+          "provision",
+          "request",
+          "approv",
+          "joiner",
+          "new user",
+          "onboard",
+          "grant"
+        ]
+      },
+      {
+        "title": "Authentication",
+        "keywords": [
+          "authenticat",
+          "password",
+          "mfa",
+          "multi-factor",
+          "sso",
+          "credential",
+          "login",
+          "lockout"
+        ]
+      },
+      {
+        "title": "Privileged Access",
+        "keywords": [
+          "privileg",
+          "admin",
+          "root",
+          "elevated",
+          "superuser"
+        ]
+      },
+      {
+        "title": "Access Reviews and Recertification",
+        "keywords": [
+          "review",
+          "recertif",
+          "attest",
+          "quarterly",
+          "annual"
+        ]
+      },
+      {
+        "title": "Access Removal",
+        "keywords": [
+          "leaver",
+          "terminat",
+          "revok",
+          "remov",
+          "disable",
+          "deprovision",
+          "transfer",
+          "mover"
+        ]
+      },
+      {
+        "title": "Remote and Third-Party Access",
+        "keywords": [
+          "remote",
+          "vpn",
+          "third",
+          "vendor",
+          "contractor",
+          "external"
+        ]
+      }
+    ],
+    "objectives": [
+      "Ensure access to systems and data is authorized, appropriate and traceable to an individual.",
+      "Enforce least privilege and segregation of duties.",
+      "Detect and remove access that is no longer required.",
+      "Reduce the risk of unauthorized access through strong authentication."
+    ],
+    "principles": [
+      "Access is denied by default and granted only on documented business need.",
+      "Every account is attributable to a named individual or a documented service owner.",
+      "Privileged access is separated from day-to-day access and is kept to a minimum.",
+      "Access rights are reviewed regularly and removed promptly when no longer needed."
+    ],
+    "definitions": {
+      "Least privilege": "Granting only the minimum access needed to perform a role.",
+      "Privileged account": "An account with elevated rights, such as administrator or root.",
+      "Multi-factor authentication": "Verifying identity with two or more independent factors.",
+      "Access review": "A periodic check that users' access rights remain appropriate.",
+      "Segregation of duties": "Dividing tasks so that no single person can complete a sensitive process alone."
+    },
+    "monitoring": [
+      "Access reviews are completed at the defined frequency and their results retained as evidence.",
+      "Authentication and privileged activity logs are monitored for anomalies.",
+      "Exceptions such as shared or dormant accounts are tracked to closure."
+    ]
+  },
+  {
+    "id": "risk_management",
+    "name": "Risk Management Policy",
+    "code": "RMP",
+    "description": "Approach to identifying, assessing, treating and monitoring risk.",
+    "purpose": "set out how risks are identified, assessed, treated, monitored and reported so that they are managed within the organization's risk appetite",
+    "keywords": [
+      "risk assessment",
+      "risk register",
+      "risk management",
+      "risk treatment",
+      "risk appetite",
+      "risk owner",
+      "likelihood",
+      "impact",
+      "residual risk",
+      "inherent risk",
+      "mitigation",
+      "risk rating",
+      "risk level",
+      "threat"
+    ],
+    "categories": [
+      "risk_management"
+    ],
+    "signals": [
+      "scored_risks"
+    ],
+    "exclude_sections": [
+      "incident_reporting"
+    ],
+    "topics": [
+      {
+        "title": "Risk Identification",
+        "keywords": [
+          "identif",
+          "threat",
+          "vulnerab",
+          "register",
+          "source"
+        ]
+      },
+      {
+        "title": "Risk Assessment and Scoring",
+        "keywords": [
+          "assess",
+          "likelihood",
+          "impact",
+          "score",
+          "rating",
+          "criteria",
+          "matrix"
+        ]
+      },
+      {
+        "title": "Risk Treatment",
+        "keywords": [
+          "treat",
+          "mitigat",
+          "accept",
+          "transfer",
+          "avoid",
+          "control",
+          "remediat",
+          "action plan"
+        ]
+      },
+      {
+        "title": "Risk Ownership and Acceptance",
+        "keywords": [
+          "owner",
+          "accept",
+          "approv",
+          "appetite",
+          "tolerance",
+          "accountab"
+        ]
+      },
+      {
+        "title": "Monitoring and Reporting",
+        "keywords": [
+          "monitor",
+          "report",
+          "review",
+          "committee",
+          "escalat",
+          "kri"
+        ]
+      }
+    ],
+    "objectives": [
+      "Identify and record risks to the organization's objectives, information and services.",
+      "Assess risks consistently using a defined scoring method.",
+      "Treat risks that exceed the organization's risk appetite and assign owners for each.",
+      "Give management timely visibility of the risk profile."
+    ],
+    "principles": [
+      "Risk management is part of everyday decision-making, not a separate exercise.",
+      "Every risk has a named owner who is accountable for its treatment.",
+      "Risks are assessed with a consistent, documented method so results are comparable.",
+      "Risk acceptance is an explicit, recorded decision made at the right level of authority."
+    ],
+    "definitions": {
+      "Risk": "The effect of uncertainty on objectives, expressed as a combination of likelihood and impact.",
+      "Inherent risk": "The level of risk before controls are taken into account.",
+      "Residual risk": "The level of risk remaining after controls are applied.",
+      "Risk appetite": "The amount of risk the organization is willing to accept in pursuit of its objectives.",
+      "Risk treatment": "The action taken to modify a risk: mitigate, transfer, avoid or accept."
+    },
+    "monitoring": [
+      "The risk register is reviewed at the defined frequency and after significant change.",
+      "Treatment actions are tracked to completion and overdue actions are escalated.",
+      "Risk reports are presented to management, highlighting risks above appetite."
+    ]
+  },
+  {
+    "id": "data_privacy",
+    "name": "Data Privacy Policy",
+    "code": "DPV",
+    "description": "How personal data is collected, used, shared and retained, and how individuals' rights are respected.",
+    "purpose": "describe how personal data is collected, used, shared, retained and protected, and how the rights of individuals are respected",
+    "keywords": [
+      "personal data",
+      "privacy",
+      "pii",
+      "data subject",
+      "consent",
+      "lawful basis",
+      "data protection officer",
+      "dpo",
+      "privacy notice",
+      "subject access",
+      "personal information",
+      "data minimisation",
+      "data minimization"
+    ],
+    "categories": [
+      "data_privacy"
+    ],
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Collection and Lawful Use",
+        "keywords": [
+          "collect",
+          "lawful",
+          "consent",
+          "purpose",
+          "notice",
+          "minimi"
+        ]
+      },
+      {
+        "title": "Individual Rights",
+        "keywords": [
+          "right",
+          "subject",
+          "access request",
+          "erasure",
+          "rectif",
+          "object"
+        ]
+      },
+      {
+        "title": "Sharing and Transfers",
+        "keywords": [
+          "shar",
+          "transfer",
+          "third",
+          "processor",
+          "disclos",
+          "cross-border"
+        ]
+      },
+      {
+        "title": "Retention and Disposal",
+        "keywords": [
+          "retention",
+          "retain",
+          "delet",
+          "dispos",
+          "archiv"
+        ]
+      },
+      {
+        "title": "Privacy Breaches",
+        "keywords": [
+          "breach",
+          "incident",
+          "notif"
+        ]
+      }
+    ],
+    "objectives": [
+      "Handle personal data fairly, transparently and only for stated purposes.",
+      "Collect and keep no more personal data than is necessary.",
+      "Enable individuals to exercise their rights over their personal data.",
+      "Protect personal data against unauthorized access, loss or disclosure."
+    ],
+    "principles": [
+      "Personal data is processed only for specified and legitimate purposes.",
+      "Privacy is considered from the start of any new system, process or project.",
+      "Personal data is kept accurate and retained only as long as necessary.",
+      "Individuals are told how their personal data is used."
+    ],
+    "definitions": {
+      "Personal data": "Any information relating to an identified or identifiable individual.",
+      "Data subject": "The individual to whom personal data relates.",
+      "Processing": "Any operation performed on personal data, such as collection, storage, use or deletion.",
+      "Consent": "A freely given, specific and informed indication of an individual's agreement to processing.",
+      "Privacy breach": "An event leading to unauthorized access to, or loss or disclosure of, personal data."
+    },
+    "monitoring": [
+      "Records of processing and consent are maintained and reviewed.",
+      "Requests from individuals are logged and tracked against response deadlines.",
+      "Privacy practices are checked periodically against this policy."
+    ]
+  },
+  {
+    "id": "data_protection",
+    "name": "Data Protection Policy",
+    "code": "DPP",
+    "description": "Technical and organizational safeguards for data throughout its lifecycle.",
+    "purpose": "define the safeguards applied to data throughout its lifecycle, from creation and classification to storage, transmission and disposal",
+    "keywords": [
+      "data protection",
+      "data classification",
+      "encryption",
+      "encrypted",
+      "data loss",
+      "dlp",
+      "data leakage",
+      "data handling",
+      "data at rest",
+      "data in transit",
+      "sensitive data",
+      "confidential data",
+      "data retention",
+      "secure disposal",
+      "masking"
+    ],
+    "categories": [
+      "data_privacy",
+      "information_security",
+      "technical_operational"
+    ],
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Data Classification and Handling",
+        "keywords": [
+          "classif",
+          "label",
+          "handl",
+          "sensitiv",
+          "confidential"
+        ]
+      },
+      {
+        "title": "Encryption and Key Management",
+        "keywords": [
+          "encrypt",
+          "key",
+          "tls",
+          "cryptograph",
+          "at rest",
+          "in transit"
+        ]
+      },
+      {
+        "title": "Data Loss Prevention",
+        "keywords": [
+          "dlp",
+          "leak",
+          "loss",
+          "exfiltrat",
+          "removable",
+          "usb",
+          "email"
+        ]
+      },
+      {
+        "title": "Storage, Retention and Disposal",
+        "keywords": [
+          "stor",
+          "retention",
+          "retain",
+          "dispos",
+          "delet",
+          "destroy",
+          "archiv"
+        ]
+      },
+      {
+        "title": "Data Sharing",
+        "keywords": [
+          "shar",
+          "transfer",
+          "third",
+          "disclos",
+          "export"
+        ]
+      }
+    ],
+    "objectives": [
+      "Ensure data is classified and handled according to its sensitivity.",
+      "Protect data at rest and in transit against unauthorized access and leakage.",
+      "Retain data only as long as required and dispose of it securely.",
+      "Control how data is shared inside and outside the organization."
+    ],
+    "principles": [
+      "The level of protection matches the classification of the data.",
+      "Sensitive data is encrypted wherever it is stored or transmitted.",
+      "Data owners are accountable for the data in their care.",
+      "Data that is no longer needed is securely disposed of."
+    ],
+    "definitions": {
+      "Data classification": "Assigning data to a category that determines how it must be handled.",
+      "Data owner": "The person accountable for a set of data and decisions about its use.",
+      "Encryption": "Encoding data so only authorized parties can read it.",
+      "Data at rest": "Data held in storage, such as on disks, databases or backups.",
+      "Data in transit": "Data moving across a network."
+    },
+    "monitoring": [
+      "Classification and encryption coverage are reviewed periodically.",
+      "Data loss events and policy violations are logged and investigated.",
+      "Retention and disposal activities are evidenced."
+    ]
+  },
+  {
+    "id": "vendor_management",
+    "name": "Vendor Management Policy",
+    "code": "VMP",
+    "description": "How third-party suppliers are assessed, contracted, monitored and offboarded.",
+    "purpose": "define how third-party vendors are assessed, contracted, monitored and offboarded so that the risks they introduce are understood and controlled",
+    "keywords": [
+      "vendor",
+      "third-party",
+      "third party",
+      "supplier",
+      "outsourc",
+      "due diligence",
+      "vendor assessment",
+      "vendor risk",
+      "service provider",
+      "subprocessor",
+      "sla",
+      "service level",
+      "contract",
+      "procurement",
+      "offboarding"
+    ],
+    "categories": [
+      "vendor_management"
+    ],
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Vendor Classification and Due Diligence",
+        "keywords": [
+          "due diligence",
+          "assess",
+          "classif",
+          "tier",
+          "critical",
+          "onboard",
+          "questionnaire",
+          "select"
+        ]
+      },
+      {
+        "title": "Contractual Requirements",
+        "keywords": [
+          "contract",
+          "agreement",
+          "sla",
+          "clause",
+          "nda",
+          "dpa",
+          "right to audit",
+          "liabil"
+        ]
+      },
+      {
+        "title": "Vendor Access and Data Handling",
+        "keywords": [
+          "access",
+          "data",
+          "encrypt",
+          "mfa",
+          "credential",
+          "shar"
+        ]
+      },
+      {
+        "title": "Ongoing Monitoring and Review",
+        "keywords": [
+          "monitor",
+          "review",
+          "reassess",
+          "annual",
+          "performance",
+          "report",
+          "certif"
+        ]
+      },
+      {
+        "title": "Incident Notification",
+        "keywords": [
+          "incident",
+          "breach",
+          "notif"
+        ]
+      },
+      {
+        "title": "Termination and Offboarding",
+        "keywords": [
+          "terminat",
+          "offboard",
+          "exit",
+          "return",
+          "delet",
+          "revok"
+        ]
+      }
+    ],
+    "objectives": [
+      "Understand and control the security risks introduced by third parties.",
+      "Ensure vendors are assessed before engagement and at regular intervals.",
+      "Embed security and data protection obligations in vendor contracts.",
+      "Ensure access and data are recovered when a vendor relationship ends."
+    ],
+    "principles": [
+      "The depth of vendor assessment is proportionate to the criticality of the service and the data involved.",
+      "The organization remains accountable for its information even when a vendor processes it.",
+      "Security obligations are agreed in writing before a vendor is given access.",
+      "Vendor risk is monitored for the whole life of the relationship."
+    ],
+    "definitions": {
+      "Vendor": "An external organization that supplies goods or services, including cloud and outsourced service providers.",
+      "Due diligence": "The assessment of a vendor's security and suitability before and during an engagement.",
+      "Critical vendor": "A vendor whose failure or compromise would significantly affect operations or sensitive data.",
+      "Service level agreement": "The agreed measures of a vendor's service performance.",
+      "Offboarding": "The controlled ending of a vendor relationship, including return of data and removal of access."
+    },
+    "monitoring": [
+      "A register of vendors, their criticality and assessment status is maintained.",
+      "Vendor assessments and contract obligations are tracked against due dates.",
+      "Vendor incidents and performance issues are reported to management."
+    ]
+  },
+  {
+    "id": "cloud_security",
+    "name": "Cloud Security Policy",
+    "code": "CSP",
+    "description": "Security requirements for adopting and operating cloud services.",
+    "purpose": "set the security requirements for selecting, configuring and operating cloud services so that data and workloads in the cloud are protected",
+    "keywords": [
+      "cloud",
+      "aws",
+      "azure",
+      "gcp",
+      "google cloud",
+      "iaas",
+      "paas",
+      "saas",
+      "s3",
+      "bucket",
+      "tenant",
+      "shared responsibility",
+      "misconfiguration",
+      "cloud provider",
+      "kubernetes",
+      "container",
+      "workload",
+      "cspm",
+      "security group"
+    ],
+    "categories": [
+      "cloud_security"
+    ],
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Cloud Governance and Shared Responsibility",
+        "keywords": [
+          "governance",
+          "shared responsib",
+          "approv",
+          "provider",
+          "account",
+          "subscription",
+          "owner"
+        ]
+      },
+      {
+        "title": "Identity and Access Management",
+        "keywords": [
+          "identity",
+          "iam",
+          "access",
+          "mfa",
+          "privileg",
+          "role",
+          "key",
+          "root"
+        ]
+      },
+      {
+        "title": "Data Protection in the Cloud",
+        "keywords": [
+          "encrypt",
+          "data",
+          "bucket",
+          "storage",
+          "backup",
+          "residency",
+          "region"
+        ]
+      },
+      {
+        "title": "Secure Configuration",
+        "keywords": [
+          "config",
+          "baseline",
+          "hardening",
+          "public",
+          "security group",
+          "network",
+          "misconfig",
+          "template"
+        ]
+      },
+      {
+        "title": "Logging and Monitoring",
+        "keywords": [
+          "log",
+          "monitor",
+          "alert",
+          "audit trail",
+          "detect",
+          "siem"
+        ]
+      },
+      {
+        "title": "Resilience and Exit",
+        "keywords": [
+          "availab",
+          "resilien",
+          "recover",
+          "exit",
+          "portab",
+          "continuity"
+        ]
+      }
+    ],
+    "objectives": [
+      "Ensure cloud services are approved, configured securely and operated under clear ownership.",
+      "Protect data stored and processed in the cloud.",
+      "Prevent and detect cloud misconfiguration.",
+      "Maintain visibility of activity in cloud environments."
+    ],
+    "principles": [
+      "Security responsibilities shared with the cloud provider are understood and documented.",
+      "Cloud resources are deployed from approved, secure configurations.",
+      "Nothing is exposed to the internet unless there is an approved business need.",
+      "Cloud activity is logged and monitored."
+    ],
+    "definitions": {
+      "Cloud service": "Computing resources delivered over a network by a provider, such as IaaS, PaaS or SaaS.",
+      "Shared responsibility model": "The division of security duties between the cloud provider and the customer.",
+      "Misconfiguration": "A setting that unintentionally weakens security, such as publicly accessible storage.",
+      "Identity and access management": "The control of who can do what in a cloud environment.",
+      "Workload": "An application or service running on cloud resources."
+    },
+    "monitoring": [
+      "Cloud configurations are checked against the approved baseline.",
+      "Cloud audit logs are retained and reviewed.",
+      "Findings from configuration checks are tracked to remediation."
+    ]
+  },
+  {
+    "id": "incident_management",
+    "name": "Incident Management Policy",
+    "code": "IMP",
+    "description": "How security incidents are detected, reported, handled and learned from.",
+    "purpose": "define how information security incidents are detected, reported, assessed, contained, resolved and reviewed",
+    "keywords": [
+      "incident",
+      "incident response",
+      "breach",
+      "escalation",
+      "containment",
+      "forensic",
+      "root cause",
+      "post-incident",
+      "csirt",
+      "severity",
+      "incident report",
+      "lessons learned"
+    ],
+    "categories": [
+      "incident_management"
+    ],
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Detection and Reporting",
+        "keywords": [
+          "detect",
+          "report",
+          "notif",
+          "identify",
+          "alert"
+        ]
+      },
+      {
+        "title": "Classification and Escalation",
+        "keywords": [
+          "classif",
+          "severity",
+          "priorit",
+          "escalat",
+          "triage"
+        ]
+      },
+      {
+        "title": "Containment, Eradication and Recovery",
+        "keywords": [
+          "contain",
+          "eradicat",
+          "recover",
+          "restor",
+          "isolat"
+        ]
+      },
+      {
+        "title": "Evidence and Communication",
+        "keywords": [
+          "evidence",
+          "forensic",
+          "log",
+          "communicat",
+          "regulator",
+          "customer"
+        ]
+      },
+      {
+        "title": "Post-Incident Review",
+        "keywords": [
+          "review",
+          "lesson",
+          "root cause",
+          "improv"
+        ]
+      }
+    ],
+    "objectives": [
+      "Detect and report incidents quickly.",
+      "Limit the impact of incidents through a consistent response.",
+      "Preserve evidence and meet notification obligations.",
+      "Learn from incidents to prevent recurrence."
+    ],
+    "principles": [
+      "Everyone has a duty to report suspected incidents without delay.",
+      "Response is prioritized by severity and business impact.",
+      "Actions taken during an incident are recorded.",
+      "Every significant incident is followed by a review."
+    ],
+    "definitions": {
+      "Security incident": "An event that compromises, or threatens to compromise, the confidentiality, integrity or availability of information.",
+      "Containment": "Action taken to stop an incident from spreading or causing further harm.",
+      "Root cause": "The underlying reason an incident occurred.",
+      "Severity": "A rating of how serious an incident is, used to prioritize the response.",
+      "Post-incident review": "A structured review of an incident and the response to it."
+    },
+    "monitoring": [
+      "Incidents are logged with their severity, timeline and outcome.",
+      "Response times are measured against the defined targets.",
+      "Actions from post-incident reviews are tracked to completion."
+    ]
+  },
+  {
+    "id": "password",
+    "name": "Password Policy",
+    "code": "PWD",
+    "description": "Rules for creating, protecting and managing passwords and other authentication secrets.",
+    "purpose": "define the rules for creating, protecting and managing passwords and other authentication secrets",
+    "keywords": [
+      "password",
+      "passphrase",
+      "password length",
+      "password complexity",
+      "password expiry",
+      "password rotation",
+      "lockout",
+      "credential",
+      "password manager",
+      "default password",
+      "shared password",
+      "mfa"
+    ],
+    "categories": [
+      "access_control"
+    ],
+    "exclude_sections": [
+      "incident_reporting"
+    ],
+    "topics": [
+      {
+        "title": "Password Construction",
+        "keywords": [
+          "length",
+          "complex",
+          "character",
+          "passphrase",
+          "strength"
+        ]
+      },
+      {
+        "title": "Password Protection",
+        "keywords": [
+          "shar",
+          "stor",
+          "written",
+          "manager",
+          "protect",
+          "disclos",
+          "default"
+        ]
+      },
+      {
+        "title": "Password Change and Reset",
+        "keywords": [
+          "chang",
+          "expir",
+          "rotat",
+          "reset",
+          "reuse",
+          "history"
+        ]
+      },
+      {
+        "title": "Account Lockout",
+        "keywords": [
+          "lockout",
+          "attempt",
+          "failed",
+          "lock"
+        ]
+      },
+      {
+        "title": "Multi-Factor Authentication",
+        "keywords": [
+          "mfa",
+          "multi-factor",
+          "two-factor",
+          "2fa",
+          "authenticator"
+        ]
+      }
+    ],
+    "objectives": [
+      "Ensure passwords are strong enough to resist guessing and brute-force attacks.",
+      "Prevent passwords from being shared, exposed or reused.",
+      "Limit the damage from a compromised password.",
+      "Strengthen authentication beyond passwords where the risk warrants it."
+    ],
+    "principles": [
+      "Passwords are confidential to the individual they are issued to.",
+      "Length matters more than complexity alone.",
+      "A password is never the only protection for sensitive or privileged access.",
+      "Compromised or suspected-compromised passwords are changed immediately."
+    ],
+    "definitions": {
+      "Password": "A secret string used to prove identity.",
+      "Passphrase": "A longer password made of several words.",
+      "Multi-factor authentication": "Verifying identity with two or more independent factors.",
+      "Account lockout": "Temporarily disabling an account after repeated failed sign-in attempts.",
+      "Password manager": "An approved tool that securely stores and generates passwords."
+    },
+    "monitoring": [
+      "Password settings are enforced technically and checked against this policy.",
+      "Failed sign-in and lockout events are monitored.",
+      "Accounts with non-compliant settings are identified and corrected."
+    ]
+  },
+  {
+    "id": "acceptable_use",
+    "name": "Acceptable Use Policy",
+    "code": "AUP",
+    "description": "What users may and may not do with the organization's systems, devices and information.",
+    "purpose": "explain what is and is not acceptable when using the organization's systems, devices, networks and information",
+    "keywords": [
+      "acceptable use",
+      "personal use",
+      "internet use",
+      "email use",
+      "prohibited",
+      "employees must",
+      "users must",
+      "social media",
+      "software installation",
+      "removable media",
+      "monitoring of use"
+    ],
+    "categories": [
+      "employee_responsibilities"
+    ],
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "General Use and Ownership",
+        "keywords": [
+          "own",
+          "business purpose",
+          "personal use",
+          "authoriz"
+        ]
+      },
+      {
+        "title": "Email, Internet and Messaging",
+        "keywords": [
+          "email",
+          "internet",
+          "web",
+          "messag",
+          "social",
+          "phishing"
+        ]
+      },
+      {
+        "title": "Devices and Software",
+        "keywords": [
+          "device",
+          "laptop",
+          "mobile",
+          "software",
+          "install",
+          "removable",
+          "usb"
+        ]
+      },
+      {
+        "title": "Information Handling",
+        "keywords": [
+          "confidential",
+          "data",
+          "shar",
+          "stor",
+          "classif"
+        ]
+      },
+      {
+        "title": "Prohibited Activities",
+        "keywords": [
+          "prohibit",
+          "must not",
+          "not permitted",
+          "illegal",
+          "unauthor"
+        ]
+      }
+    ],
+    "objectives": [
+      "Set clear expectations for the use of the organization's technology and information.",
+      "Protect the organization and its users from misuse.",
+      "Reduce security incidents caused by unsafe behaviour.",
+      "Make users aware that use may be monitored."
+    ],
+    "principles": [
+      "Systems and information are provided for business purposes.",
+      "Users are accountable for activity carried out under their accounts.",
+      "Users behave lawfully, ethically and with respect for others.",
+      "If in doubt about whether something is acceptable, users ask before acting."
+    ],
+    "definitions": {
+      "User": "Anyone who uses the organization's systems or information, including employees, contractors and temporary staff.",
+      "Organizational resources": "Systems, devices, networks, accounts and information provided by the organization.",
+      "Personal use": "Use of organizational resources for non-business purposes.",
+      "Removable media": "Portable storage such as USB drives and external disks."
+    },
+    "monitoring": [
+      "Use of systems may be monitored in line with applicable law and internal rules.",
+      "Users acknowledge this policy when they are given access.",
+      "Violations are handled through the disciplinary process."
+    ]
+  },
+  {
+    "id": "business_continuity",
+    "name": "Business Continuity Policy",
+    "code": "BCP",
+    "description": "How the organization prepares for, responds to and recovers from disruption.",
+    "purpose": "set out how the organization prepares for, responds to and recovers from disruptive events so that critical services continue",
+    "keywords": [
+      "business continuity",
+      "disaster recovery",
+      "continuity plan",
+      "bcp",
+      "drp",
+      "rto",
+      "rpo",
+      "recovery time",
+      "recovery point",
+      "business impact",
+      "bia",
+      "crisis",
+      "failover",
+      "resilience",
+      "critical service"
+    ],
+    "categories": [
+      "business_continuity"
+    ],
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Business Impact Analysis",
+        "keywords": [
+          "impact analysis",
+          "bia",
+          "critical",
+          "priorit",
+          "dependenc"
+        ]
+      },
+      {
+        "title": "Recovery Objectives",
+        "keywords": [
+          "rto",
+          "rpo",
+          "recovery time",
+          "recovery point",
+          "objective"
+        ]
+      },
+      {
+        "title": "Continuity and Recovery Plans",
+        "keywords": [
+          "plan",
+          "procedure",
+          "recover",
+          "failover",
+          "alternate",
+          "restor"
+        ]
+      },
+      {
+        "title": "Crisis Management and Communication",
+        "keywords": [
+          "crisis",
+          "communicat",
+          "escalat",
+          "contact",
+          "team"
+        ]
+      },
+      {
+        "title": "Testing and Exercises",
+        "keywords": [
+          "test",
+          "exercis",
+          "drill",
+          "rehears"
+        ]
+      }
+    ],
+    "objectives": [
+      "Identify critical services and the resources they depend on.",
+      "Define recovery objectives for critical services.",
+      "Maintain plans that enable recovery within those objectives.",
+      "Prove the plans work through regular testing."
+    ],
+    "principles": [
+      "The safety of people comes first in any disruption.",
+      "Recovery priorities follow business impact.",
+      "Plans are kept current, accessible and tested.",
+      "Lessons from tests and real events are fed back into the plans."
+    ],
+    "definitions": {
+      "Business continuity": "The capability to continue delivering services at acceptable levels during a disruption.",
+      "Business impact analysis": "Assessing the effect of disruption on activities over time.",
+      "Recovery time objective": "The target time to restore a service after disruption.",
+      "Recovery point objective": "The maximum tolerable period of data loss.",
+      "Disaster recovery": "Restoring technology systems and data after a disruption."
+    },
+    "monitoring": [
+      "Plans are reviewed and tested at the defined frequency.",
+      "Test results and corrective actions are recorded and tracked.",
+      "Readiness is reported to management."
+    ]
+  },
+  {
+    "id": "asset_management",
+    "name": "Asset Management Policy",
+    "code": "AMP",
+    "description": "How information and technology assets are inventoried, owned, used and disposed of.",
+    "purpose": "define how information and technology assets are identified, inventoried, assigned an owner, protected and disposed of",
+    "keywords": [
+      "asset",
+      "asset inventory",
+      "asset register",
+      "asset owner",
+      "hardware",
+      "software inventory",
+      "cmdb",
+      "disposal",
+      "decommission",
+      "lifecycle",
+      "asset tag",
+      "end of life"
+    ],
+    "categories": [
+      "organizational",
+      "information_security"
+    ],
+    "exclude_sections": [
+      "incident_reporting"
+    ],
+    "topics": [
+      {
+        "title": "Asset Inventory",
+        "keywords": [
+          "inventor",
+          "register",
+          "record",
+          "cmdb",
+          "tag",
+          "identif"
+        ]
+      },
+      {
+        "title": "Ownership and Classification",
+        "keywords": [
+          "owner",
+          "classif",
+          "accountab",
+          "custodian"
+        ]
+      },
+      {
+        "title": "Acceptable Use and Handling",
+        "keywords": [
+          "use",
+          "handl",
+          "issue",
+          "assign",
+          "return"
+        ]
+      },
+      {
+        "title": "Maintenance and Lifecycle",
+        "keywords": [
+          "maintain",
+          "patch",
+          "support",
+          "end of life",
+          "lifecycle",
+          "licen"
+        ]
+      },
+      {
+        "title": "Disposal",
+        "keywords": [
+          "dispos",
+          "decommission",
+          "wipe",
+          "destroy",
+          "saniti"
+        ]
+      }
+    ],
+    "objectives": [
+      "Maintain an accurate inventory of information and technology assets.",
+      "Assign an accountable owner to every asset.",
+      "Protect assets according to their value and sensitivity.",
+      "Dispose of assets securely at the end of their life."
+    ],
+    "principles": [
+      "An asset that is not known cannot be protected.",
+      "Every asset has an owner.",
+      "Assets are returned when they are no longer needed by their holder.",
+      "Data is removed from assets before disposal or reuse."
+    ],
+    "definitions": {
+      "Asset": "Anything of value to the organization, including hardware, software, data and services.",
+      "Asset owner": "The person accountable for an asset throughout its life.",
+      "Asset inventory": "The record of the organization's assets and their attributes.",
+      "Decommissioning": "Retiring an asset from service in a controlled way.",
+      "Sanitization": "Removing data from an asset so it cannot be recovered."
+    },
+    "monitoring": [
+      "The asset inventory is reconciled periodically against what is actually in use.",
+      "Assets without an owner or past end of support are reported.",
+      "Disposal is evidenced with records of sanitization."
+    ]
+  },
+  {
+    "id": "change_management",
+    "name": "Change Management Policy",
+    "code": "CMP",
+    "description": "How changes to systems and services are requested, assessed, approved and implemented.",
+    "purpose": "ensure changes to systems, applications and infrastructure are requested, assessed, approved, tested and implemented in a controlled way",
+    "keywords": [
+      "change management",
+      "change request",
+      "change control",
+      "change approval",
+      "cab",
+      "change advisory",
+      "release",
+      "deployment",
+      "rollback",
+      "emergency change",
+      "production change",
+      "configuration change"
+    ],
+    "categories": [
+      "technical_operational"
+    ],
+    "exclude_sections": [
+      "incident_reporting"
+    ],
+    "topics": [
+      {
+        "title": "Change Requests and Classification",
+        "keywords": [
+          "request",
+          "classif",
+          "standard",
+          "normal",
+          "categor",
+          "record"
+        ]
+      },
+      {
+        "title": "Risk and Impact Assessment",
+        "keywords": [
+          "risk",
+          "impact",
+          "assess",
+          "security review"
+        ]
+      },
+      {
+        "title": "Approval",
+        "keywords": [
+          "approv",
+          "cab",
+          "authoriz",
+          "sign-off"
+        ]
+      },
+      {
+        "title": "Testing and Implementation",
+        "keywords": [
+          "test",
+          "implement",
+          "deploy",
+          "releas",
+          "rollback",
+          "back-out",
+          "window"
+        ]
+      },
+      {
+        "title": "Emergency Changes",
+        "keywords": [
+          "emergency",
+          "urgent",
+          "retrospective"
+        ]
+      }
+    ],
+    "objectives": [
+      "Reduce disruption and security incidents caused by change.",
+      "Ensure changes are assessed and approved before implementation.",
+      "Ensure changes are tested and can be reversed.",
+      "Keep an auditable record of what changed, when and why."
+    ],
+    "principles": [
+      "No change is made to production without authorization.",
+      "The person who requests or builds a change does not approve it alone.",
+      "Every change has a tested way back.",
+      "Emergency changes follow the same rules, compressed, and are reviewed afterwards."
+    ],
+    "definitions": {
+      "Change": "The addition, modification or removal of anything that could affect a system or service.",
+      "Change request": "The formal record proposing a change.",
+      "Change advisory board": "The group that assesses and advises on changes.",
+      "Emergency change": "A change that must be made urgently to restore service or prevent serious harm.",
+      "Rollback": "Returning a system to its state before a change."
+    },
+    "monitoring": [
+      "Changes are sampled to confirm they were approved and tested.",
+      "Failed and unauthorized changes are recorded and investigated.",
+      "Change metrics are reported to management."
+    ]
+  },
+  {
+    "id": "backup_recovery",
+    "name": "Backup and Recovery Policy",
+    "code": "BRP",
+    "description": "How data is backed up, protected and restored.",
+    "purpose": "define how data and systems are backed up, how backups are protected and tested, and how they are restored when needed",
+    "keywords": [
+      "backup",
+      "back-up",
+      "restore",
+      "restoration",
+      "recovery",
+      "backup schedule",
+      "backup retention",
+      "offsite",
+      "off-site",
+      "snapshot",
+      "replication",
+      "rpo",
+      "rto",
+      "restore test",
+      "immutable"
+    ],
+    "categories": [
+      "business_continuity",
+      "technical_operational"
+    ],
+    "exclude_sections": [
+      "incident_reporting"
+    ],
+    "topics": [
+      {
+        "title": "Backup Scope and Frequency",
+        "keywords": [
+          "scope",
+          "frequen",
+          "daily",
+          "weekly",
+          "schedul",
+          "incremental",
+          "full"
+        ]
+      },
+      {
+        "title": "Backup Storage and Protection",
+        "keywords": [
+          "stor",
+          "offsite",
+          "off-site",
+          "encrypt",
+          "immutable",
+          "access",
+          "location",
+          "replicat"
+        ]
+      },
+      {
+        "title": "Retention",
+        "keywords": [
+          "retention",
+          "retain",
+          "keep",
+          "archiv"
+        ]
+      },
+      {
+        "title": "Restoration and Testing",
+        "keywords": [
+          "restor",
+          "test",
+          "recover",
+          "verif",
+          "rto",
+          "rpo"
+        ]
+      },
+      {
+        "title": "Monitoring of Backup Jobs",
+        "keywords": [
+          "monitor",
+          "fail",
+          "alert",
+          "report",
+          "job"
+        ]
+      }
+    ],
+    "objectives": [
+      "Ensure data can be recovered after loss, corruption or attack.",
+      "Meet the organization's recovery objectives.",
+      "Protect backups from unauthorized access and tampering.",
+      "Prove recoverability through regular restore tests."
+    ],
+    "principles": [
+      "A backup is only as good as its last successful restore test.",
+      "Backups are kept separate from the systems they protect.",
+      "Backups receive the same protection as the data they contain.",
+      "Backup failures are treated as incidents and resolved promptly."
+    ],
+    "definitions": {
+      "Backup": "A copy of data kept so it can be restored after loss.",
+      "Recovery point objective": "The maximum tolerable period of data loss.",
+      "Recovery time objective": "The target time to restore a service.",
+      "Restore test": "A test that data can actually be recovered from a backup.",
+      "Offsite backup": "A backup stored at a different location from the original data."
+    },
+    "monitoring": [
+      "Backup job results are monitored and failures followed up.",
+      "Restore tests are performed at the defined frequency and recorded.",
+      "Backup coverage is reviewed when systems are added or changed."
+    ]
+  },
+  {
+    "id": "remote_work",
+    "name": "Remote Work Security Policy",
+    "code": "RWP",
+    "description": "Security requirements for working outside the organization's premises.",
+    "purpose": "set the security requirements for working outside the organization's premises, including home and mobile working",
+    "keywords": [
+      "remote work",
+      "remote working",
+      "work from home",
+      "teleworking",
+      "telework",
+      "home working",
+      "vpn",
+      "byod",
+      "personal device",
+      "public wi-fi",
+      "mobile device",
+      "remote access",
+      "hybrid working"
+    ],
+    "categories": [
+      "employee_responsibilities",
+      "access_control",
+      "technical_operational"
+    ],
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Remote Access",
+        "keywords": [
+          "vpn",
+          "remote access",
+          "connect",
+          "mfa",
+          "authenticat"
+        ]
+      },
+      {
+        "title": "Device Security",
+        "keywords": [
+          "device",
+          "laptop",
+          "byod",
+          "personal",
+          "encrypt",
+          "patch",
+          "antivirus",
+          "mobile"
+        ]
+      },
+      {
+        "title": "Networks and Connectivity",
+        "keywords": [
+          "wi-fi",
+          "wifi",
+          "network",
+          "public",
+          "home router",
+          "hotspot"
+        ]
+      },
+      {
+        "title": "Information Handling at Remote Locations",
+        "keywords": [
+          "print",
+          "paper",
+          "screen",
+          "confidential",
+          "stor",
+          "privacy",
+          "shar"
+        ]
+      },
+      {
+        "title": "Loss, Theft and Incidents",
+        "keywords": [
+          "loss",
+          "lost",
+          "theft",
+          "stolen",
+          "incident",
+          "report"
+        ]
+      }
+    ],
+    "objectives": [
+      "Give remote workers secure access to the systems they need.",
+      "Protect organizational information on devices and networks outside the organization's control.",
+      "Ensure remote workers know their security responsibilities.",
+      "Ensure lost or stolen devices are reported and handled quickly."
+    ],
+    "principles": [
+      "The same level of security applies wherever work is done.",
+      "Remote connections to internal systems are authenticated and encrypted.",
+      "Organizational information stays on approved devices and services.",
+      "Remote workers take reasonable care to keep information from being overseen or overheard."
+    ],
+    "definitions": {
+      "Remote work": "Work carried out away from the organization's premises.",
+      "Virtual private network": "An encrypted connection to the organization's network.",
+      "Bring your own device": "Using a personally owned device for work.",
+      "Public network": "A network not controlled by the organization or the user, such as public Wi-Fi.",
+      "Approved device": "A device that meets the organization's security requirements and is authorized for work."
+    },
+    "monitoring": [
+      "Remote connections are logged and monitored.",
+      "Devices used for remote work are checked for compliance with security requirements.",
+      "Lost and stolen device reports are tracked to closure."
+    ]
+  }
+]
