@@ -81,6 +81,7 @@ export const analysis = {
 const block = (type, extra) => ({ type, text: '', items: [], statements: [], columns: [], rows: [], ...extra });
 
 export const report = {
+  readiness: { structure_checked: true, ready_for_approval: false, missing_information: [{ label: 'list of systems in scope', placeholder: '[To be confirmed: list of systems in scope]', sections: ['scope'] }], review_checks: [], blocking_issues: [] },
   id: 'r1',
   title: 'Access Control Policy',
   policy_type: 'access_control',

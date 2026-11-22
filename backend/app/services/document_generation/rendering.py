@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 from pathlib import Path
 
 from app.core.logging import get_logger
@@ -18,6 +20,12 @@ MEDIA_TYPES = {
     "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     "pdf": "application/pdf",
 }
+LAYOUT_VERSION = "sapres-ims-v5"
+
+
+def _layout_stamp(policy: Policy, version: PolicyVersion, analysis: Analysis) -> str:
+    model = build_document_model(policy, version, analysis)
+    return hashlib.sha256(json.dumps([LAYOUT_VERSION, model], sort_keys=True).encode()).hexdigest()
 
 
 class RenderError(Exception):
@@ -37,7 +45,9 @@ def render_version(policy: Policy, version: PolicyVersion, analysis: Analysis, f
         try:
             renderer(model, partial)
             partial.replace(target)
-        except Exception as exc:  # noqa: BLE001 - any library failure becomes a clear rendering error
+            storage.persist(target)
+            storage.write_json(target.with_name(target.name + ".layout.json"), {"stamp": _layout_stamp(policy, version, analysis)})
+        except Exception as exc:
             storage.remove(partial)
             logger.error(
                 "document rendering failed",
@@ -52,6 +62,12 @@ def render_version(policy: Policy, version: PolicyVersion, analysis: Analysis, f
 def ensure_rendered(policy: Policy, version: PolicyVersion, analysis: Analysis, fmt: str) -> Path:
     """Return the rendered file for a version, creating it if it is not cached."""
     target = storage.report_path(policy.id, version.version_number, fmt)
-    if not target.exists():
+    storage.materialize(target)
+    marker = target.with_name(target.name + ".layout.json")
+    try:
+        stamp = storage.read_json(marker).get("stamp")
+    except (FileNotFoundError, ValueError):
+        stamp = None
+    if not target.exists() or stamp != _layout_stamp(policy, version, analysis):
         render_version(policy, version, analysis, [fmt])
     return target

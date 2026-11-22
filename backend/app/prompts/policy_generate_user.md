@@ -2,7 +2,9 @@
 
 Write a complete **{{policy_name}}** for the organization described by the configuration and analysis below.
 
-The analysis may cover more subjects than this policy does, especially when several documents were uploaded. Build the policy from the findings that belong in a {{policy_name}}. Findings on unrelated subjects should not be turned into requirements here; they stay available to the reader in the appendices, and you can mention in one sentence that they exist.
+{{document_guidance}}
+
+Build every section from findings that belong in a {{policy_name}}, including objectives, responsibilities, risks, controls and monitoring. Do not copy a general ISMS assessment into a specialist document. When a vendor risk is not evidenced, describe a proposed vendor assessment requirement rather than asserting that the vendor has that weakness.
 
 ### Configuration
 
@@ -22,7 +24,7 @@ Write these sections, in this order, using exactly these `id` and `heading` valu
 
 {{sections}}
 
-The application adds the cover page, document control, version history, table of contents and the appendices (risk register, control matrix, gap analysis, evidence mapping) itself, so do not write those. You may refer to them, for example "see the Risk Register appendix".
+The application adds the cover page, document identity, change history and contents itself. There are NO appendices. Do not add or refer to an appendix, annex or evidence mapping attachment. Put necessary requirements and relevant risk treatments in the main sections.
 
 ### Block types
 

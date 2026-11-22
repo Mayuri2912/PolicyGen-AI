@@ -123,6 +123,7 @@ class _TimeLimitReached(Exception):
 
 
 class OpenRouterProvider(LLMProvider):
+    api_url = API_URL
     name = "openrouter"
     display_name = "OpenRouter"
     service_name = "OpenRouter API"
@@ -166,11 +167,11 @@ class OpenRouterProvider(LLMProvider):
             limit = None if limit_lifted else self._max_output_tokens
             body = self._body(request, limit)
             logger.info(
-                "openrouter call started",
+                "provider call started",
                 extra={
-                    "task": request.task, "model": self.model, "attempt": attempt, "response_format": self._format,
+                    "provider": self.name, "task": request.task, "model": self.model, "attempt": attempt, "response_format": self._format,
                     "prompt_chars": len(request.system) + len(request.user), "max_tokens": limit or 0,
-                    "time_limit_seconds": int(self._timeout),
+                    "time_limit_seconds": int(min(self._timeout, request.timeout_seconds or self._timeout)),
                 },
             )
             try:
@@ -190,7 +191,7 @@ class OpenRouterProvider(LLMProvider):
                     timed_out = True
                     retries_left -= 1
                     continue
-                raise self._time_limit_error(exc) from None
+                raise self._time_limit_error(exc, request.timeout_seconds) from None
             except httpx.TimeoutException as exc:
                 if retries_left > 0:
                     retries_left -= 1
@@ -215,14 +216,14 @@ class OpenRouterProvider(LLMProvider):
                 except LLMError as exc:
                     # A free model costs nothing, so the limit protects nothing:
                     # ask once more and let the model use its own maximum.
-                    if exc.code == "llm_output_truncated" and limit and self._is_free_model():
+                    if exc.code == "llm_output_truncated" and limit and self._is_free_model() and self._max_retries > 0:
                         logger.warning("openrouter answer was cut off; retrying without the output limit")
                         limit_lifted = True
                         continue
                     raise
 
             detail_lower = detail.lower()
-            logger.warning("openrouter returned an error", extra={"status_code": code, "detail": self._redact(detail)})
+            logger.warning("provider returned an error", extra={"provider": self.name, "status_code": code, "detail": self._redact(detail)})
             daily_limit = code == 429 and any(hint in detail_lower for hint in _DAILY_LIMIT_HINTS)
             if code in _TRANSIENT and not daily_limit and retries_left > 0:
                 retries_left -= 1
@@ -230,7 +231,12 @@ class OpenRouterProvider(LLMProvider):
                 continue
             if self._degrade(code, detail_lower):
                 continue
-            raise self._to_error(code, detail_lower)
+            error = self._to_error(code, detail_lower)
+            if isinstance(error, LLMRateLimitError):
+                error.retry_after_seconds = self._server_wait(response, payload)
+                if error.code == "llm_quota_exceeded" and error.retry_after_seconds is None:
+                    error.retry_after_seconds = 86400
+            raise error
 
     def _send(self, request: LLMRequest, body: dict, attempt: int) -> tuple[httpx.Response, dict]:
         """POST the request and read the answer as it arrives, under one total time limit.
@@ -246,7 +252,7 @@ class OpenRouterProvider(LLMProvider):
         def tick() -> None:
             nonlocal reported
             now = self._monotonic()
-            if now - started > self._timeout:
+            if now - started > min(self._timeout, request.timeout_seconds or self._timeout):
                 raise _TimeLimitReached(now - started, state)
             if state["answer_chars"] and now - state["last_text_at"] > _STALL_SECONDS:
                 raise _TimeLimitReached(now - started, state, stalled=True)
@@ -255,7 +261,7 @@ class OpenRouterProvider(LLMProvider):
                 phase = "writing" if state["answer_chars"] else "reasoning" if state["reasoning_chars"] else "waiting"
                 request.observer({"model": state["model"] or self.model, "phase": phase, "elapsed": now - started, "attempt": attempt})
 
-        with self._client.stream("POST", API_URL, headers=self._headers(), json=body) as response:
+        with self._client.stream("POST", self.api_url, headers=self._headers(), json=body) as response:
             if "text/event-stream" not in response.headers.get("content-type", ""):
                 raw = bytearray()
                 for piece in response.iter_bytes():
@@ -311,8 +317,8 @@ class OpenRouterProvider(LLMProvider):
                 ]
             return response, payload
 
-    def _time_limit_error(self, reached: _TimeLimitReached) -> LLMTimeoutError:
-        model, seconds = reached.state["model"] or self.model, int(self._timeout)
+    def _time_limit_error(self, reached: _TimeLimitReached, timeout_seconds=None) -> LLMTimeoutError:
+        model, seconds = reached.state["model"] or self.model, int(min(self._timeout, timeout_seconds or self._timeout))
         if reached.stalled:
             return LLMTimeoutError(
                 f"The model {model} stopped part-way through its answer (nothing more arrived for {int(_STALL_SECONDS)} s). "

@@ -14,27 +14,27 @@ export const DEFAULT_CONFIG = {
   review_frequency: 'Annually',
   classification: 'Internal',
   custom_title: '',
+  delivery_scope: 'unknown',
+  customer_obligations: '', assigned_roles: '', approved_timings: '', approved_tools: '', applicable_obligations: '',
   writing_style: 'formal',
   detail_level: 'standard',
-  include_risk_register: true,
-  include_control_matrix: true,
-  include_gap_analysis: true,
-  include_source_references: true,
+  include_risk_register: false,
+  include_control_matrix: false,
+  include_gap_analysis: false,
+  include_source_references: false,
   output_formats: ['docx', 'pdf'],
 };
 
-const OPTIONAL_SECTIONS = [
-  ['include_risk_register', 'Risk register', 'Appendix listing every identified risk with its score and a risk matrix.'],
-  ['include_control_matrix', 'Control matrix', 'Appendix mapping requirements to risks and to existing and recommended controls.'],
-  ['include_gap_analysis', 'Gap analysis', 'Appendix comparing each requirement with the documented evidence.'],
-  ['include_source_references', 'Source references', 'Appendix tracing each policy statement back to the uploaded document it came from.'],
-];
 const REVIEW_OPTIONS = ['Quarterly', 'Every six months', 'Annually', 'Every two years'];
 const CLASSIFICATIONS = ['Public', 'Internal', 'Confidential', 'Restricted'];
 
 export function PolicyConfigForm({ config, policyTypes, recommendations, detectedOrganization, initial, onSubmit, submitting }) {
   const [values, setValues] = useState({ ...DEFAULT_CONFIG, ...initial });
   const [errors, setErrors] = useState({});
+  const [typeSearch, setTypeSearch] = useState('');
+  const [category, setCategory] = useState('all');
+  const group = (type) => /continuity|disaster|bcdr/i.test(type.name) ? 'Continuity' : /vendor|supplier/i.test(type.name) ? 'Supplier management' : /ISMS|security|configuration/i.test(type.management_system + ' ' + type.name) ? 'ISMS' : 'Other governance';
+  const filteredTypes = policyTypes.filter((type) => type.id === values.policy_type || ((category === 'all' || group(type) === category) && `${type.code} ${type.name} ${type.description}`.toLowerCase().includes(typeSearch.toLowerCase())));
   const set = (name, value) => setValues((current) => ({ ...current, [name]: value }));
   const recommended = recommendations?.[0];
   const selectedType = policyTypes.find((type) => type.id === values.policy_type);
@@ -57,6 +57,8 @@ export function PolicyConfigForm({ config, policyTypes, recommendations, detecte
     <form onSubmit={submit} noValidate className="config-form">
       <section className="card">
         <h2>Policy type</h2>
+        <div className="form-grid"><label className="field"><span>Search policy types</span><input type="search" value={typeSearch} onChange={(e) => setTypeSearch(e.target.value)} placeholder="Search name, code or topic" /></label>
+        <label className="field"><span>Policy category</span><select value={category} onChange={(e) => setCategory(e.target.value)}><option value="all">All categories</option>{['ISMS', 'Continuity', 'Supplier management', 'Other governance'].map((g) => <option key={g}>{g}</option>)}</select></label></div>
         {recommended && (
           <div className="recommendation" aria-label="Recommended policy type">
             <div className="recommendation-head">
@@ -104,9 +106,9 @@ export function PolicyConfigForm({ config, policyTypes, recommendations, detecte
             aria-describedby={errors.policy_type ? 'err-policy-type' : undefined}
           >
             <option value="">Select a policy type…</option>
-            {policyTypes.map((type) => (
+            {filteredTypes.map((type) => (
               <option key={type.id} value={type.id}>
-                {type.name}
+                {type.code ? `${type.code} - ` : ''}{type.name}
                 {recommended?.policy_type === type.id ? ' (recommended)' : ''}
               </option>
             ))}
@@ -228,20 +230,14 @@ export function PolicyConfigForm({ config, policyTypes, recommendations, detecte
       </section>
 
       <section className="card">
-        <h2>Optional sections and output</h2>
+        <h2>Organisation and project context</h2>
+        <p>Provide confirmed facts or references to approved records. Leave unknown details blank; the draft must not invent tools, deadlines or legal obligations.</p>
+        <label className="field"><span>Delivery scope</span><select value={values.delivery_scope} onChange={(e) => set('delivery_scope', e.target.value)}><option value="unknown">To be confirmed</option><option value="internal">Internally managed services</option><option value="customer">Customer-managed projects</option><option value="both">Both internal and customer-managed</option></select></label>
+        <div className="form-grid">{[['customer_obligations', 'Customer contracts, shared responsibilities and recovery requirements'], ['assigned_roles', 'Actual roles, deputies and approval authority'], ['approved_timings', 'Approved response times, RTO/RPO, review frequencies and retention'], ['approved_tools', 'Internal tools and approved customer repositories/processes'], ['applicable_obligations', 'Confirmed regulations, standards and obligations register']].map(([key, label]) => <label className="field" key={key}><span>{label}</span><textarea rows={3} maxLength={key === 'customer_obligations' ? 4000 : 2000} value={values[key]} onChange={(e) => set(key, e.target.value)} /></label>)}</div>
+      </section>
+      <section className="card">
+        <h2>Document output</h2>
         <div className="form-grid">
-          <fieldset className="choice-group">
-            <legend>Appendices to include</legend>
-            {OPTIONAL_SECTIONS.map(([name, label, help]) => (
-              <label key={name} className="choice">
-                <input type="checkbox" checked={values[name]} onChange={(e) => set(name, e.target.checked)} />
-                <span>
-                  <strong>{label}</strong>
-                  <span className="muted small">{help}</span>
-                </span>
-              </label>
-            ))}
-          </fieldset>
           <fieldset className="choice-group" aria-describedby={errors.output_formats ? 'err-formats' : undefined}>
             <legend>Output format</legend>
             {[

@@ -34,20 +34,25 @@ _TABLE_RULE = re.compile(r"^\|?[\s:\-|]+\|?$")
 
 
 def clean_blocks(blocks: list[PolicyBlock]) -> list[dict]:
-    """Drop empty blocks and make every table rectangular."""
+    """Normalize mixed model blocks without losing their text, lists or statements."""
     cleaned = []
     for block in blocks:
-        if block.is_empty():
-            continue
-        data = block.model_dump()
-        if block.type == "table":
+        # Some providers return a paragraph label and its list in one block.
+        # Split each populated payload into the type that can render it.
+        if block.text.strip():
+            kind = "subheading" if block.type == "subheading" else "paragraph"
+            cleaned.append(PolicyBlock(type=kind, text=block.text.strip()).model_dump())
+        items = [item.strip() for item in block.items if item.strip()]
+        if items:
+            kind = "numbered" if block.type == "numbered" else "bullets"
+            cleaned.append(PolicyBlock(type=kind, items=items).model_dump())
+        if block.statements:
+            cleaned.append(PolicyBlock(type="statements", statements=block.statements).model_dump())
+        if block.columns and block.rows:
             width = len(block.columns)
-            data["rows"] = [(row + [""] * width)[:width] for row in block.rows if any(c.strip() for c in row)]
-            if not data["rows"]:
-                continue
-        elif block.type in ("bullets", "numbered"):
-            data["items"] = [i.strip() for i in block.items if i.strip()]
-        cleaned.append(data)
+            rows = [(row + [""] * width)[:width] for row in block.rows if any(cell.strip() for cell in row)]
+            if rows:
+                cleaned.append(PolicyBlock(type="table", columns=block.columns, rows=rows).model_dump())
     return cleaned
 
 
@@ -60,6 +65,14 @@ def normalise_sections(sections: list[PolicySection], template: PolicyTemplate, 
     by_id: dict[str, dict] = {}
     for section in sections:
         section_id = section.id.strip().lower()
+        if section_id == "principles":
+            section_id = "objectives"
+            if section_id in by_id:
+                by_id[section_id]["blocks"].extend(clean_blocks(section.blocks))
+                continue
+        if section_id == "objectives" and section_id in by_id:
+            by_id[section_id]["blocks"].extend(clean_blocks(section.blocks))
+            continue
         if section_id in by_id or (section_id not in specs and is_retired(section_id, section.heading)):
             continue
         heading = specs[section_id].heading if section_id in specs else section.heading.strip()

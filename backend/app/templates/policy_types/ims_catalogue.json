@@ -1,0 +1,4193 @@
+[
+  {
+    "id": "ims_i_01",
+    "name": "IMS Manual / Management-System Overview",
+    "code": "I-01",
+    "management_system": "Integrated",
+    "document_kind": "manual",
+    "description": "I-01 | Integrated | IMS Manual / Management-System Overview. Covers Management system boundaries, Governance and accountability, QMS and ISMS process interactions, Objectives and performance, Audit management review and improvement.",
+    "purpose": "define the responsibilities and operational controls for ims manual / management-system overview",
+    "keywords": [
+      "manual",
+      "system",
+      "overview",
+      "management",
+      "boundaries",
+      "governance",
+      "accountability",
+      "process",
+      "interactions",
+      "objectives",
+      "performance",
+      "improvement"
+    ],
+    "categories": [],
+    "broad": true,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Management system boundaries",
+        "keywords": [
+          "management",
+          "system",
+          "boundaries"
+        ]
+      },
+      {
+        "title": "Governance and accountability",
+        "keywords": [
+          "governance",
+          "accountability"
+        ]
+      },
+      {
+        "title": "QMS and ISMS process interactions",
+        "keywords": [
+          "process",
+          "interactions"
+        ]
+      },
+      {
+        "title": "Objectives and performance",
+        "keywords": [
+          "objectives",
+          "performance"
+        ]
+      },
+      {
+        "title": "Audit management review and improvement",
+        "keywords": [
+          "audit",
+          "management",
+          "review",
+          "improvement"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for management system boundaries.",
+      "Establish clear requirements and ownership for governance and accountability.",
+      "Establish clear requirements and ownership for qms and isms process interactions."
+    ],
+    "principles": [
+      "Decisions about management system boundaries are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of audit management review and improvement at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Management system boundaries; Governance and accountability; QMS and ISMS process interactions; Objectives and performance; Audit management review and improvement. ",
+      "procedures": "Give operational steps for Management system boundaries; Governance and accountability; QMS and ISMS process interactions; Objectives and performance; Audit management review and improvement with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting IMS Manual / Management-System Overview. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_i_15",
+    "name": "IMS Manual / scope / process map",
+    "code": "I-15",
+    "management_system": "Integrated",
+    "document_kind": "manual",
+    "description": "I-15 | Integrated | IMS Manual / scope / process map. Covers Scope and exclusions, Services locations and interfaces, Process map inputs and outputs, Process owners and handoffs, Outsourced processes and control points.",
+    "purpose": "define the responsibilities and operational controls for ims manual / scope / process map",
+    "keywords": [
+      "manual",
+      "scope",
+      "process",
+      "exclusions",
+      "services",
+      "locations",
+      "interfaces",
+      "inputs",
+      "outputs",
+      "owners",
+      "handoffs",
+      "outsourced",
+      "processes",
+      "control",
+      "points"
+    ],
+    "categories": [],
+    "broad": true,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Scope and exclusions",
+        "keywords": [
+          "scope",
+          "exclusions"
+        ]
+      },
+      {
+        "title": "Services locations and interfaces",
+        "keywords": [
+          "services",
+          "locations",
+          "interfaces"
+        ]
+      },
+      {
+        "title": "Process map inputs and outputs",
+        "keywords": [
+          "process",
+          "inputs",
+          "outputs"
+        ]
+      },
+      {
+        "title": "Process owners and handoffs",
+        "keywords": [
+          "process",
+          "owners",
+          "handoffs"
+        ]
+      },
+      {
+        "title": "Outsourced processes and control points",
+        "keywords": [
+          "outsourced",
+          "processes",
+          "control",
+          "points"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for scope and exclusions.",
+      "Establish clear requirements and ownership for services locations and interfaces.",
+      "Establish clear requirements and ownership for process map inputs and outputs."
+    ],
+    "principles": [
+      "Decisions about scope and exclusions are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of outsourced processes and control points at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Scope and exclusions; Services locations and interfaces; Process map inputs and outputs; Process owners and handoffs; Outsourced processes and control points. ",
+      "procedures": "Give operational steps for Scope and exclusions; Services locations and interfaces; Process map inputs and outputs; Process owners and handoffs; Outsourced processes and control points with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting IMS Manual / scope / process map. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_i_02",
+    "name": "Context, Interested Parties and Scope Procedure",
+    "code": "I-02",
+    "management_system": "Integrated",
+    "document_kind": "procedure",
+    "description": "I-02 | Integrated | Context, Interested Parties and Scope Procedure. Covers Internal and external context, Interested party requirements, Scope decisions and exclusions, Change triggers, Approval and retained context records.",
+    "purpose": "define the responsibilities and operational controls for context, interested parties and scope procedure",
+    "keywords": [
+      "context",
+      "interested",
+      "parties",
+      "scope",
+      "internal",
+      "external",
+      "decisions",
+      "exclusions",
+      "change",
+      "triggers",
+      "retained"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Internal and external context",
+        "keywords": [
+          "internal",
+          "external",
+          "context"
+        ]
+      },
+      {
+        "title": "Interested party requirements",
+        "keywords": [
+          "interested",
+          "party",
+          "requirements"
+        ]
+      },
+      {
+        "title": "Scope decisions and exclusions",
+        "keywords": [
+          "scope",
+          "decisions",
+          "exclusions"
+        ]
+      },
+      {
+        "title": "Change triggers",
+        "keywords": [
+          "change",
+          "triggers"
+        ]
+      },
+      {
+        "title": "Approval and retained context records",
+        "keywords": [
+          "approval",
+          "retained",
+          "context",
+          "records"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for internal and external context.",
+      "Establish clear requirements and ownership for interested party requirements.",
+      "Establish clear requirements and ownership for scope decisions and exclusions."
+    ],
+    "principles": [
+      "Decisions about internal and external context are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of approval and retained context records at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Internal and external context; Interested party requirements; Scope decisions and exclusions; Change triggers; Approval and retained context records. ",
+      "procedures": "Give operational steps for Internal and external context; Interested party requirements; Scope decisions and exclusions; Change triggers; Approval and retained context records with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Context, Interested Parties and Scope Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_i_03",
+    "name": "Integrated Risk and Opportunity Management Procedure",
+    "code": "I-03",
+    "management_system": "Integrated",
+    "document_kind": "procedure",
+    "description": "I-03 | Integrated | Integrated Risk and Opportunity Management Procedure. Covers Risk and opportunity identification, Assessment criteria, Treatment decisions and ownership, Opportunity implementation, Residual risk acceptance and review.",
+    "purpose": "define the responsibilities and operational controls for integrated risk and opportunity management procedure",
+    "keywords": [
+      "risk",
+      "opportunity",
+      "identification",
+      "assessment",
+      "criteria",
+      "treatment",
+      "decisions",
+      "implementation",
+      "residual",
+      "acceptance"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Risk and opportunity identification",
+        "keywords": [
+          "opportunity",
+          "identification"
+        ]
+      },
+      {
+        "title": "Assessment criteria",
+        "keywords": [
+          "assessment",
+          "criteria"
+        ]
+      },
+      {
+        "title": "Treatment decisions and ownership",
+        "keywords": [
+          "treatment",
+          "decisions",
+          "ownership"
+        ]
+      },
+      {
+        "title": "Opportunity implementation",
+        "keywords": [
+          "opportunity",
+          "implementation"
+        ]
+      },
+      {
+        "title": "Residual risk acceptance and review",
+        "keywords": [
+          "residual",
+          "acceptance",
+          "review"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for risk and opportunity identification.",
+      "Establish clear requirements and ownership for assessment criteria.",
+      "Establish clear requirements and ownership for treatment decisions and ownership."
+    ],
+    "principles": [
+      "Decisions about risk and opportunity identification are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of residual risk acceptance and review at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Risk and opportunity identification; Assessment criteria; Treatment decisions and ownership; Opportunity implementation; Residual risk acceptance and review. ",
+      "procedures": "Give operational steps for Risk and opportunity identification; Assessment criteria; Treatment decisions and ownership; Opportunity implementation; Residual risk acceptance and review with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Integrated Risk and Opportunity Management Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_i_04",
+    "name": "Integrated Policy Framework",
+    "code": "I-04",
+    "management_system": "Integrated",
+    "document_kind": "policy",
+    "description": "I-04 | Integrated | Integrated Policy Framework. Covers Integrated management commitments, Policy hierarchy and ownership, Quality and information security alignment, Communication and adoption, Review and change control.",
+    "purpose": "define the responsibilities and operational controls for integrated policy framework",
+    "keywords": [
+      "framework",
+      "integrated",
+      "management",
+      "commitments",
+      "policy",
+      "hierarchy",
+      "quality",
+      "information",
+      "security",
+      "alignment",
+      "communication",
+      "adoption",
+      "change",
+      "control"
+    ],
+    "categories": [],
+    "broad": true,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Integrated management commitments",
+        "keywords": [
+          "integrated",
+          "management",
+          "commitments"
+        ]
+      },
+      {
+        "title": "Policy hierarchy and ownership",
+        "keywords": [
+          "policy",
+          "hierarchy",
+          "ownership"
+        ]
+      },
+      {
+        "title": "Quality and information security alignment",
+        "keywords": [
+          "quality",
+          "information",
+          "security",
+          "alignment"
+        ]
+      },
+      {
+        "title": "Communication and adoption",
+        "keywords": [
+          "communication",
+          "adoption"
+        ]
+      },
+      {
+        "title": "Review and change control",
+        "keywords": [
+          "review",
+          "change",
+          "control"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for integrated management commitments.",
+      "Establish clear requirements and ownership for policy hierarchy and ownership.",
+      "Establish clear requirements and ownership for quality and information security alignment."
+    ],
+    "principles": [
+      "Decisions about integrated management commitments are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of review and change control at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Integrated management commitments; Policy hierarchy and ownership; Quality and information security alignment; Communication and adoption; Review and change control. ",
+      "procedures": "Give operational steps for Integrated management commitments; Policy hierarchy and ownership; Quality and information security alignment; Communication and adoption; Review and change control with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Integrated Policy Framework. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_i_05",
+    "name": "Objectives, KPIs and Improvement Plan",
+    "code": "I-05",
+    "management_system": "Integrated",
+    "document_kind": "plan",
+    "description": "I-05 | Integrated | Objectives, KPIs and Improvement Plan. Covers Objectives and measurable targets, KPI definitions formulas sources and owners, Improvement actions and resources, Reporting intervals, Escalation and progress reviews.",
+    "purpose": "define the responsibilities and operational controls for objectives, kpis and improvement plan",
+    "keywords": [
+      "objectives",
+      "kpis",
+      "improvement",
+      "plan",
+      "measurable",
+      "targets",
+      "definitions",
+      "formulas",
+      "sources",
+      "owners",
+      "actions",
+      "resources",
+      "reporting",
+      "intervals",
+      "escalation",
+      "progress",
+      "reviews"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Objectives and measurable targets",
+        "keywords": [
+          "objectives",
+          "measurable",
+          "targets"
+        ]
+      },
+      {
+        "title": "KPI definitions formulas sources and owners",
+        "keywords": [
+          "definitions",
+          "formulas",
+          "sources",
+          "owners"
+        ]
+      },
+      {
+        "title": "Improvement actions and resources",
+        "keywords": [
+          "improvement",
+          "actions",
+          "resources"
+        ]
+      },
+      {
+        "title": "Reporting intervals",
+        "keywords": [
+          "reporting",
+          "intervals"
+        ]
+      },
+      {
+        "title": "Escalation and progress reviews",
+        "keywords": [
+          "escalation",
+          "progress",
+          "reviews"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for objectives and measurable targets.",
+      "Establish clear requirements and ownership for kpi definitions formulas sources and owners.",
+      "Establish clear requirements and ownership for improvement actions and resources."
+    ],
+    "principles": [
+      "Decisions about objectives and measurable targets are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of escalation and progress reviews at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Objectives and measurable targets; KPI definitions formulas sources and owners; Improvement actions and resources; Reporting intervals; Escalation and progress reviews. Include usable main-body register or matrix tables with defined columns, responsible roles, applicability, status and evidence. Unknown entries remain placeholders; never claim controls were implemented or audits completed without source evidence.",
+      "procedures": "Give operational steps for Objectives and measurable targets; KPI definitions formulas sources and owners; Improvement actions and resources; Reporting intervals; Escalation and progress reviews with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Objectives, KPIs and Improvement Plan. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_i_06",
+    "name": "Competence, Awareness and Training Procedure",
+    "code": "I-06",
+    "management_system": "Integrated",
+    "document_kind": "procedure",
+    "description": "I-06 | Integrated | Competence, Awareness and Training Procedure. Covers Competence requirements by role, Skills and training needs, Training delivery and awareness, Effectiveness evaluation, Competence evidence and refresher triggers.",
+    "purpose": "define the responsibilities and operational controls for competence, awareness and training procedure",
+    "keywords": [
+      "competence",
+      "awareness",
+      "training",
+      "skills",
+      "delivery",
+      "effectiveness",
+      "evaluation",
+      "refresher",
+      "triggers"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Competence requirements by role",
+        "keywords": [
+          "competence",
+          "requirements"
+        ]
+      },
+      {
+        "title": "Skills and training needs",
+        "keywords": [
+          "skills",
+          "training",
+          "needs"
+        ]
+      },
+      {
+        "title": "Training delivery and awareness",
+        "keywords": [
+          "training",
+          "delivery",
+          "awareness"
+        ]
+      },
+      {
+        "title": "Effectiveness evaluation",
+        "keywords": [
+          "effectiveness",
+          "evaluation"
+        ]
+      },
+      {
+        "title": "Competence evidence and refresher triggers",
+        "keywords": [
+          "competence",
+          "evidence",
+          "refresher",
+          "triggers"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for competence requirements by role.",
+      "Establish clear requirements and ownership for skills and training needs.",
+      "Establish clear requirements and ownership for training delivery and awareness."
+    ],
+    "principles": [
+      "Decisions about competence requirements by role are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of competence evidence and refresher triggers at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Competence requirements by role; Skills and training needs; Training delivery and awareness; Effectiveness evaluation; Competence evidence and refresher triggers. ",
+      "procedures": "Give operational steps for Competence requirements by role; Skills and training needs; Training delivery and awareness; Effectiveness evaluation; Competence evidence and refresher triggers with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Competence, Awareness and Training Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_i_07",
+    "name": "Documented Information and Records Control Procedure",
+    "code": "I-07",
+    "management_system": "Integrated",
+    "document_kind": "procedure",
+    "description": "I-07 | Integrated | Documented Information and Records Control Procedure. Covers Document identification and approval, Version changes and distribution, Record retention and protection, External document control, Obsolete document withdrawal and disposal.",
+    "purpose": "define the responsibilities and operational controls for documented information and records control procedure",
+    "keywords": [
+      "documented",
+      "records",
+      "control",
+      "document",
+      "identification",
+      "version",
+      "changes",
+      "distribution",
+      "record",
+      "retention",
+      "protection",
+      "external",
+      "obsolete",
+      "withdrawal",
+      "disposal"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Document identification and approval",
+        "keywords": [
+          "document",
+          "identification",
+          "approval"
+        ]
+      },
+      {
+        "title": "Version changes and distribution",
+        "keywords": [
+          "version",
+          "changes",
+          "distribution"
+        ]
+      },
+      {
+        "title": "Record retention and protection",
+        "keywords": [
+          "record",
+          "retention",
+          "protection"
+        ]
+      },
+      {
+        "title": "External document control",
+        "keywords": [
+          "external",
+          "document",
+          "control"
+        ]
+      },
+      {
+        "title": "Obsolete document withdrawal and disposal",
+        "keywords": [
+          "obsolete",
+          "document",
+          "withdrawal",
+          "disposal"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for document identification and approval.",
+      "Establish clear requirements and ownership for version changes and distribution.",
+      "Establish clear requirements and ownership for record retention and protection."
+    ],
+    "principles": [
+      "Decisions about document identification and approval are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of obsolete document withdrawal and disposal at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Document identification and approval; Version changes and distribution; Record retention and protection; External document control; Obsolete document withdrawal and disposal. ",
+      "procedures": "Give operational steps for Document identification and approval; Version changes and distribution; Record retention and protection; External document control; Obsolete document withdrawal and disposal with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Documented Information and Records Control Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_i_08",
+    "name": "Supplier, Outsourcing and Third-Party Management Procedure",
+    "code": "I-08",
+    "management_system": "Integrated",
+    "document_kind": "procedure",
+    "description": "I-08 | Integrated | Supplier, Outsourcing and Third-Party Management Procedure. Covers Supplier selection and criticality, Due diligence and approval, Outsourcing responsibilities and contracts, Supplier performance and risk monitoring, Renewal and secure exit.",
+    "purpose": "define the responsibilities and operational controls for supplier, outsourcing and third-party management procedure",
+    "keywords": [
+      "supplier",
+      "outsourcing",
+      "third",
+      "party",
+      "selection",
+      "criticality",
+      "diligence",
+      "contracts",
+      "performance",
+      "renewal",
+      "secure"
+    ],
+    "categories": [
+      "vendor_management"
+    ],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Supplier selection and criticality",
+        "keywords": [
+          "supplier",
+          "selection",
+          "criticality"
+        ]
+      },
+      {
+        "title": "Due diligence and approval",
+        "keywords": [
+          "diligence",
+          "approval"
+        ]
+      },
+      {
+        "title": "Outsourcing responsibilities and contracts",
+        "keywords": [
+          "outsourcing",
+          "responsibilities",
+          "contracts"
+        ]
+      },
+      {
+        "title": "Supplier performance and risk monitoring",
+        "keywords": [
+          "supplier",
+          "performance",
+          "monitoring"
+        ]
+      },
+      {
+        "title": "Renewal and secure exit",
+        "keywords": [
+          "renewal",
+          "secure"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for supplier selection and criticality.",
+      "Establish clear requirements and ownership for due diligence and approval.",
+      "Establish clear requirements and ownership for outsourcing responsibilities and contracts."
+    ],
+    "principles": [
+      "Decisions about supplier selection and criticality are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of renewal and secure exit at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Supplier selection and criticality; Due diligence and approval; Outsourcing responsibilities and contracts; Supplier performance and risk monitoring; Renewal and secure exit. ",
+      "procedures": "Give operational steps for Supplier selection and criticality; Due diligence and approval; Outsourcing responsibilities and contracts; Supplier performance and risk monitoring; Renewal and secure exit with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Supplier, Outsourcing and Third-Party Management Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_i_09",
+    "name": "Internal Audit Procedure and Annual Audit Programme",
+    "code": "I-09",
+    "management_system": "Integrated",
+    "document_kind": "procedure",
+    "description": "I-09 | Integrated | Internal Audit Procedure and Annual Audit Programme. Covers Risk based annual audit programme, Auditor competence and independence, Planning sampling and evidence, Findings and corrective followup, Programme approval and retained audit records.",
+    "purpose": "define the responsibilities and operational controls for internal audit procedure and annual audit programme",
+    "keywords": [
+      "internal",
+      "audit",
+      "annual",
+      "programme",
+      "auditor",
+      "competence",
+      "independence",
+      "planning",
+      "sampling",
+      "findings",
+      "corrective",
+      "followup",
+      "retained"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Risk based annual audit programme",
+        "keywords": [
+          "based",
+          "annual",
+          "audit",
+          "programme"
+        ]
+      },
+      {
+        "title": "Auditor competence and independence",
+        "keywords": [
+          "auditor",
+          "competence",
+          "independence"
+        ]
+      },
+      {
+        "title": "Planning sampling and evidence",
+        "keywords": [
+          "planning",
+          "sampling",
+          "evidence"
+        ]
+      },
+      {
+        "title": "Findings and corrective followup",
+        "keywords": [
+          "findings",
+          "corrective",
+          "followup"
+        ]
+      },
+      {
+        "title": "Programme approval and retained audit records",
+        "keywords": [
+          "programme",
+          "approval",
+          "retained",
+          "audit",
+          "records"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for risk based annual audit programme.",
+      "Establish clear requirements and ownership for auditor competence and independence.",
+      "Establish clear requirements and ownership for planning sampling and evidence."
+    ],
+    "principles": [
+      "Decisions about risk based annual audit programme are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of programme approval and retained audit records at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Risk based annual audit programme; Auditor competence and independence; Planning sampling and evidence; Findings and corrective followup; Programme approval and retained audit records. ",
+      "procedures": "Give operational steps for Risk based annual audit programme; Auditor competence and independence; Planning sampling and evidence; Findings and corrective followup; Programme approval and retained audit records with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Internal Audit Procedure and Annual Audit Programme. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_i_10",
+    "name": "Management Review Procedure and Record",
+    "code": "I-10",
+    "management_system": "Integrated",
+    "document_kind": "procedure",
+    "description": "I-10 | Integrated | Management Review Procedure and Record. Covers Review scheduling and participants, Required management review inputs, Performance risks and resource decisions, Action ownership and due dates, Review minutes and followup.",
+    "purpose": "define the responsibilities and operational controls for management review procedure and record",
+    "keywords": [
+      "review",
+      "record",
+      "scheduling",
+      "participants",
+      "required",
+      "management",
+      "inputs",
+      "performance",
+      "resource",
+      "decisions",
+      "action",
+      "minutes",
+      "followup"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Review scheduling and participants",
+        "keywords": [
+          "review",
+          "scheduling",
+          "participants"
+        ]
+      },
+      {
+        "title": "Required management review inputs",
+        "keywords": [
+          "required",
+          "management",
+          "review",
+          "inputs"
+        ]
+      },
+      {
+        "title": "Performance risks and resource decisions",
+        "keywords": [
+          "performance",
+          "risks",
+          "resource",
+          "decisions"
+        ]
+      },
+      {
+        "title": "Action ownership and due dates",
+        "keywords": [
+          "action",
+          "ownership",
+          "dates"
+        ]
+      },
+      {
+        "title": "Review minutes and followup",
+        "keywords": [
+          "review",
+          "minutes",
+          "followup"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for review scheduling and participants.",
+      "Establish clear requirements and ownership for required management review inputs.",
+      "Establish clear requirements and ownership for performance risks and resource decisions."
+    ],
+    "principles": [
+      "Decisions about review scheduling and participants are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of review minutes and followup at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Review scheduling and participants; Required management review inputs; Performance risks and resource decisions; Action ownership and due dates; Review minutes and followup. ",
+      "procedures": "Give operational steps for Review scheduling and participants; Required management review inputs; Performance risks and resource decisions; Action ownership and due dates; Review minutes and followup with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Management Review Procedure and Record. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_i_11",
+    "name": "Nonconformity, Corrective Action and Continual Improvement Procedure",
+    "code": "I-11",
+    "management_system": "Integrated",
+    "document_kind": "procedure",
+    "description": "I-11 | Integrated | Nonconformity, Corrective Action and Continual Improvement Procedure. Covers Nonconformity identification and containment, Root cause analysis, Corrective action decisions, Effectiveness verification, Trend analysis and continual improvement.",
+    "purpose": "define the responsibilities and operational controls for nonconformity, corrective action and continual improvement procedure",
+    "keywords": [
+      "nonconformity",
+      "corrective",
+      "action",
+      "continual",
+      "improvement",
+      "identification",
+      "containment",
+      "analysis",
+      "decisions",
+      "effectiveness",
+      "verification"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Nonconformity identification and containment",
+        "keywords": [
+          "nonconformity",
+          "identification",
+          "containment"
+        ]
+      },
+      {
+        "title": "Root cause analysis",
+        "keywords": [
+          "cause",
+          "analysis"
+        ]
+      },
+      {
+        "title": "Corrective action decisions",
+        "keywords": [
+          "corrective",
+          "action",
+          "decisions"
+        ]
+      },
+      {
+        "title": "Effectiveness verification",
+        "keywords": [
+          "effectiveness",
+          "verification"
+        ]
+      },
+      {
+        "title": "Trend analysis and continual improvement",
+        "keywords": [
+          "trend",
+          "analysis",
+          "continual",
+          "improvement"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for nonconformity identification and containment.",
+      "Establish clear requirements and ownership for root cause analysis.",
+      "Establish clear requirements and ownership for corrective action decisions."
+    ],
+    "principles": [
+      "Decisions about nonconformity identification and containment are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of trend analysis and continual improvement at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Nonconformity identification and containment; Root cause analysis; Corrective action decisions; Effectiveness verification; Trend analysis and continual improvement. ",
+      "procedures": "Give operational steps for Nonconformity identification and containment; Root cause analysis; Corrective action decisions; Effectiveness verification; Trend analysis and continual improvement with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Nonconformity, Corrective Action and Continual Improvement Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_i_12",
+    "name": "Business Continuity and Service-Recovery Plan",
+    "code": "I-12",
+    "management_system": "Integrated",
+    "document_kind": "plan",
+    "description": "I-12 | Integrated | Business Continuity and Service-Recovery Plan. Covers Business impact and service dependencies, Activation criteria and escalation, Recovery priorities and objectives, Continuity and restoration steps, Exercises communications and plan maintenance.",
+    "purpose": "define the responsibilities and operational controls for business continuity and service-recovery plan",
+    "keywords": [
+      "business",
+      "continuity",
+      "service",
+      "recovery",
+      "plan",
+      "impact",
+      "dependencies",
+      "activation",
+      "criteria",
+      "escalation",
+      "priorities",
+      "objectives",
+      "restoration",
+      "exercises",
+      "communications",
+      "maintenance"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Business impact and service dependencies",
+        "keywords": [
+          "business",
+          "impact",
+          "service",
+          "dependencies"
+        ]
+      },
+      {
+        "title": "Activation criteria and escalation",
+        "keywords": [
+          "activation",
+          "criteria",
+          "escalation"
+        ]
+      },
+      {
+        "title": "Recovery priorities and objectives",
+        "keywords": [
+          "recovery",
+          "priorities",
+          "objectives"
+        ]
+      },
+      {
+        "title": "Continuity and restoration steps",
+        "keywords": [
+          "continuity",
+          "restoration",
+          "steps"
+        ]
+      },
+      {
+        "title": "Exercises communications and plan maintenance",
+        "keywords": [
+          "exercises",
+          "communications",
+          "maintenance"
+        ]
+      },
+      {
+        "title": "Customer-Managed Projects and Contractual Compliance",
+        "keywords": [
+          "customer-managed",
+          "client-managed",
+          "customer requirements",
+          "contractual",
+          "shared responsibility",
+          "customer approval"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for business impact and service dependencies.",
+      "Establish clear requirements and ownership for activation criteria and escalation.",
+      "Establish clear requirements and ownership for recovery priorities and objectives.",
+      "Meet agreed customer-managed project requirements and maintain evidence of contractual compliance within the assigned scope of responsibility."
+    ],
+    "principles": [
+      "Decisions about business impact and service dependencies are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of exercises communications and plan maintenance at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Business impact and service dependencies; Activation criteria and escalation; Recovery priorities and objectives; Continuity and restoration steps; Exercises communications and plan maintenance. Include usable main-body register or matrix tables with defined columns, responsible roles, applicability, status and evidence. Unknown entries remain placeholders; never claim controls were implemented or audits completed without source evidence.",
+      "procedures": "Give operational steps for Business impact and service dependencies; Activation criteria and escalation; Recovery priorities and objectives; Continuity and restoration steps; Exercises communications and plan maintenance with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Business Continuity and Service-Recovery Plan. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    },
+    "customer_project_sections": {
+      "scope": [
+        "This policy applies to work delivered in customer-managed projects and customer-controlled environments as well as internally managed services, including employees, contractors and remote or client-site delivery. Responsibilities must follow the agreed contract and shared-responsibility matrix; customer ownership does not remove the organization's delivery and compliance obligations."
+      ],
+      "roles_responsibilities": [
+        "For customer-managed projects, the Project Manager coordinates contractual BCP/DR requirements, the internal continuity lead maintains delivery continuity, assigned technical personnel support authorized recovery tasks, and the customer-designated continuity/recovery authority directs recovery of customer-controlled systems. Record project-specific responsibilities and hand-offs."
+      ],
+      "policy_requirements": [
+        "At onboarding and after material changes, identify and record each customer-managed project's contractual BCP/DR requirements, service dependencies, agreed RTO/RPO and recovery priorities, customer continuity plans, notification obligations, exercise participation and required compliance evidence. Use [To be confirmed: project recovery objectives and contractual obligations] for unknown values.",
+        "Maintain a shared-responsibility matrix and project continuity arrangements for personnel availability, remote/client-site delivery, alternate working arrangements and communication with the customer. Customer-managed recovery infrastructure does not remove the organization's responsibility to sustain its contracted delivery obligations.",
+        "Personnel must comply with applicable customer BCP/DR plans, participate in agreed exercises and provide permitted evidence. Backup, restore, failover and failback actions on customer-controlled systems require the customer-designated authority's authorization and must remain within the contracted scope."
+      ],
+      "procedures": [
+        "For customer-managed projects, map contractual BCP/DR obligations and service dependencies, agree the shared-responsibility matrix, align project continuity arrangements with customer plans and recovery objectives, record notification contacts and declaration authority, and brief assigned employees and contractors.",
+        "On disruption, notify the internal continuity lead and customer through agreed channels, activate authorized delivery workarounds, coordinate hand-offs and customer-directed recovery, obtain approval before customer-system restore/failover/failback, validate contracted service recovery against agreed objectives, retain permitted evidence and complete a joint post-event review.",
+        "Participate in agreed customer BCP/DR exercises, record attendance and recovery results, track corrective actions to the responsible internal or customer owner, and escalate unavailable customer plans or evidence."
+      ],
+      "risk_controls": [
+        "Assess customer-managed project risks including outage of customer platforms or access, unavailable customer recovery plans, conflicting recovery priorities, unclear declaration authority, missed contractual notification or recovery targets, and dependence on customer-controlled backups; manage them through agreed interfaces, continuity workarounds, responsibility mapping and joint exercises."
+      ],
+      "monitoring_compliance": [
+        "For each customer-managed project, review compliance with contractual BCP/DR requirements, agreed RTO/RPO, exercise participation, notification arrangements, recovery evidence and corrective actions at the agreed frequency. Where the customer owns recovery controls, obtain permitted assurance or attestations and record evidence limitations rather than claiming unverified compliance."
+      ],
+      "incident_reporting": [
+        "During customer-managed project disruptions, follow both internal escalation and customer-agreed notification channels, decision authority and contractual deadlines. Record notifications and hand-offs; use [To be confirmed: project notification contacts and deadlines] where evidence is absent."
+      ],
+      "exceptions": [
+        "Any exception affecting customer-managed project continuity, recovery targets or contractual obligations requires documented risk assessment and internal approval plus customer approval where applicable. Record the agreed workaround, responsibility, expiry and review; internal approval cannot waive customer commitments."
+      ]
+    }
+  },
+  {
+    "id": "ims_i_13",
+    "name": "Legal, Regulatory and Contractual Obligations Register Procedure",
+    "code": "I-13",
+    "management_system": "Integrated",
+    "document_kind": "procedure",
+    "description": "I-13 | Integrated | Legal, Regulatory and Contractual Obligations Register Procedure. Covers Obligation identification and applicability, Register fields jurisdictions owners and evidence, Contractual customer flowdowns, Compliance evaluation and change monitoring, Breach escalation and remediation.",
+    "purpose": "define the responsibilities and operational controls for legal, regulatory and contractual obligations register procedure",
+    "keywords": [
+      "legal",
+      "regulatory",
+      "contractual",
+      "obligations",
+      "register",
+      "obligation",
+      "identification",
+      "applicability",
+      "fields",
+      "jurisdictions",
+      "owners",
+      "customer",
+      "flowdowns",
+      "compliance",
+      "evaluation",
+      "change",
+      "breach",
+      "escalation",
+      "remediation"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Obligation identification and applicability",
+        "keywords": [
+          "obligation",
+          "identification",
+          "applicability"
+        ]
+      },
+      {
+        "title": "Register fields jurisdictions owners and evidence",
+        "keywords": [
+          "register",
+          "fields",
+          "jurisdictions",
+          "owners",
+          "evidence"
+        ]
+      },
+      {
+        "title": "Contractual customer flowdowns",
+        "keywords": [
+          "contractual",
+          "customer",
+          "flowdowns"
+        ]
+      },
+      {
+        "title": "Compliance evaluation and change monitoring",
+        "keywords": [
+          "compliance",
+          "evaluation",
+          "change",
+          "monitoring"
+        ]
+      },
+      {
+        "title": "Breach escalation and remediation",
+        "keywords": [
+          "breach",
+          "escalation",
+          "remediation"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for obligation identification and applicability.",
+      "Establish clear requirements and ownership for register fields jurisdictions owners and evidence.",
+      "Establish clear requirements and ownership for contractual customer flowdowns."
+    ],
+    "principles": [
+      "Decisions about obligation identification and applicability are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of breach escalation and remediation at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Obligation identification and applicability; Register fields jurisdictions owners and evidence; Contractual customer flowdowns; Compliance evaluation and change monitoring; Breach escalation and remediation. ",
+      "procedures": "Give operational steps for Obligation identification and applicability; Register fields jurisdictions owners and evidence; Contractual customer flowdowns; Compliance evaluation and change monitoring; Breach escalation and remediation with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Legal, Regulatory and Contractual Obligations Register Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_i_14",
+    "name": "Communications and Escalation Matrix",
+    "code": "I-14",
+    "management_system": "Integrated",
+    "document_kind": "matrix",
+    "description": "I-14 | Integrated | Communications and Escalation Matrix. Covers Stakeholders and communication needs, Communication matrix sender recipient channel frequency and record, Escalation triggers severity and authority, Backup contacts by role, Matrix ownership and testing.",
+    "purpose": "define the responsibilities and operational controls for communications and escalation matrix",
+    "keywords": [
+      "communications",
+      "escalation",
+      "matrix",
+      "stakeholders",
+      "communication",
+      "sender",
+      "recipient",
+      "channel",
+      "frequency",
+      "record",
+      "triggers",
+      "severity",
+      "authority",
+      "backup",
+      "contacts",
+      "testing"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Stakeholders and communication needs",
+        "keywords": [
+          "stakeholders",
+          "communication",
+          "needs"
+        ]
+      },
+      {
+        "title": "Communication matrix sender recipient channel frequency and record",
+        "keywords": [
+          "communication",
+          "matrix",
+          "sender",
+          "recipient",
+          "channel",
+          "frequency",
+          "record"
+        ]
+      },
+      {
+        "title": "Escalation triggers severity and authority",
+        "keywords": [
+          "escalation",
+          "triggers",
+          "severity",
+          "authority"
+        ]
+      },
+      {
+        "title": "Backup contacts by role",
+        "keywords": [
+          "backup",
+          "contacts"
+        ]
+      },
+      {
+        "title": "Matrix ownership and testing",
+        "keywords": [
+          "matrix",
+          "ownership",
+          "testing"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for stakeholders and communication needs.",
+      "Establish clear requirements and ownership for communication matrix sender recipient channel frequency and record.",
+      "Establish clear requirements and ownership for escalation triggers severity and authority."
+    ],
+    "principles": [
+      "Decisions about stakeholders and communication needs are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of matrix ownership and testing at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Stakeholders and communication needs; Communication matrix sender recipient channel frequency and record; Escalation triggers severity and authority; Backup contacts by role; Matrix ownership and testing. Include usable main-body register or matrix tables with defined columns, responsible roles, applicability, status and evidence. Unknown entries remain placeholders; never claim controls were implemented or audits completed without source evidence.",
+      "procedures": "Give operational steps for Stakeholders and communication needs; Communication matrix sender recipient channel frequency and record; Escalation triggers severity and authority; Backup contacts by role; Matrix ownership and testing with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Communications and Escalation Matrix. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_q_01",
+    "name": "Quality Policy",
+    "code": "Q-01",
+    "management_system": "QMS",
+    "document_kind": "policy",
+    "description": "Q-01 | QMS | Quality Policy. Covers Customer service quality commitments, Requirements and service conformity, Quality objectives, Leadership and personnel accountability, Customer feedback and continual improvement.",
+    "purpose": "define the responsibilities and operational controls for quality policy",
+    "keywords": [
+      "quality",
+      "customer",
+      "service",
+      "commitments",
+      "conformity",
+      "objectives",
+      "leadership",
+      "personnel",
+      "accountability",
+      "feedback",
+      "continual",
+      "improvement"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Customer service quality commitments",
+        "keywords": [
+          "customer",
+          "service",
+          "quality",
+          "commitments"
+        ]
+      },
+      {
+        "title": "Requirements and service conformity",
+        "keywords": [
+          "requirements",
+          "service",
+          "conformity"
+        ]
+      },
+      {
+        "title": "Quality objectives",
+        "keywords": [
+          "quality",
+          "objectives"
+        ]
+      },
+      {
+        "title": "Leadership and personnel accountability",
+        "keywords": [
+          "leadership",
+          "personnel",
+          "accountability"
+        ]
+      },
+      {
+        "title": "Customer feedback and continual improvement",
+        "keywords": [
+          "customer",
+          "feedback",
+          "continual",
+          "improvement"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for customer service quality commitments.",
+      "Establish clear requirements and ownership for requirements and service conformity.",
+      "Establish clear requirements and ownership for quality objectives."
+    ],
+    "principles": [
+      "Decisions about customer service quality commitments are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of customer feedback and continual improvement at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Customer service quality commitments; Requirements and service conformity; Quality objectives; Leadership and personnel accountability; Customer feedback and continual improvement. ",
+      "procedures": "Give operational steps for Customer service quality commitments; Requirements and service conformity; Quality objectives; Leadership and personnel accountability; Customer feedback and continual improvement with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Quality Policy. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_q_02",
+    "name": "Customer and Candidate Requirement Review Procedure",
+    "code": "Q-02",
+    "management_system": "QMS",
+    "document_kind": "procedure",
+    "description": "Q-02 | QMS | Customer and Candidate Requirement Review Procedure. Covers Customer and candidate requirement capture, Requirement clarification and feasibility, Candidate suitability and consent interfaces, Review and approval before commitments, Changes and retained review records.",
+    "purpose": "define the responsibilities and operational controls for customer and candidate requirement review procedure",
+    "keywords": [
+      "customer",
+      "candidate",
+      "requirement",
+      "review",
+      "capture",
+      "clarification",
+      "feasibility",
+      "suitability",
+      "consent",
+      "interfaces",
+      "before",
+      "commitments",
+      "changes",
+      "retained"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Customer and candidate requirement capture",
+        "keywords": [
+          "customer",
+          "candidate",
+          "requirement",
+          "capture"
+        ]
+      },
+      {
+        "title": "Requirement clarification and feasibility",
+        "keywords": [
+          "requirement",
+          "clarification",
+          "feasibility"
+        ]
+      },
+      {
+        "title": "Candidate suitability and consent interfaces",
+        "keywords": [
+          "candidate",
+          "suitability",
+          "consent",
+          "interfaces"
+        ]
+      },
+      {
+        "title": "Review and approval before commitments",
+        "keywords": [
+          "review",
+          "approval",
+          "before",
+          "commitments"
+        ]
+      },
+      {
+        "title": "Changes and retained review records",
+        "keywords": [
+          "changes",
+          "retained",
+          "review",
+          "records"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for customer and candidate requirement capture.",
+      "Establish clear requirements and ownership for requirement clarification and feasibility.",
+      "Establish clear requirements and ownership for candidate suitability and consent interfaces."
+    ],
+    "principles": [
+      "Decisions about customer and candidate requirement capture are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of changes and retained review records at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Customer and candidate requirement capture; Requirement clarification and feasibility; Candidate suitability and consent interfaces; Review and approval before commitments; Changes and retained review records. ",
+      "procedures": "Give operational steps for Customer and candidate requirement capture; Requirement clarification and feasibility; Candidate suitability and consent interfaces; Review and approval before commitments; Changes and retained review records with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Customer and Candidate Requirement Review Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_q_09",
+    "name": "Customer Requirement and Contract Review Procedure",
+    "code": "Q-09",
+    "management_system": "QMS",
+    "document_kind": "procedure",
+    "description": "Q-09 | QMS | Customer Requirement and Contract Review Procedure. Covers Customer contract requirements, Feasibility resources and delivery obligations, Contract deviations and approval, Changes and customer agreement, Handover to delivery and contract review records.",
+    "purpose": "define the responsibilities and operational controls for customer requirement and contract review procedure",
+    "keywords": [
+      "customer",
+      "requirement",
+      "contract",
+      "review",
+      "feasibility",
+      "resources",
+      "delivery",
+      "obligations",
+      "deviations",
+      "changes",
+      "agreement",
+      "handover"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Customer contract requirements",
+        "keywords": [
+          "customer",
+          "contract",
+          "requirements"
+        ]
+      },
+      {
+        "title": "Feasibility resources and delivery obligations",
+        "keywords": [
+          "feasibility",
+          "resources",
+          "delivery",
+          "obligations"
+        ]
+      },
+      {
+        "title": "Contract deviations and approval",
+        "keywords": [
+          "contract",
+          "deviations",
+          "approval"
+        ]
+      },
+      {
+        "title": "Changes and customer agreement",
+        "keywords": [
+          "changes",
+          "customer",
+          "agreement"
+        ]
+      },
+      {
+        "title": "Handover to delivery and contract review records",
+        "keywords": [
+          "handover",
+          "delivery",
+          "contract",
+          "review",
+          "records"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for customer contract requirements.",
+      "Establish clear requirements and ownership for feasibility resources and delivery obligations.",
+      "Establish clear requirements and ownership for contract deviations and approval."
+    ],
+    "principles": [
+      "Decisions about customer contract requirements are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of handover to delivery and contract review records at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Customer contract requirements; Feasibility resources and delivery obligations; Contract deviations and approval; Changes and customer agreement; Handover to delivery and contract review records. ",
+      "procedures": "Give operational steps for Customer contract requirements; Feasibility resources and delivery obligations; Contract deviations and approval; Changes and customer agreement; Handover to delivery and contract review records with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Customer Requirement and Contract Review Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_q_03",
+    "name": "Candidate Sourcing, Screening and Assessment Procedure",
+    "code": "Q-03",
+    "management_system": "QMS",
+    "document_kind": "procedure",
+    "description": "Q-03 | QMS | Candidate Sourcing, Screening and Assessment Procedure. Covers Candidate sourcing criteria, Screening and assessment methods, Evidence verification and fair consistent decisions, Customer requirement matching, Candidate records and approved release.",
+    "purpose": "define the responsibilities and operational controls for candidate sourcing, screening and assessment procedure",
+    "keywords": [
+      "candidate",
+      "sourcing",
+      "screening",
+      "assessment",
+      "criteria",
+      "methods",
+      "verification",
+      "consistent",
+      "decisions",
+      "customer",
+      "requirement",
+      "matching",
+      "approved",
+      "release"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Candidate sourcing criteria",
+        "keywords": [
+          "candidate",
+          "sourcing",
+          "criteria"
+        ]
+      },
+      {
+        "title": "Screening and assessment methods",
+        "keywords": [
+          "screening",
+          "assessment",
+          "methods"
+        ]
+      },
+      {
+        "title": "Evidence verification and fair consistent decisions",
+        "keywords": [
+          "evidence",
+          "verification",
+          "consistent",
+          "decisions"
+        ]
+      },
+      {
+        "title": "Customer requirement matching",
+        "keywords": [
+          "customer",
+          "requirement",
+          "matching"
+        ]
+      },
+      {
+        "title": "Candidate records and approved release",
+        "keywords": [
+          "candidate",
+          "records",
+          "approved",
+          "release"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for candidate sourcing criteria.",
+      "Establish clear requirements and ownership for screening and assessment methods.",
+      "Establish clear requirements and ownership for evidence verification and fair consistent decisions."
+    ],
+    "principles": [
+      "Decisions about candidate sourcing criteria are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of candidate records and approved release at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Candidate sourcing criteria; Screening and assessment methods; Evidence verification and fair consistent decisions; Customer requirement matching; Candidate records and approved release. ",
+      "procedures": "Give operational steps for Candidate sourcing criteria; Screening and assessment methods; Evidence verification and fair consistent decisions; Customer requirement matching; Candidate records and approved release with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Candidate Sourcing, Screening and Assessment Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_q_04",
+    "name": "Placement and Assignment-Mobilisation Procedure",
+    "code": "Q-04",
+    "management_system": "QMS",
+    "document_kind": "procedure",
+    "description": "Q-04 | QMS | Placement and Assignment-Mobilisation Procedure. Covers Placement readiness and acceptance, Assignment mobilisation checks, Access equipment and induction, Customer and candidate handoff, Mobilisation records and exceptions.",
+    "purpose": "define the responsibilities and operational controls for placement and assignment-mobilisation procedure",
+    "keywords": [
+      "placement",
+      "assignment",
+      "mobilisation",
+      "readiness",
+      "acceptance",
+      "checks",
+      "access",
+      "equipment",
+      "induction",
+      "customer",
+      "candidate",
+      "handoff",
+      "exceptions"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Placement readiness and acceptance",
+        "keywords": [
+          "placement",
+          "readiness",
+          "acceptance"
+        ]
+      },
+      {
+        "title": "Assignment mobilisation checks",
+        "keywords": [
+          "assignment",
+          "mobilisation",
+          "checks"
+        ]
+      },
+      {
+        "title": "Access equipment and induction",
+        "keywords": [
+          "access",
+          "equipment",
+          "induction"
+        ]
+      },
+      {
+        "title": "Customer and candidate handoff",
+        "keywords": [
+          "customer",
+          "candidate",
+          "handoff"
+        ]
+      },
+      {
+        "title": "Mobilisation records and exceptions",
+        "keywords": [
+          "mobilisation",
+          "records",
+          "exceptions"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for placement readiness and acceptance.",
+      "Establish clear requirements and ownership for assignment mobilisation checks.",
+      "Establish clear requirements and ownership for access equipment and induction."
+    ],
+    "principles": [
+      "Decisions about placement readiness and acceptance are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of mobilisation records and exceptions at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Placement readiness and acceptance; Assignment mobilisation checks; Access equipment and induction; Customer and candidate handoff; Mobilisation records and exceptions. ",
+      "procedures": "Give operational steps for Placement readiness and acceptance; Assignment mobilisation checks; Access equipment and induction; Customer and candidate handoff; Mobilisation records and exceptions with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Placement and Assignment-Mobilisation Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_q_05",
+    "name": "Assignment Monitoring, Customer Feedback and Complaints Procedure",
+    "code": "Q-05",
+    "management_system": "QMS",
+    "document_kind": "procedure",
+    "description": "Q-05 | QMS | Assignment Monitoring, Customer Feedback and Complaints Procedure. Covers Assignment performance monitoring, Customer feedback collection, Complaint intake and ownership, Investigation resolution and followup, Performance trends and improvement actions.",
+    "purpose": "define the responsibilities and operational controls for assignment monitoring, customer feedback and complaints procedure",
+    "keywords": [
+      "assignment",
+      "monitoring",
+      "customer",
+      "feedback",
+      "complaints",
+      "performance",
+      "collection",
+      "complaint",
+      "intake",
+      "investigation",
+      "resolution",
+      "followup",
+      "trends",
+      "improvement",
+      "actions"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Assignment performance monitoring",
+        "keywords": [
+          "assignment",
+          "performance",
+          "monitoring"
+        ]
+      },
+      {
+        "title": "Customer feedback collection",
+        "keywords": [
+          "customer",
+          "feedback",
+          "collection"
+        ]
+      },
+      {
+        "title": "Complaint intake and ownership",
+        "keywords": [
+          "complaint",
+          "intake",
+          "ownership"
+        ]
+      },
+      {
+        "title": "Investigation resolution and followup",
+        "keywords": [
+          "investigation",
+          "resolution",
+          "followup"
+        ]
+      },
+      {
+        "title": "Performance trends and improvement actions",
+        "keywords": [
+          "performance",
+          "trends",
+          "improvement",
+          "actions"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for assignment performance monitoring.",
+      "Establish clear requirements and ownership for customer feedback collection.",
+      "Establish clear requirements and ownership for complaint intake and ownership."
+    ],
+    "principles": [
+      "Decisions about assignment performance monitoring are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of performance trends and improvement actions at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Assignment performance monitoring; Customer feedback collection; Complaint intake and ownership; Investigation resolution and followup; Performance trends and improvement actions. ",
+      "procedures": "Give operational steps for Assignment performance monitoring; Customer feedback collection; Complaint intake and ownership; Investigation resolution and followup; Performance trends and improvement actions with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Assignment Monitoring, Customer Feedback and Complaints Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_q_06",
+    "name": "SoW Project Delivery Procedure",
+    "code": "Q-06",
+    "management_system": "QMS",
+    "document_kind": "procedure",
+    "description": "Q-06 | QMS | SoW Project Delivery Procedure. Covers Statement of work scope deliverables and acceptance, Delivery planning and responsibilities, Milestones dependencies and change control, Quality checks and customer reporting, Delivery closure and lessons learned.",
+    "purpose": "define the responsibilities and operational controls for sow project delivery procedure",
+    "keywords": [
+      "project",
+      "delivery",
+      "statement",
+      "deliverables",
+      "acceptance",
+      "planning",
+      "milestones",
+      "dependencies",
+      "change",
+      "control",
+      "quality",
+      "checks",
+      "customer",
+      "reporting",
+      "closure",
+      "lessons",
+      "learned"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Statement of work scope deliverables and acceptance",
+        "keywords": [
+          "statement",
+          "scope",
+          "deliverables",
+          "acceptance"
+        ]
+      },
+      {
+        "title": "Delivery planning and responsibilities",
+        "keywords": [
+          "delivery",
+          "planning",
+          "responsibilities"
+        ]
+      },
+      {
+        "title": "Milestones dependencies and change control",
+        "keywords": [
+          "milestones",
+          "dependencies",
+          "change",
+          "control"
+        ]
+      },
+      {
+        "title": "Quality checks and customer reporting",
+        "keywords": [
+          "quality",
+          "checks",
+          "customer",
+          "reporting"
+        ]
+      },
+      {
+        "title": "Delivery closure and lessons learned",
+        "keywords": [
+          "delivery",
+          "closure",
+          "lessons",
+          "learned"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for statement of work scope deliverables and acceptance.",
+      "Establish clear requirements and ownership for delivery planning and responsibilities.",
+      "Establish clear requirements and ownership for milestones dependencies and change control."
+    ],
+    "principles": [
+      "Decisions about statement of work scope deliverables and acceptance are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of delivery closure and lessons learned at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Statement of work scope deliverables and acceptance; Delivery planning and responsibilities; Milestones dependencies and change control; Quality checks and customer reporting; Delivery closure and lessons learned. ",
+      "procedures": "Give operational steps for Statement of work scope deliverables and acceptance; Delivery planning and responsibilities; Milestones dependencies and change control; Quality checks and customer reporting; Delivery closure and lessons learned with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting SoW Project Delivery Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_q_07",
+    "name": "Service Release and Acceptance Procedure",
+    "code": "Q-07",
+    "management_system": "QMS",
+    "document_kind": "procedure",
+    "description": "Q-07 | QMS | Service Release and Acceptance Procedure. Covers Release readiness criteria, Verification and acceptance evidence, Release approval authority, Nonconforming release exceptions, Customer acceptance and release records.",
+    "purpose": "define the responsibilities and operational controls for service release and acceptance procedure",
+    "keywords": [
+      "service",
+      "release",
+      "acceptance",
+      "readiness",
+      "criteria",
+      "verification",
+      "authority",
+      "nonconforming",
+      "exceptions",
+      "customer"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Release readiness criteria",
+        "keywords": [
+          "release",
+          "readiness",
+          "criteria"
+        ]
+      },
+      {
+        "title": "Verification and acceptance evidence",
+        "keywords": [
+          "verification",
+          "acceptance",
+          "evidence"
+        ]
+      },
+      {
+        "title": "Release approval authority",
+        "keywords": [
+          "release",
+          "approval",
+          "authority"
+        ]
+      },
+      {
+        "title": "Nonconforming release exceptions",
+        "keywords": [
+          "nonconforming",
+          "release",
+          "exceptions"
+        ]
+      },
+      {
+        "title": "Customer acceptance and release records",
+        "keywords": [
+          "customer",
+          "acceptance",
+          "release",
+          "records"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for release readiness criteria.",
+      "Establish clear requirements and ownership for verification and acceptance evidence.",
+      "Establish clear requirements and ownership for release approval authority."
+    ],
+    "principles": [
+      "Decisions about release readiness criteria are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of customer acceptance and release records at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Release readiness criteria; Verification and acceptance evidence; Release approval authority; Nonconforming release exceptions; Customer acceptance and release records. ",
+      "procedures": "Give operational steps for Release readiness criteria; Verification and acceptance evidence; Release approval authority; Nonconforming release exceptions; Customer acceptance and release records with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Service Release and Acceptance Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_q_08",
+    "name": "Quality Control Plan and Operational Templates",
+    "code": "Q-08",
+    "management_system": "QMS",
+    "document_kind": "plan",
+    "description": "Q-08 | QMS | Quality Control Plan and Operational Templates. Covers Quality control points and inspection criteria, Sampling and verification responsibilities, Operational template fields, Nonconforming output handling, Control evidence and plan changes.",
+    "purpose": "define the responsibilities and operational controls for quality control plan and operational templates",
+    "keywords": [
+      "quality",
+      "control",
+      "plan",
+      "operational",
+      "templates",
+      "points",
+      "inspection",
+      "criteria",
+      "sampling",
+      "verification",
+      "template",
+      "fields",
+      "nonconforming",
+      "output",
+      "handling",
+      "changes"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Quality control points and inspection criteria",
+        "keywords": [
+          "quality",
+          "control",
+          "points",
+          "inspection",
+          "criteria"
+        ]
+      },
+      {
+        "title": "Sampling and verification responsibilities",
+        "keywords": [
+          "sampling",
+          "verification",
+          "responsibilities"
+        ]
+      },
+      {
+        "title": "Operational template fields",
+        "keywords": [
+          "operational",
+          "template",
+          "fields"
+        ]
+      },
+      {
+        "title": "Nonconforming output handling",
+        "keywords": [
+          "nonconforming",
+          "output",
+          "handling"
+        ]
+      },
+      {
+        "title": "Control evidence and plan changes",
+        "keywords": [
+          "control",
+          "evidence",
+          "changes"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for quality control points and inspection criteria.",
+      "Establish clear requirements and ownership for sampling and verification responsibilities.",
+      "Establish clear requirements and ownership for operational template fields."
+    ],
+    "principles": [
+      "Decisions about quality control points and inspection criteria are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of control evidence and plan changes at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Quality control points and inspection criteria; Sampling and verification responsibilities; Operational template fields; Nonconforming output handling; Control evidence and plan changes. Include usable main-body register or matrix tables with defined columns, responsible roles, applicability, status and evidence. Unknown entries remain placeholders; never claim controls were implemented or audits completed without source evidence.",
+      "procedures": "Give operational steps for Quality control points and inspection criteria; Sampling and verification responsibilities; Operational template fields; Nonconforming output handling; Control evidence and plan changes with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Quality Control Plan and Operational Templates. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_q_10",
+    "name": "Customer Feedback, Complaints and Service Recovery Procedure",
+    "code": "Q-10",
+    "management_system": "QMS",
+    "document_kind": "procedure",
+    "description": "Q-10 | QMS | Customer Feedback, Complaints and Service Recovery Procedure. Covers Feedback and complaint channels, Acknowledgement triage and ownership, Investigation and remedy, Service recovery and customer confirmation, Closure evidence and recurring issue prevention.",
+    "purpose": "define the responsibilities and operational controls for customer feedback, complaints and service recovery procedure",
+    "keywords": [
+      "customer",
+      "feedback",
+      "complaints",
+      "service",
+      "recovery",
+      "complaint",
+      "channels",
+      "acknowledgement",
+      "triage",
+      "investigation",
+      "remedy",
+      "confirmation",
+      "closure",
+      "recurring",
+      "prevention"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Feedback and complaint channels",
+        "keywords": [
+          "feedback",
+          "complaint",
+          "channels"
+        ]
+      },
+      {
+        "title": "Acknowledgement triage and ownership",
+        "keywords": [
+          "acknowledgement",
+          "triage",
+          "ownership"
+        ]
+      },
+      {
+        "title": "Investigation and remedy",
+        "keywords": [
+          "investigation",
+          "remedy"
+        ]
+      },
+      {
+        "title": "Service recovery and customer confirmation",
+        "keywords": [
+          "service",
+          "recovery",
+          "customer",
+          "confirmation"
+        ]
+      },
+      {
+        "title": "Closure evidence and recurring issue prevention",
+        "keywords": [
+          "closure",
+          "evidence",
+          "recurring",
+          "issue",
+          "prevention"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for feedback and complaint channels.",
+      "Establish clear requirements and ownership for acknowledgement triage and ownership.",
+      "Establish clear requirements and ownership for investigation and remedy."
+    ],
+    "principles": [
+      "Decisions about feedback and complaint channels are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of closure evidence and recurring issue prevention at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Feedback and complaint channels; Acknowledgement triage and ownership; Investigation and remedy; Service recovery and customer confirmation; Closure evidence and recurring issue prevention. ",
+      "procedures": "Give operational steps for Feedback and complaint channels; Acknowledgement triage and ownership; Investigation and remedy; Service recovery and customer confirmation; Closure evidence and recurring issue prevention with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Customer Feedback, Complaints and Service Recovery Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_s_01",
+    "name": "Information Security Policy and Security Governance Procedure",
+    "code": "S-01",
+    "management_system": "ISMS",
+    "document_kind": "policy",
+    "description": "S-01 | ISMS | Information Security Policy and Security Governance Procedure. Covers Security governance accountability and objectives, Information protection commitments, Risk based security and exceptions, Security policy hierarchy and communication, Governance monitoring and review.",
+    "purpose": "define the responsibilities and operational controls for information security policy and security governance procedure",
+    "keywords": [
+      "security",
+      "governance",
+      "accountability",
+      "objectives",
+      "information",
+      "protection",
+      "commitments",
+      "exceptions",
+      "policy",
+      "hierarchy",
+      "communication"
+    ],
+    "categories": [],
+    "broad": true,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Security governance accountability and objectives",
+        "keywords": [
+          "security",
+          "governance",
+          "accountability",
+          "objectives"
+        ]
+      },
+      {
+        "title": "Information protection commitments",
+        "keywords": [
+          "information",
+          "protection",
+          "commitments"
+        ]
+      },
+      {
+        "title": "Risk based security and exceptions",
+        "keywords": [
+          "based",
+          "security",
+          "exceptions"
+        ]
+      },
+      {
+        "title": "Security policy hierarchy and communication",
+        "keywords": [
+          "security",
+          "policy",
+          "hierarchy",
+          "communication"
+        ]
+      },
+      {
+        "title": "Governance monitoring and review",
+        "keywords": [
+          "governance",
+          "monitoring",
+          "review"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for security governance accountability and objectives.",
+      "Establish clear requirements and ownership for information protection commitments.",
+      "Establish clear requirements and ownership for risk based security and exceptions."
+    ],
+    "principles": [
+      "Decisions about security governance accountability and objectives are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of governance monitoring and review at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Security governance accountability and objectives; Information protection commitments; Risk based security and exceptions; Security policy hierarchy and communication; Governance monitoring and review. ",
+      "procedures": "Give operational steps for Security governance accountability and objectives; Information protection commitments; Risk based security and exceptions; Security policy hierarchy and communication; Governance monitoring and review with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Information Security Policy and Security Governance Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_s_02",
+    "name": "ISMS Scope, Asset Inventory and Information Classification Procedure",
+    "code": "S-02",
+    "management_system": "ISMS",
+    "document_kind": "procedure",
+    "description": "S-02 | ISMS | ISMS Scope, Asset Inventory and Information Classification Procedure. Covers ISMS scope boundaries and interfaces, Asset inventory identifiers owners locations and dependencies, Information classification criteria, Handling rules by classification, Inventory and classification review.",
+    "purpose": "define the responsibilities and operational controls for isms scope, asset inventory and information classification procedure",
+    "keywords": [
+      "isms",
+      "scope",
+      "asset",
+      "inventory",
+      "classification",
+      "boundaries",
+      "interfaces",
+      "identifiers",
+      "owners",
+      "locations",
+      "dependencies",
+      "information",
+      "criteria",
+      "handling"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "ISMS scope boundaries and interfaces",
+        "keywords": [
+          "scope",
+          "boundaries",
+          "interfaces"
+        ]
+      },
+      {
+        "title": "Asset inventory identifiers owners locations and dependencies",
+        "keywords": [
+          "asset",
+          "inventory",
+          "identifiers",
+          "owners",
+          "locations",
+          "dependencies"
+        ]
+      },
+      {
+        "title": "Information classification criteria",
+        "keywords": [
+          "information",
+          "classification",
+          "criteria"
+        ]
+      },
+      {
+        "title": "Handling rules by classification",
+        "keywords": [
+          "handling",
+          "rules",
+          "classification"
+        ]
+      },
+      {
+        "title": "Inventory and classification review",
+        "keywords": [
+          "inventory",
+          "classification",
+          "review"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for isms scope boundaries and interfaces.",
+      "Establish clear requirements and ownership for asset inventory identifiers owners locations and dependencies.",
+      "Establish clear requirements and ownership for information classification criteria."
+    ],
+    "principles": [
+      "Decisions about isms scope boundaries and interfaces are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of inventory and classification review at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: ISMS scope boundaries and interfaces; Asset inventory identifiers owners locations and dependencies; Information classification criteria; Handling rules by classification; Inventory and classification review. ",
+      "procedures": "Give operational steps for ISMS scope boundaries and interfaces; Asset inventory identifiers owners locations and dependencies; Information classification criteria; Handling rules by classification; Inventory and classification review with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting ISMS Scope, Asset Inventory and Information Classification Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_s_03",
+    "name": "Information-Security Risk Assessment and Treatment Procedure",
+    "code": "S-03",
+    "management_system": "ISMS",
+    "document_kind": "procedure",
+    "description": "S-03 | ISMS | Information-Security Risk Assessment and Treatment Procedure. Covers Information security risk criteria, Asset threat vulnerability and consequence scenarios, Likelihood impact and inherent risk, Treatment owners actions and residual risk, Risk acceptance approval and reassessment.",
+    "purpose": "define the responsibilities and operational controls for information-security risk assessment and treatment procedure",
+    "keywords": [
+      "risk",
+      "assessment",
+      "treatment",
+      "information",
+      "security",
+      "criteria",
+      "threat",
+      "vulnerability",
+      "consequence",
+      "scenarios",
+      "likelihood",
+      "impact",
+      "inherent",
+      "owners",
+      "actions",
+      "residual",
+      "acceptance",
+      "reassessment"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Information security risk criteria",
+        "keywords": [
+          "information",
+          "security",
+          "criteria"
+        ]
+      },
+      {
+        "title": "Asset threat vulnerability and consequence scenarios",
+        "keywords": [
+          "asset",
+          "threat",
+          "vulnerability",
+          "consequence",
+          "scenarios"
+        ]
+      },
+      {
+        "title": "Likelihood impact and inherent risk",
+        "keywords": [
+          "likelihood",
+          "impact",
+          "inherent"
+        ]
+      },
+      {
+        "title": "Treatment owners actions and residual risk",
+        "keywords": [
+          "treatment",
+          "owners",
+          "actions",
+          "residual"
+        ]
+      },
+      {
+        "title": "Risk acceptance approval and reassessment",
+        "keywords": [
+          "acceptance",
+          "approval",
+          "reassessment"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for information security risk criteria.",
+      "Establish clear requirements and ownership for asset threat vulnerability and consequence scenarios.",
+      "Establish clear requirements and ownership for likelihood impact and inherent risk."
+    ],
+    "principles": [
+      "Decisions about information security risk criteria are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of risk acceptance approval and reassessment at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Information security risk criteria; Asset threat vulnerability and consequence scenarios; Likelihood impact and inherent risk; Treatment owners actions and residual risk; Risk acceptance approval and reassessment. ",
+      "procedures": "Give operational steps for Information security risk criteria; Asset threat vulnerability and consequence scenarios; Likelihood impact and inherent risk; Treatment owners actions and residual risk; Risk acceptance approval and reassessment with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Information-Security Risk Assessment and Treatment Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_s_04",
+    "name": "Statement of Applicability and Control-Implementation Register",
+    "code": "S-04",
+    "management_system": "ISMS",
+    "document_kind": "register",
+    "description": "S-04 | ISMS | Statement of Applicability and Control-Implementation Register. Covers Control applicability decisions and justification, Statement of Applicability fields control source applicability exclusion rationale implementation status owner and evidence, Risk and obligation linkage, Control implementation actions and dates, Approval review and version control.",
+    "purpose": "define the responsibilities and operational controls for statement of applicability and control-implementation register",
+    "keywords": [
+      "statement",
+      "applicability",
+      "control",
+      "implementation",
+      "register",
+      "decisions",
+      "justification",
+      "fields",
+      "source",
+      "exclusion",
+      "rationale",
+      "status",
+      "obligation",
+      "linkage",
+      "actions",
+      "version"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Control applicability decisions and justification",
+        "keywords": [
+          "control",
+          "applicability",
+          "decisions",
+          "justification"
+        ]
+      },
+      {
+        "title": "Statement of Applicability fields control source applicability exclusion rationale implementation status owner and evidence",
+        "keywords": [
+          "statement",
+          "applicability",
+          "fields",
+          "control",
+          "source",
+          "applicability",
+          "exclusion",
+          "rationale",
+          "implementation",
+          "status",
+          "owner",
+          "evidence"
+        ]
+      },
+      {
+        "title": "Risk and obligation linkage",
+        "keywords": [
+          "obligation",
+          "linkage"
+        ]
+      },
+      {
+        "title": "Control implementation actions and dates",
+        "keywords": [
+          "control",
+          "implementation",
+          "actions",
+          "dates"
+        ]
+      },
+      {
+        "title": "Approval review and version control",
+        "keywords": [
+          "approval",
+          "review",
+          "version",
+          "control"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for control applicability decisions and justification.",
+      "Establish clear requirements and ownership for statement of applicability fields control source applicability exclusion rationale implementation status owner and evidence.",
+      "Establish clear requirements and ownership for risk and obligation linkage."
+    ],
+    "principles": [
+      "Decisions about control applicability decisions and justification are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of approval review and version control at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Control applicability decisions and justification; Statement of Applicability fields control source applicability exclusion rationale implementation status owner and evidence; Risk and obligation linkage; Control implementation actions and dates; Approval review and version control. Include usable main-body register or matrix tables with defined columns, responsible roles, applicability, status and evidence. Unknown entries remain placeholders; never claim controls were implemented or audits completed without source evidence.",
+      "procedures": "Give operational steps for Control applicability decisions and justification; Statement of Applicability fields control source applicability exclusion rationale implementation status owner and evidence; Risk and obligation linkage; Control implementation actions and dates; Approval review and version control with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Statement of Applicability and Control-Implementation Register. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_s_05",
+    "name": "Access Control, (Joiner-Mover-Leaver) and Identity-Management Procedure",
+    "code": "S-05",
+    "management_system": "ISMS",
+    "document_kind": "procedure",
+    "description": "S-05 | ISMS | Access Control, (Joiner-Mover-Leaver) and Identity-Management Procedure. Covers Joiner identity verification and authorised provisioning, Mover access changes and segregation, Leaver revocation and asset return, Privileged and service account lifecycle, Periodic access reviews and retained approvals.",
+    "purpose": "define the responsibilities and operational controls for access control, (joiner-mover-leaver) and identity-management procedure",
+    "keywords": [
+      "access",
+      "control",
+      "(joiner",
+      "mover",
+      "leaver)",
+      "identity",
+      "joiner",
+      "verification",
+      "authorised",
+      "provisioning",
+      "changes",
+      "segregation",
+      "leaver",
+      "revocation",
+      "return",
+      "privileged",
+      "service",
+      "account",
+      "lifecycle",
+      "periodic",
+      "reviews",
+      "retained",
+      "approvals"
+    ],
+    "categories": [
+      "access_control",
+      "password"
+    ],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Joiner identity verification and authorised provisioning",
+        "keywords": [
+          "joiner",
+          "identity",
+          "verification",
+          "authorised",
+          "provisioning"
+        ]
+      },
+      {
+        "title": "Mover access changes and segregation",
+        "keywords": [
+          "mover",
+          "access",
+          "changes",
+          "segregation"
+        ]
+      },
+      {
+        "title": "Leaver revocation and asset return",
+        "keywords": [
+          "leaver",
+          "revocation",
+          "asset",
+          "return"
+        ]
+      },
+      {
+        "title": "Privileged and service account lifecycle",
+        "keywords": [
+          "privileged",
+          "service",
+          "account",
+          "lifecycle"
+        ]
+      },
+      {
+        "title": "Periodic access reviews and retained approvals",
+        "keywords": [
+          "periodic",
+          "access",
+          "reviews",
+          "retained",
+          "approvals"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for joiner identity verification and authorised provisioning.",
+      "Establish clear requirements and ownership for mover access changes and segregation.",
+      "Establish clear requirements and ownership for leaver revocation and asset return."
+    ],
+    "principles": [
+      "Decisions about joiner identity verification and authorised provisioning are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of periodic access reviews and retained approvals at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Joiner identity verification and authorised provisioning; Mover access changes and segregation; Leaver revocation and asset return; Privileged and service account lifecycle; Periodic access reviews and retained approvals. ",
+      "procedures": "Give operational steps for Joiner identity verification and authorised provisioning; Mover access changes and segregation; Leaver revocation and asset return; Privileged and service account lifecycle; Periodic access reviews and retained approvals with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Access Control, (Joiner-Mover-Leaver) and Identity-Management Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_s_06",
+    "name": "Acceptable Use, Remote Work and Endpoint Security Procedure",
+    "code": "S-06",
+    "management_system": "ISMS",
+    "document_kind": "procedure",
+    "description": "S-06 | ISMS | Acceptable Use, Remote Work and Endpoint Security Procedure. Covers Acceptable use of systems information and equipment, Remote work safeguards, Endpoint configuration and protection, Lost devices and prohibited use reporting, Acknowledgement exceptions and verification.",
+    "purpose": "define the responsibilities and operational controls for acceptable use, remote work and endpoint security procedure",
+    "keywords": [
+      "acceptable",
+      "remote",
+      "work",
+      "endpoint",
+      "systems",
+      "information",
+      "equipment",
+      "safeguards",
+      "configuration",
+      "protection",
+      "devices",
+      "prohibited",
+      "reporting",
+      "acknowledgement",
+      "exceptions",
+      "verification"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Acceptable use of systems information and equipment",
+        "keywords": [
+          "acceptable",
+          "systems",
+          "information",
+          "equipment"
+        ]
+      },
+      {
+        "title": "Remote work safeguards",
+        "keywords": [
+          "remote",
+          "safeguards"
+        ]
+      },
+      {
+        "title": "Endpoint configuration and protection",
+        "keywords": [
+          "endpoint",
+          "configuration",
+          "protection"
+        ]
+      },
+      {
+        "title": "Lost devices and prohibited use reporting",
+        "keywords": [
+          "devices",
+          "prohibited",
+          "reporting"
+        ]
+      },
+      {
+        "title": "Acknowledgement exceptions and verification",
+        "keywords": [
+          "acknowledgement",
+          "exceptions",
+          "verification"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for acceptable use of systems information and equipment.",
+      "Establish clear requirements and ownership for remote work safeguards.",
+      "Establish clear requirements and ownership for endpoint configuration and protection."
+    ],
+    "principles": [
+      "Decisions about acceptable use of systems information and equipment are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of acknowledgement exceptions and verification at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Acceptable use of systems information and equipment; Remote work safeguards; Endpoint configuration and protection; Lost devices and prohibited use reporting; Acknowledgement exceptions and verification. ",
+      "procedures": "Give operational steps for Acceptable use of systems information and equipment; Remote work safeguards; Endpoint configuration and protection; Lost devices and prohibited use reporting; Acknowledgement exceptions and verification with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Acceptable Use, Remote Work and Endpoint Security Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_s_07",
+    "name": "Cryptography and Secure Information-Transfer Procedure",
+    "code": "S-07",
+    "management_system": "ISMS",
+    "document_kind": "procedure",
+    "description": "S-07 | ISMS | Cryptography and Secure Information-Transfer Procedure. Covers Encryption scope and approved methods, Cryptographic key lifecycle and custody, Secure information transfer channels, Recipient authorisation and transfer records, Exceptions compromise response and review.",
+    "purpose": "define the responsibilities and operational controls for cryptography and secure information-transfer procedure",
+    "keywords": [
+      "cryptography",
+      "secure",
+      "transfer",
+      "encryption",
+      "approved",
+      "methods",
+      "cryptographic",
+      "lifecycle",
+      "custody",
+      "information",
+      "channels",
+      "recipient",
+      "authorisation",
+      "exceptions",
+      "compromise",
+      "response"
+    ],
+    "categories": [
+      "data_protection"
+    ],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Encryption scope and approved methods",
+        "keywords": [
+          "encryption",
+          "scope",
+          "approved",
+          "methods"
+        ]
+      },
+      {
+        "title": "Cryptographic key lifecycle and custody",
+        "keywords": [
+          "cryptographic",
+          "lifecycle",
+          "custody"
+        ]
+      },
+      {
+        "title": "Secure information transfer channels",
+        "keywords": [
+          "secure",
+          "information",
+          "transfer",
+          "channels"
+        ]
+      },
+      {
+        "title": "Recipient authorisation and transfer records",
+        "keywords": [
+          "recipient",
+          "authorisation",
+          "transfer",
+          "records"
+        ]
+      },
+      {
+        "title": "Exceptions compromise response and review",
+        "keywords": [
+          "exceptions",
+          "compromise",
+          "response",
+          "review"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for encryption scope and approved methods.",
+      "Establish clear requirements and ownership for cryptographic key lifecycle and custody.",
+      "Establish clear requirements and ownership for secure information transfer channels."
+    ],
+    "principles": [
+      "Decisions about encryption scope and approved methods are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of exceptions compromise response and review at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Encryption scope and approved methods; Cryptographic key lifecycle and custody; Secure information transfer channels; Recipient authorisation and transfer records; Exceptions compromise response and review. ",
+      "procedures": "Give operational steps for Encryption scope and approved methods; Cryptographic key lifecycle and custody; Secure information transfer channels; Recipient authorisation and transfer records; Exceptions compromise response and review with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Cryptography and Secure Information-Transfer Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_s_08",
+    "name": "Backup, Restore and Availability Procedure",
+    "code": "S-08",
+    "management_system": "ISMS",
+    "document_kind": "procedure",
+    "description": "S-08 | ISMS | Backup, Restore and Availability Procedure. Covers Backup scope schedules and responsibilities, Backup protection separation and retention, Restore authorisation and steps, Restore testing and recovery evidence, Availability monitoring and failed backup escalation.",
+    "purpose": "define the responsibilities and operational controls for backup, restore and availability procedure",
+    "keywords": [
+      "backup",
+      "restore",
+      "availability",
+      "schedules",
+      "protection",
+      "separation",
+      "retention",
+      "authorisation",
+      "testing",
+      "recovery",
+      "failed",
+      "escalation"
+    ],
+    "categories": [
+      "backup_recovery"
+    ],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Backup scope schedules and responsibilities",
+        "keywords": [
+          "backup",
+          "scope",
+          "schedules",
+          "responsibilities"
+        ]
+      },
+      {
+        "title": "Backup protection separation and retention",
+        "keywords": [
+          "backup",
+          "protection",
+          "separation",
+          "retention"
+        ]
+      },
+      {
+        "title": "Restore authorisation and steps",
+        "keywords": [
+          "restore",
+          "authorisation",
+          "steps"
+        ]
+      },
+      {
+        "title": "Restore testing and recovery evidence",
+        "keywords": [
+          "restore",
+          "testing",
+          "recovery",
+          "evidence"
+        ]
+      },
+      {
+        "title": "Availability monitoring and failed backup escalation",
+        "keywords": [
+          "availability",
+          "monitoring",
+          "failed",
+          "backup",
+          "escalation"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for backup scope schedules and responsibilities.",
+      "Establish clear requirements and ownership for backup protection separation and retention.",
+      "Establish clear requirements and ownership for restore authorisation and steps."
+    ],
+    "principles": [
+      "Decisions about backup scope schedules and responsibilities are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of availability monitoring and failed backup escalation at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Backup scope schedules and responsibilities; Backup protection separation and retention; Restore authorisation and steps; Restore testing and recovery evidence; Availability monitoring and failed backup escalation. ",
+      "procedures": "Give operational steps for Backup scope schedules and responsibilities; Backup protection separation and retention; Restore authorisation and steps; Restore testing and recovery evidence; Availability monitoring and failed backup escalation with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Backup, Restore and Availability Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_s_09",
+    "name": "Incident Management and Information-Security Event Procedure",
+    "code": "S-09",
+    "management_system": "ISMS",
+    "document_kind": "procedure",
+    "description": "S-09 | ISMS | Incident Management and Information-Security Event Procedure. Covers Event detection and reporting, Triage classification and incident activation, Containment evidence preservation and coordination, Recovery stakeholder notification and contractual deadlines, Post incident review and records.",
+    "purpose": "define the responsibilities and operational controls for incident management and information-security event procedure",
+    "keywords": [
+      "incident",
+      "event",
+      "detection",
+      "reporting",
+      "triage",
+      "classification",
+      "activation",
+      "containment",
+      "preservation",
+      "coordination",
+      "recovery",
+      "stakeholder",
+      "notification",
+      "contractual",
+      "deadlines"
+    ],
+    "categories": [
+      "incident_management"
+    ],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Event detection and reporting",
+        "keywords": [
+          "event",
+          "detection",
+          "reporting"
+        ]
+      },
+      {
+        "title": "Triage classification and incident activation",
+        "keywords": [
+          "triage",
+          "classification",
+          "incident",
+          "activation"
+        ]
+      },
+      {
+        "title": "Containment evidence preservation and coordination",
+        "keywords": [
+          "containment",
+          "evidence",
+          "preservation",
+          "coordination"
+        ]
+      },
+      {
+        "title": "Recovery stakeholder notification and contractual deadlines",
+        "keywords": [
+          "recovery",
+          "stakeholder",
+          "notification",
+          "contractual",
+          "deadlines"
+        ]
+      },
+      {
+        "title": "Post incident review and records",
+        "keywords": [
+          "incident",
+          "review",
+          "records"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for event detection and reporting.",
+      "Establish clear requirements and ownership for triage classification and incident activation.",
+      "Establish clear requirements and ownership for containment evidence preservation and coordination."
+    ],
+    "principles": [
+      "Decisions about event detection and reporting are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of post incident review and records at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Event detection and reporting; Triage classification and incident activation; Containment evidence preservation and coordination; Recovery stakeholder notification and contractual deadlines; Post incident review and records. ",
+      "procedures": "Give operational steps for Event detection and reporting; Triage classification and incident activation; Containment evidence preservation and coordination; Recovery stakeholder notification and contractual deadlines; Post incident review and records with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Incident Management and Information-Security Event Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_s_10",
+    "name": "Vulnerability, Patch and Secure-Configuration Procedure",
+    "code": "S-10",
+    "management_system": "ISMS",
+    "document_kind": "procedure",
+    "description": "S-10 | ISMS | Vulnerability, Patch and Secure-Configuration Procedure. Covers Vulnerability discovery and asset coverage, Risk based remediation priority, Patch testing approval and rollout, Secure configuration baselines and drift, Exceptions verification and overdue remediation escalation.",
+    "purpose": "define the responsibilities and operational controls for vulnerability, patch and secure-configuration procedure",
+    "keywords": [
+      "vulnerability",
+      "patch",
+      "secure",
+      "configuration",
+      "discovery",
+      "coverage",
+      "remediation",
+      "priority",
+      "testing",
+      "rollout",
+      "baselines",
+      "exceptions",
+      "verification",
+      "overdue",
+      "escalation"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Vulnerability discovery and asset coverage",
+        "keywords": [
+          "vulnerability",
+          "discovery",
+          "asset",
+          "coverage"
+        ]
+      },
+      {
+        "title": "Risk based remediation priority",
+        "keywords": [
+          "based",
+          "remediation",
+          "priority"
+        ]
+      },
+      {
+        "title": "Patch testing approval and rollout",
+        "keywords": [
+          "patch",
+          "testing",
+          "approval",
+          "rollout"
+        ]
+      },
+      {
+        "title": "Secure configuration baselines and drift",
+        "keywords": [
+          "secure",
+          "configuration",
+          "baselines",
+          "drift"
+        ]
+      },
+      {
+        "title": "Exceptions verification and overdue remediation escalation",
+        "keywords": [
+          "exceptions",
+          "verification",
+          "overdue",
+          "remediation",
+          "escalation"
+        ]
+      },
+      {
+        "title": "Customer-Managed Projects and Contractual Compliance",
+        "keywords": [
+          "customer-managed",
+          "client-managed",
+          "customer requirements",
+          "contractual",
+          "shared responsibility",
+          "customer approval"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for vulnerability discovery and asset coverage.",
+      "Establish clear requirements and ownership for risk based remediation priority.",
+      "Establish clear requirements and ownership for patch testing approval and rollout.",
+      "Meet agreed customer-managed project requirements and maintain evidence of contractual compliance within the assigned scope of responsibility."
+    ],
+    "principles": [
+      "Decisions about vulnerability discovery and asset coverage are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of exceptions verification and overdue remediation escalation at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Vulnerability discovery and asset coverage; Risk based remediation priority; Patch testing approval and rollout; Secure configuration baselines and drift; Exceptions verification and overdue remediation escalation. ",
+      "procedures": "Give operational steps for Vulnerability discovery and asset coverage; Risk based remediation priority; Patch testing approval and rollout; Secure configuration baselines and drift; Exceptions verification and overdue remediation escalation with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Vulnerability, Patch and Secure-Configuration Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    },
+    "customer_project_sections": {
+      "scope": [
+        "This policy applies to work delivered in customer-managed projects and customer-controlled environments as well as internally managed services, including employees, contractors and remote or client-site delivery. Responsibilities must follow the agreed contract and shared-responsibility matrix; customer ownership does not remove the organization's delivery and compliance obligations."
+      ],
+      "roles_responsibilities": [
+        "For customer-managed projects, the Project Manager coordinates requirements and evidence, authorized delivery personnel perform only assigned configuration activities, and the customer-designated configuration/change authority approves customer-controlled baselines and changes. Confirm project-specific role assignments."
+      ],
+      "policy_requirements": [
+        "At onboarding and after material contract changes, identify and record the customer-managed project's contractual configuration requirements, customer-approved baselines, authorized tools/repositories, access restrictions, change windows, approval authority and required compliance evidence.",
+        "Personnel must use the customer-approved configuration and change process for customer-controlled assets, maintain project configuration records in the approved repository, and segregate customer configuration data and secrets. An internal CMDB or tool must not be mandated for customer assets without customer authorization.",
+        "Document the shared-responsibility matrix and obtain customer approval for baseline deviations, emergency changes, rollback or restoration within the agreed scope; escalate conflicting requirements instead of bypassing customer controls."
+      ],
+      "procedures": [
+        "For customer-managed projects, review contractual and customer configuration requirements, agree and record the shared-responsibility matrix and baseline, obtain authorized access, raise changes through the customer-approved workflow, test within authorized boundaries, obtain approval before deployment or rollback, validate results and retain permitted evidence in the approved project repository.",
+        "When customer-managed tooling, permissions or approvals prevent a required control, record the dependency, notify the Project Manager and customer-designated authority, agree compensating controls or a formally approved exception, and track closure."
+      ],
+      "risk_controls": [
+        "Assess customer-managed project risks including conflicting baselines, unauthorized changes in customer environments, unavailable customer approvals, shared-responsibility gaps and exposure of customer configurations or secrets; treat them through agreed authority, segregated repositories, controlled access, approval records and escalation."
+      ],
+      "monitoring_compliance": [
+        "For each customer-managed project, review conformity with contractual configuration obligations and customer-approved baselines, change approvals, drift remediation, exceptions and required audit evidence at the agreed frequency. Obtain customer attestations or permitted reports where direct access is restricted; record and escalate evidence gaps."
+      ],
+      "incident_reporting": [
+        "In customer-managed projects, report configuration incidents through agreed internal and customer channels and contractual notification timelines. Coordinate investigation and remediation with the customer-designated authority and retain permitted records; use [To be confirmed: project notification contacts and deadlines] where these are not evidenced."
+      ],
+      "exceptions": [
+        "Exceptions affecting customer-managed projects require documented risk assessment, internal approval and the customer-designated authority's approval where customer assets or contractual obligations are affected. Record compensating controls, expiry and review; internal approval alone cannot waive customer requirements."
+      ]
+    }
+  },
+  {
+    "id": "ims_s_11",
+    "name": "Supplier and Cloud Security Procedure",
+    "code": "S-11",
+    "management_system": "ISMS",
+    "document_kind": "procedure",
+    "description": "S-11 | ISMS | Supplier and Cloud Security Procedure. Covers Supplier and cloud service criticality, Security due diligence and shared responsibility, Contract data location subcontractor and assurance obligations, Supplier access monitoring and incident coordination, Portability data return deletion and exit assurance.",
+    "purpose": "define the responsibilities and operational controls for supplier and cloud security procedure",
+    "keywords": [
+      "supplier",
+      "cloud",
+      "service",
+      "criticality",
+      "security",
+      "diligence",
+      "shared",
+      "responsibility",
+      "contract",
+      "location",
+      "subcontractor",
+      "assurance",
+      "obligations",
+      "access",
+      "incident",
+      "coordination",
+      "portability",
+      "return",
+      "deletion"
+    ],
+    "categories": [
+      "vendor_management"
+    ],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Supplier and cloud service criticality",
+        "keywords": [
+          "supplier",
+          "cloud",
+          "service",
+          "criticality"
+        ]
+      },
+      {
+        "title": "Security due diligence and shared responsibility",
+        "keywords": [
+          "security",
+          "diligence",
+          "shared",
+          "responsibility"
+        ]
+      },
+      {
+        "title": "Contract data location subcontractor and assurance obligations",
+        "keywords": [
+          "contract",
+          "location",
+          "subcontractor",
+          "assurance",
+          "obligations"
+        ]
+      },
+      {
+        "title": "Supplier access monitoring and incident coordination",
+        "keywords": [
+          "supplier",
+          "access",
+          "monitoring",
+          "incident",
+          "coordination"
+        ]
+      },
+      {
+        "title": "Portability data return deletion and exit assurance",
+        "keywords": [
+          "portability",
+          "return",
+          "deletion",
+          "assurance"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for supplier and cloud service criticality.",
+      "Establish clear requirements and ownership for security due diligence and shared responsibility.",
+      "Establish clear requirements and ownership for contract data location subcontractor and assurance obligations."
+    ],
+    "principles": [
+      "Decisions about supplier and cloud service criticality are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of portability data return deletion and exit assurance at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Supplier and cloud service criticality; Security due diligence and shared responsibility; Contract data location subcontractor and assurance obligations; Supplier access monitoring and incident coordination; Portability data return deletion and exit assurance. ",
+      "procedures": "Give operational steps for Supplier and cloud service criticality; Security due diligence and shared responsibility; Contract data location subcontractor and assurance obligations; Supplier access monitoring and incident coordination; Portability data return deletion and exit assurance with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Supplier and Cloud Security Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_s_12",
+    "name": "Secure Development and Project Information-Security Procedure",
+    "code": "S-12",
+    "management_system": "ISMS",
+    "document_kind": "procedure",
+    "description": "S-12 | ISMS | Secure Development and Project Information-Security Procedure. Covers Project security requirements and applicability, Secure design threat modelling and data flows, Development access code review and dependency security, Security testing and release approval, Change handover and vulnerability remediation.",
+    "purpose": "define the responsibilities and operational controls for secure development and project information-security procedure",
+    "keywords": [
+      "secure",
+      "development",
+      "project",
+      "security",
+      "applicability",
+      "design",
+      "threat",
+      "modelling",
+      "access",
+      "dependency",
+      "testing",
+      "release",
+      "change",
+      "handover",
+      "vulnerability",
+      "remediation"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Project security requirements and applicability",
+        "keywords": [
+          "project",
+          "security",
+          "requirements",
+          "applicability"
+        ]
+      },
+      {
+        "title": "Secure design threat modelling and data flows",
+        "keywords": [
+          "secure",
+          "design",
+          "threat",
+          "modelling",
+          "flows"
+        ]
+      },
+      {
+        "title": "Development access code review and dependency security",
+        "keywords": [
+          "development",
+          "access",
+          "review",
+          "dependency",
+          "security"
+        ]
+      },
+      {
+        "title": "Security testing and release approval",
+        "keywords": [
+          "security",
+          "testing",
+          "release",
+          "approval"
+        ]
+      },
+      {
+        "title": "Change handover and vulnerability remediation",
+        "keywords": [
+          "change",
+          "handover",
+          "vulnerability",
+          "remediation"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for project security requirements and applicability.",
+      "Establish clear requirements and ownership for secure design threat modelling and data flows.",
+      "Establish clear requirements and ownership for development access code review and dependency security."
+    ],
+    "principles": [
+      "Decisions about project security requirements and applicability are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of change handover and vulnerability remediation at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Project security requirements and applicability; Secure design threat modelling and data flows; Development access code review and dependency security; Security testing and release approval; Change handover and vulnerability remediation. ",
+      "procedures": "Give operational steps for Project security requirements and applicability; Secure design threat modelling and data flows; Development access code review and dependency security; Security testing and release approval; Change handover and vulnerability remediation with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Secure Development and Project Information-Security Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_s_13",
+    "name": "Logging, Monitoring and Security-Review Procedure",
+    "code": "S-13",
+    "management_system": "ISMS",
+    "document_kind": "procedure",
+    "description": "S-13 | ISMS | Logging, Monitoring and Security-Review Procedure. Covers Logging requirements and event coverage, Log integrity time synchronisation access and retention, Monitoring use cases alerts and triage, Security review evidence and followup, Logging failures privacy and review ownership.",
+    "purpose": "define the responsibilities and operational controls for logging, monitoring and security-review procedure",
+    "keywords": [
+      "logging",
+      "monitoring",
+      "review",
+      "coverage",
+      "integrity",
+      "synchronisation",
+      "access",
+      "retention",
+      "alerts",
+      "triage",
+      "security",
+      "followup",
+      "failures",
+      "privacy"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Logging requirements and event coverage",
+        "keywords": [
+          "logging",
+          "requirements",
+          "event",
+          "coverage"
+        ]
+      },
+      {
+        "title": "Log integrity time synchronisation access and retention",
+        "keywords": [
+          "integrity",
+          "synchronisation",
+          "access",
+          "retention"
+        ]
+      },
+      {
+        "title": "Monitoring use cases alerts and triage",
+        "keywords": [
+          "monitoring",
+          "cases",
+          "alerts",
+          "triage"
+        ]
+      },
+      {
+        "title": "Security review evidence and followup",
+        "keywords": [
+          "security",
+          "review",
+          "evidence",
+          "followup"
+        ]
+      },
+      {
+        "title": "Logging failures privacy and review ownership",
+        "keywords": [
+          "logging",
+          "failures",
+          "privacy",
+          "review",
+          "ownership"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for logging requirements and event coverage.",
+      "Establish clear requirements and ownership for log integrity time synchronisation access and retention.",
+      "Establish clear requirements and ownership for monitoring use cases alerts and triage."
+    ],
+    "principles": [
+      "Decisions about logging requirements and event coverage are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of logging failures privacy and review ownership at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Logging requirements and event coverage; Log integrity time synchronisation access and retention; Monitoring use cases alerts and triage; Security review evidence and followup; Logging failures privacy and review ownership. ",
+      "procedures": "Give operational steps for Logging requirements and event coverage; Log integrity time synchronisation access and retention; Monitoring use cases alerts and triage; Security review evidence and followup; Logging failures privacy and review ownership with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Logging, Monitoring and Security-Review Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_s_14",
+    "name": "Physical and Environmental Security Procedure",
+    "code": "S-14",
+    "management_system": "ISMS",
+    "document_kind": "procedure",
+    "description": "S-14 | ISMS | Physical and Environmental Security Procedure. Covers Site security zones and authorised entry, Visitor contractor and delivery controls, Equipment and media protection, Environmental hazards utilities and maintenance, Physical incident reporting and inspection records.",
+    "purpose": "define the responsibilities and operational controls for physical and environmental security procedure",
+    "keywords": [
+      "physical",
+      "environmental",
+      "security",
+      "authorised",
+      "visitor",
+      "contractor",
+      "delivery",
+      "controls",
+      "equipment",
+      "protection",
+      "hazards",
+      "utilities",
+      "maintenance",
+      "incident",
+      "reporting",
+      "inspection"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Site security zones and authorised entry",
+        "keywords": [
+          "security",
+          "zones",
+          "authorised",
+          "entry"
+        ]
+      },
+      {
+        "title": "Visitor contractor and delivery controls",
+        "keywords": [
+          "visitor",
+          "contractor",
+          "delivery",
+          "controls"
+        ]
+      },
+      {
+        "title": "Equipment and media protection",
+        "keywords": [
+          "equipment",
+          "media",
+          "protection"
+        ]
+      },
+      {
+        "title": "Environmental hazards utilities and maintenance",
+        "keywords": [
+          "environmental",
+          "hazards",
+          "utilities",
+          "maintenance"
+        ]
+      },
+      {
+        "title": "Physical incident reporting and inspection records",
+        "keywords": [
+          "physical",
+          "incident",
+          "reporting",
+          "inspection",
+          "records"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for site security zones and authorised entry.",
+      "Establish clear requirements and ownership for visitor contractor and delivery controls.",
+      "Establish clear requirements and ownership for equipment and media protection."
+    ],
+    "principles": [
+      "Decisions about site security zones and authorised entry are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of physical incident reporting and inspection records at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Site security zones and authorised entry; Visitor contractor and delivery controls; Equipment and media protection; Environmental hazards utilities and maintenance; Physical incident reporting and inspection records. ",
+      "procedures": "Give operational steps for Site security zones and authorised entry; Visitor contractor and delivery controls; Equipment and media protection; Environmental hazards utilities and maintenance; Physical incident reporting and inspection records with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Physical and Environmental Security Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_s_15",
+    "name": "Human-Resource Security Procedure",
+    "code": "S-15",
+    "management_system": "ISMS",
+    "document_kind": "procedure",
+    "description": "S-15 | ISMS | Human-Resource Security Procedure. Covers recruitment, screening, induction, confidentiality, role changes, customer-managed assignments and offboarding; references separate risk and incident procedures without duplicating them.",
+    "purpose": "define the responsibilities and operational controls for human-resource security procedure",
+    "keywords": [
+      "human",
+      "resource",
+      "employment",
+      "screening",
+      "security",
+      "induction",
+      "awareness",
+      "confidentiality",
+      "changes",
+      "ongoing",
+      "personnel",
+      "disciplinary",
+      "interfaces",
+      "access",
+      "removal",
+      "return"
+    ],
+    "categories": [
+      "employee_responsibilities",
+      "access_control"
+    ],
+    "broad": false,
+    "exclude_sections": [
+      "risk_controls",
+      "incident_reporting",
+      "references",
+      "abbreviations"
+    ],
+    "topics": [
+      {
+        "title": "Pre employment screening and security terms",
+        "keywords": [
+          "employment",
+          "screening",
+          "security",
+          "terms"
+        ]
+      },
+      {
+        "title": "Induction awareness and confidentiality",
+        "keywords": [
+          "induction",
+          "awareness",
+          "confidentiality"
+        ]
+      },
+      {
+        "title": "Role changes and ongoing personnel responsibilities",
+        "keywords": [
+          "changes",
+          "ongoing",
+          "personnel",
+          "responsibilities"
+        ]
+      },
+      {
+        "title": "Disciplinary interfaces",
+        "keywords": [
+          "disciplinary",
+          "interfaces"
+        ]
+      },
+      {
+        "title": "Employment exit access removal and asset return",
+        "keywords": [
+          "employment",
+          "access",
+          "removal",
+          "asset",
+          "return"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for pre employment screening and security terms.",
+      "Establish clear requirements and ownership for induction awareness and confidentiality.",
+      "Establish clear requirements and ownership for role changes and ongoing personnel responsibilities."
+    ],
+    "principles": [
+      "Decisions about pre employment screening and security terms are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of employment exit access removal and asset return at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover proportionate screening and consent, competence before assignment, confidentiality agreements, induction acknowledgement, refresher training, mover reassessment, disciplinary interface, timely exit access removal and asset return, protection and minimisation of personnel records. For risk assessment and incidents include only a brief cross-reference to the applicable separate procedure. Do not create an incident response plan or risk register here. Do not turn proposed automation into a claim of existing implementation.",
+      "procedures": "Provide concise ordered steps with accountable roles and retained records for recruitment/CV screening and interviews, consent and screening review, onboarding, customer assignment, role change and exit. Keep access fulfilment details in the separate JML/access procedure; specify the HR handoff, confirmation and evidence. Customer-controlled access must be revoked by the authorised customer team with completion confirmed. Do not repeat roles tables or add incident investigation, escalation matrices, risk scoring or treatment workflows.",
+      "purpose": "Give one short HR-specific purpose. Do not insert scope, objectives, policy statements or general ISMS governance here.",
+      "definitions": "Use one two-column Term / Definition table for relevant terms and abbreviations with their full forms. Include only terms actually used; do not create a separate Abbreviations section or repeat tables.",
+      "scope": "One scope section covering employees, contractors and external providers, recruitment/CV screening and interviews, pre-employment checks, induction, role changes and exit. Cover Sapres-managed and customer-managed assignments, respecting customer authority over customer systems.",
+      "objectives": "One substantive combined Objectives and Principles section; never leave an empty heading or repeat objectives in Purpose.",
+      "roles_responsibilities": "One table of HR/recruitment, assignment or contract manager, IT, personnel and confirmed approving roles. Include recruitment screening and interviews. Do not repeat the roles table under Procedures or Review.",
+      "monitoring_compliance": "Verify screening completion, acknowledgements, training, access change/revocation and asset return records. Refer unresolved issues to the existing corrective-action/risk process; do not reproduce it.",
+      "exceptions": "State HR exception submission, designated review/approval, duration and record requirements; refer assessment to the separate risk procedure. Exceptions must not delay incident notification. Do not repeat the incident workflow.",
+      "review_maintenance": "Give a concise review interval and triggers, with confirmed ownership. Avoid repeating the roles table, document-control workflow or generic governance lists."
+    }
+  },
+  {
+    "id": "ims_eu_01",
+    "name": "Privacy and Personal-Data Governance Pack",
+    "code": "EU-01",
+    "management_system": "ISMS",
+    "document_kind": "pack",
+    "description": "EU-01 | ISMS | Privacy and Personal-Data Governance Pack. Covers Personal data inventory purposes and lawful basis review, Privacy roles notices and rights handling, Processor sharing transfer and retention controls, Privacy risk assessment and breach coordination, Governance registers accountability evidence and review.",
+    "purpose": "define the responsibilities and operational controls for privacy and personal-data governance pack",
+    "keywords": [
+      "privacy",
+      "personal",
+      "data",
+      "pack",
+      "inventory",
+      "purposes",
+      "lawful",
+      "notices",
+      "rights",
+      "handling",
+      "processor",
+      "sharing",
+      "transfer",
+      "retention",
+      "controls",
+      "assessment",
+      "breach",
+      "coordination",
+      "governance",
+      "registers",
+      "accountability"
+    ],
+    "categories": [
+      "data_privacy"
+    ],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Personal data inventory purposes and lawful basis review",
+        "keywords": [
+          "personal",
+          "inventory",
+          "purposes",
+          "lawful",
+          "basis",
+          "review"
+        ]
+      },
+      {
+        "title": "Privacy roles notices and rights handling",
+        "keywords": [
+          "privacy",
+          "roles",
+          "notices",
+          "rights",
+          "handling"
+        ]
+      },
+      {
+        "title": "Processor sharing transfer and retention controls",
+        "keywords": [
+          "processor",
+          "sharing",
+          "transfer",
+          "retention",
+          "controls"
+        ]
+      },
+      {
+        "title": "Privacy risk assessment and breach coordination",
+        "keywords": [
+          "privacy",
+          "assessment",
+          "breach",
+          "coordination"
+        ]
+      },
+      {
+        "title": "Governance registers accountability evidence and review",
+        "keywords": [
+          "governance",
+          "registers",
+          "accountability",
+          "evidence",
+          "review"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for personal data inventory purposes and lawful basis review.",
+      "Establish clear requirements and ownership for privacy roles notices and rights handling.",
+      "Establish clear requirements and ownership for processor sharing transfer and retention controls."
+    ],
+    "principles": [
+      "Decisions about personal data inventory purposes and lawful basis review are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of governance registers accountability evidence and review at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Personal data inventory purposes and lawful basis review; Privacy roles notices and rights handling; Processor sharing transfer and retention controls; Privacy risk assessment and breach coordination; Governance registers accountability evidence and review. Include usable main-body register or matrix tables with defined columns, responsible roles, applicability, status and evidence. Unknown entries remain placeholders; never claim controls were implemented or audits completed without source evidence.",
+      "procedures": "Give operational steps for Personal data inventory purposes and lawful basis review; Privacy roles notices and rights handling; Processor sharing transfer and retention controls; Privacy risk assessment and breach coordination; Governance registers accountability evidence and review with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Privacy and Personal-Data Governance Pack. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_eu_02",
+    "name": "Recruitment Automation and AI Governance Procedure",
+    "code": "EU-02",
+    "management_system": "ISMS",
+    "document_kind": "procedure",
+    "description": "EU-02 | ISMS | Recruitment Automation and AI Governance Procedure. Covers Recruitment automation inventory and purpose, Applicability and risk assessment of AI use, Human oversight candidate transparency and challenge, Bias accuracy data protection and supplier checks, Approval monitoring incidents and change records.",
+    "purpose": "define the responsibilities and operational controls for recruitment automation and ai governance procedure",
+    "keywords": [
+      "recruitment",
+      "automation",
+      "inventory",
+      "purpose",
+      "applicability",
+      "assessment",
+      "oversight",
+      "candidate",
+      "transparency",
+      "challenge",
+      "accuracy",
+      "protection",
+      "supplier",
+      "checks",
+      "incidents",
+      "change"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Recruitment automation inventory and purpose",
+        "keywords": [
+          "recruitment",
+          "automation",
+          "inventory",
+          "purpose"
+        ]
+      },
+      {
+        "title": "Applicability and risk assessment of AI use",
+        "keywords": [
+          "applicability",
+          "assessment"
+        ]
+      },
+      {
+        "title": "Human oversight candidate transparency and challenge",
+        "keywords": [
+          "human",
+          "oversight",
+          "candidate",
+          "transparency",
+          "challenge"
+        ]
+      },
+      {
+        "title": "Bias accuracy data protection and supplier checks",
+        "keywords": [
+          "accuracy",
+          "protection",
+          "supplier",
+          "checks"
+        ]
+      },
+      {
+        "title": "Approval monitoring incidents and change records",
+        "keywords": [
+          "approval",
+          "monitoring",
+          "incidents",
+          "change",
+          "records"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for recruitment automation inventory and purpose.",
+      "Establish clear requirements and ownership for applicability and risk assessment of ai use.",
+      "Establish clear requirements and ownership for human oversight candidate transparency and challenge."
+    ],
+    "principles": [
+      "Decisions about recruitment automation inventory and purpose are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of approval monitoring incidents and change records at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Recruitment automation inventory and purpose; Applicability and risk assessment of AI use; Human oversight candidate transparency and challenge; Bias accuracy data protection and supplier checks; Approval monitoring incidents and change records. ",
+      "procedures": "Give operational steps for Recruitment automation inventory and purpose; Applicability and risk assessment of AI use; Human oversight candidate transparency and challenge; Bias accuracy data protection and supplier checks; Approval monitoring incidents and change records with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Recruitment Automation and AI Governance Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_eu_03",
+    "name": "Cybersecurity Applicability and Customer-Flowdown Procedure",
+    "code": "EU-03",
+    "management_system": "ISMS",
+    "document_kind": "procedure",
+    "description": "EU-03 | ISMS | Cybersecurity Applicability and Customer-Flowdown Procedure. Covers Cybersecurity legal and customer requirement applicability, Contractual flowdown to suppliers and personnel, Obligations mapping ownership and assurance evidence, Customer incident notification requirements, Change monitoring and escalation.",
+    "purpose": "define the responsibilities and operational controls for cybersecurity applicability and customer-flowdown procedure",
+    "keywords": [
+      "cybersecurity",
+      "applicability",
+      "customer",
+      "flowdown",
+      "requirement",
+      "contractual",
+      "suppliers",
+      "personnel",
+      "obligations",
+      "mapping",
+      "assurance",
+      "incident",
+      "notification",
+      "change",
+      "escalation"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Cybersecurity legal and customer requirement applicability",
+        "keywords": [
+          "cybersecurity",
+          "legal",
+          "customer",
+          "requirement",
+          "applicability"
+        ]
+      },
+      {
+        "title": "Contractual flowdown to suppliers and personnel",
+        "keywords": [
+          "contractual",
+          "flowdown",
+          "suppliers",
+          "personnel"
+        ]
+      },
+      {
+        "title": "Obligations mapping ownership and assurance evidence",
+        "keywords": [
+          "obligations",
+          "mapping",
+          "ownership",
+          "assurance",
+          "evidence"
+        ]
+      },
+      {
+        "title": "Customer incident notification requirements",
+        "keywords": [
+          "customer",
+          "incident",
+          "notification",
+          "requirements"
+        ]
+      },
+      {
+        "title": "Change monitoring and escalation",
+        "keywords": [
+          "change",
+          "monitoring",
+          "escalation"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for cybersecurity legal and customer requirement applicability.",
+      "Establish clear requirements and ownership for contractual flowdown to suppliers and personnel.",
+      "Establish clear requirements and ownership for obligations mapping ownership and assurance evidence."
+    ],
+    "principles": [
+      "Decisions about cybersecurity legal and customer requirement applicability are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of change monitoring and escalation at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Cybersecurity legal and customer requirement applicability; Contractual flowdown to suppliers and personnel; Obligations mapping ownership and assurance evidence; Customer incident notification requirements; Change monitoring and escalation. ",
+      "procedures": "Give operational steps for Cybersecurity legal and customer requirement applicability; Contractual flowdown to suppliers and personnel; Obligations mapping ownership and assurance evidence; Customer incident notification requirements; Change monitoring and escalation with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Cybersecurity Applicability and Customer-Flowdown Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_eu_04",
+    "name": "Whistleblowing / Speak-Up Procedure",
+    "code": "EU-04",
+    "management_system": "ISMS",
+    "document_kind": "procedure",
+    "description": "EU-04 | ISMS | Whistleblowing / Speak-Up Procedure. Covers Speak up reporting channels and accessibility, Confidentiality and protection against retaliation, Report triage independent investigation and conflicts, Feedback escalation and resolution, Restricted records retention and oversight.",
+    "purpose": "define the responsibilities and operational controls for whistleblowing / speak-up procedure",
+    "keywords": [
+      "whistleblowing",
+      "speak",
+      "reporting",
+      "channels",
+      "accessibility",
+      "confidentiality",
+      "protection",
+      "against",
+      "retaliation",
+      "report",
+      "triage",
+      "independent",
+      "investigation",
+      "conflicts",
+      "feedback",
+      "escalation",
+      "resolution",
+      "restricted",
+      "retention",
+      "oversight"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Speak up reporting channels and accessibility",
+        "keywords": [
+          "speak",
+          "reporting",
+          "channels",
+          "accessibility"
+        ]
+      },
+      {
+        "title": "Confidentiality and protection against retaliation",
+        "keywords": [
+          "confidentiality",
+          "protection",
+          "against",
+          "retaliation"
+        ]
+      },
+      {
+        "title": "Report triage independent investigation and conflicts",
+        "keywords": [
+          "report",
+          "triage",
+          "independent",
+          "investigation",
+          "conflicts"
+        ]
+      },
+      {
+        "title": "Feedback escalation and resolution",
+        "keywords": [
+          "feedback",
+          "escalation",
+          "resolution"
+        ]
+      },
+      {
+        "title": "Restricted records retention and oversight",
+        "keywords": [
+          "restricted",
+          "records",
+          "retention",
+          "oversight"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for speak up reporting channels and accessibility.",
+      "Establish clear requirements and ownership for confidentiality and protection against retaliation.",
+      "Establish clear requirements and ownership for report triage independent investigation and conflicts."
+    ],
+    "principles": [
+      "Decisions about speak up reporting channels and accessibility are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of restricted records retention and oversight at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Speak up reporting channels and accessibility; Confidentiality and protection against retaliation; Report triage independent investigation and conflicts; Feedback escalation and resolution; Restricted records retention and oversight. ",
+      "procedures": "Give operational steps for Speak up reporting channels and accessibility; Confidentiality and protection against retaliation; Report triage independent investigation and conflicts; Feedback escalation and resolution; Restricted records retention and oversight with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Whistleblowing / Speak-Up Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  },
+  {
+    "id": "ims_eu_05",
+    "name": "Employment, Assignment and Right-to-Work Compliance Procedure",
+    "code": "EU-05",
+    "management_system": "ISMS",
+    "document_kind": "procedure",
+    "description": "EU-05 | ISMS | Employment, Assignment and Right-to-Work Compliance Procedure. Covers Country and assignment applicability assessment, Right to work checks and evidence, Employment assignment and customer obligations matrix, Renewal changes and escalation, Restricted records ownership and compliance review.",
+    "purpose": "define the responsibilities and operational controls for employment, assignment and right-to-work compliance procedure",
+    "keywords": [
+      "employment",
+      "assignment",
+      "right",
+      "work",
+      "compliance",
+      "country",
+      "applicability",
+      "assessment",
+      "checks",
+      "customer",
+      "obligations",
+      "matrix",
+      "renewal",
+      "changes",
+      "escalation",
+      "restricted"
+    ],
+    "categories": [],
+    "broad": false,
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Country and assignment applicability assessment",
+        "keywords": [
+          "country",
+          "assignment",
+          "applicability",
+          "assessment"
+        ]
+      },
+      {
+        "title": "Right to work checks and evidence",
+        "keywords": [
+          "right",
+          "checks",
+          "evidence"
+        ]
+      },
+      {
+        "title": "Employment assignment and customer obligations matrix",
+        "keywords": [
+          "employment",
+          "assignment",
+          "customer",
+          "obligations",
+          "matrix"
+        ]
+      },
+      {
+        "title": "Renewal changes and escalation",
+        "keywords": [
+          "renewal",
+          "changes",
+          "escalation"
+        ]
+      },
+      {
+        "title": "Restricted records ownership and compliance review",
+        "keywords": [
+          "restricted",
+          "records",
+          "ownership",
+          "compliance",
+          "review"
+        ]
+      }
+    ],
+    "objectives": [
+      "Establish clear requirements and ownership for country and assignment applicability assessment.",
+      "Establish clear requirements and ownership for right to work checks and evidence.",
+      "Establish clear requirements and ownership for employment assignment and customer obligations matrix."
+    ],
+    "principles": [
+      "Decisions about country and assignment applicability assessment are proportionate to documented needs and risk.",
+      "Responsibilities, approvals and retained evidence are defined before work is completed."
+    ],
+    "monitoring": [
+      "The document owner verifies the operation of restricted records ownership and compliance review at the agreed review interval."
+    ],
+    "section_guidance": {
+      "policy_requirements": "Cover these document-specific subjects: Country and assignment applicability assessment; Right to work checks and evidence; Employment assignment and customer obligations matrix; Renewal changes and escalation; Restricted records ownership and compliance review. ",
+      "procedures": "Give operational steps for Country and assignment applicability assessment; Right to work checks and evidence; Employment assignment and customer obligations matrix; Renewal changes and escalation; Restricted records ownership and compliance review with actor, input, decision, approval, output and record. Do not merely restate policy commitments.",
+      "risk_controls": "Describe threat or failure scenarios specifically affecting Employment, Assignment and Right-to-Work Compliance Procedure. Map relevant treatment and responsible roles. No generic ISMS risk dump."
+    }
+  }
+]

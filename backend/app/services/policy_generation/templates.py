@@ -56,6 +56,10 @@ class PolicyTemplate:
     # Extra evidence the recommender looks for: "breadth" (requirements spread
     # over many areas) and "scored_risks" (risks rated in the documents).
     signals: tuple[str, ...] = ()
+    document_kind: str = "policy"
+    management_system: str = ""
+    section_guidance: dict = field(default_factory=dict)
+    customer_project_sections: dict = field(default_factory=dict)
 
     def sections(self) -> list[SectionSpec]:
         return [s for s in section_library() if s.id not in self.exclude_sections]
@@ -66,6 +70,8 @@ class PolicyTemplate:
             "name": self.name,
             "code": self.code,
             "description": self.description,
+            "document_kind": self.document_kind,
+            "management_system": self.management_system,
             "sections": [{"id": s.id, "heading": s.heading, "mandatory": s.mandatory} for s in self.sections()],
         }
 
@@ -127,6 +133,10 @@ def _build(entry: dict, source: Path) -> PolicyTemplate | None:
         monitoring=tuple(entry.get("monitoring", [])),
         broad=bool(entry.get("broad", False)),
         signals=tuple(entry.get("signals", [])),
+        document_kind=entry.get("document_kind", "policy"),
+        management_system=entry.get("management_system", ""),
+        section_guidance=dict(entry.get("section_guidance", {})),
+        customer_project_sections=dict(entry.get("customer_project_sections", {})),
     )
 
 

@@ -14,7 +14,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from app import __version__
-from app.api import routes_analysis, routes_files, routes_jobs, routes_policies, routes_reports, routes_system
+from app.api import routes_auth, routes_analysis, routes_files, routes_jobs, routes_policies, routes_reports, routes_system
 from app.core.config import BACKEND_DIR, get_settings
 from app.core.errors import NotFoundError, register_error_handlers
 from app.core.logging import configure_logging, get_logger
@@ -67,7 +67,7 @@ def create_app() -> FastAPI:
         expose_headers=["Content-Disposition", "Retry-After"],
     )
     register_error_handlers(app)
-    for module in (routes_system, routes_files, routes_analysis, routes_policies, routes_reports, routes_jobs):
+    for module in (routes_auth, routes_system, routes_files, routes_analysis, routes_policies, routes_reports, routes_jobs):
         app.include_router(module.router, prefix="/api")
 
     if (FRONTEND_DIST / "index.html").is_file():

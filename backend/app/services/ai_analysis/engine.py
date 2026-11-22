@@ -385,6 +385,7 @@ def run_analysis(ctx: JobContext) -> dict:
         )
 
     cache_file = storage.cache_path(f"analysis_{analysis_id}.json")
+    storage.materialize(cache_file)
     cache: dict = storage.read_json(cache_file) if cache_file.exists() else {}
     results: list[tuple[Chunk, ChunkFindings]] = []
     failed_chunks: list[dict] = []
@@ -398,6 +399,7 @@ def run_analysis(ctx: JobContext) -> dict:
                 findings = ChunkFindings.model_validate(cache[key])
             else:
                 extract = build_extract_request(chunk)
+                extract.timeout_seconds = max(30, settings.analysis_call_timeout_seconds)
                 extract.observer = progress_reporter(ctx.update, activity)
                 findings, _ = structured_call(provider, extract, ChunkFindings, repair_attempts=settings.llm_json_repair_attempts)
                 cache[key] = findings.model_dump()
@@ -437,8 +439,18 @@ def run_analysis(ctx: JobContext) -> dict:
     ctx.update(progress=80, message="Consolidating findings across documents.")
     try:
         consolidate = build_consolidate_request(merged, doc_overviews)
+        consolidate.timeout_seconds = max(30, settings.analysis_call_timeout_seconds)
         consolidate.observer = progress_reporter(ctx.update, "Consolidating findings across documents.")
-        consolidation, _ = structured_call(provider, consolidate, ConsolidationResult, repair_attempts=settings.llm_json_repair_attempts)
+        from app.services.ai_analysis.consolidation import consolidate_bounded
+        # A Groq fallback can have a much smaller per-request quota than the primary.
+        if any(name in provider.service_name for name in ("Groq", "NVIDIA")) and len(consolidate.system + consolidate.user) > 18000:
+            consolidation = consolidate_bounded(
+                provider, consolidate, cache, lambda: storage.write_json(cache_file, cache),
+                repair_attempts=settings.llm_json_repair_attempts,
+                budget=max(2500, min(12000, settings.consolidation_batch_chars)),
+            )
+        else:
+            consolidation, _ = structured_call(provider, consolidate, ConsolidationResult, repair_attempts=settings.llm_json_repair_attempts)
     except LLMError as exc:
         raise JobFailure(f"The findings were extracted, but consolidating them failed. {exc.message}", exc.code) from exc
 

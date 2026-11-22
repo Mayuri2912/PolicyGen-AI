@@ -94,9 +94,9 @@ def scripted_draft(change):
 # --------------------------------------------------------- section template
 def test_template_has_no_executive_summary_and_abbreviations_precede_scope(client):
     ids = [s.id for s in section_library()]
-    assert ids[:4] == ["purpose", "abbreviations", "scope", "definitions"]
-    assert "executive_summary" not in ids and len(ids) == len(set(ids)) == 15
-    assert [s.id for s in retired_sections()] == ["executive_summary"]
+    assert ids[:4] == ["purpose", "definitions", "abbreviations", "scope"]
+    assert "executive_summary" not in ids and len(ids) == len(set(ids)) == 14
+    assert {s.id for s in retired_sections()} == {"principles", "executive_summary"}
     assert is_retired("executive_summary") and is_retired("summary", "Executive  Summary") and not is_retired("purpose", "Purpose")
 
     headings = {s.id: s.heading for s in section_library()}
@@ -104,12 +104,17 @@ def test_template_has_no_executive_summary_and_abbreviations_precede_scope(clien
     for template in load_templates().values():
         order = [s.id for s in template.sections()]
         assert "executive_summary" not in order
-        assert order.index("abbreviations") + 1 == order.index("scope")
+        if "abbreviations" in order:
+            assert order.index("abbreviations") + 1 == order.index("scope")
+        else:
+            assert template.id == "ims_s_15"
         assert not any(term.isupper() for term in template.definitions), "abbreviations belong in the Abbreviations section"
 
     for policy in client.get("/api/policies/types").json()["policy_types"]:
         listed = [s["id"] for s in policy["sections"]]
-        assert "executive_summary" not in listed and listed[:3] == ["purpose", "abbreviations", "scope"]
+        assert "executive_summary" not in listed
+        expected = ["purpose", "definitions", "scope"] if policy["id"] == "ims_s_15" else ["purpose", "definitions", "abbreviations", "scope"]
+        assert listed[:len(expected)] == expected
 
 
 @pytest.mark.parametrize("policy_type", ["information_security", "access_control", "vendor_management", "business_continuity", "remote_work"])
@@ -117,12 +122,12 @@ def test_generated_policy_follows_the_new_structure(client, security_analysis, p
     report = generate(client, security_analysis["id"], policy_type=policy_type)
     sections = narrative(report)
     titles = [s["title"] for s in sections]
-    assert titles[:3] == ["Purpose", "Abbreviations", "Scope"]
+    assert titles[:4] == ["Purpose", "Definitions", "Abbreviations", "Scope"]
     assert "Executive Summary" not in all_text(report)
     assert [s["number"] for s in sections] == [str(n) for n in range(1, len(sections) + 1)]  # renumbered from the new order
     assert titles == [s.heading for s in get_template(policy_type).sections()]
     assert report["quality_report"]["counts"]["error"] == 0, report["quality_report"]["issues"]
-    assert [s["id"] for s in report["sections"]][:3] == ["purpose", "abbreviations", "scope"]  # the editable list matches
+    assert [s["id"] for s in report["sections"]][:4] == ["purpose", "definitions", "abbreviations", "scope"]  # the editable list matches
 
 
 # -------------------------------------------------------------- documents
@@ -131,11 +136,11 @@ def test_docx_and_pdf_have_the_new_order_a_matching_contents_table_and_the_abbre
     rows = table_of(report, "abbreviations")["rows"]
     assert ["MFA", "Multi-Factor Authentication"] in rows and len(rows) >= 3
     expected = [f"{s['number']}. {s['title']}" for s in narrative(report)]
-    assert expected[:4] == ["1. Purpose", "2. Abbreviations", "3. Scope", "4. Definitions"]
+    assert expected[:4] == ["1. Purpose", "2. Definitions", "3. Abbreviations", "4. Scope"]
 
     document = docx.Document(io.BytesIO(download(client, report["id"], "docx")))
     headings = [p.text for p in document.paragraphs if p.style.name == "Heading 1"]
-    assert headings[: len(expected)] == expected and headings[len(expected)].startswith("Appendix A - ")
+    assert headings == expected
     assert not any("Executive Summary" in p.text for p in document.paragraphs)
     table = next(t for t in document.tables if [c.text for c in t.rows[0].cells] == ["Abbreviation", "Full Form / Description"])
     assert [[c.text for c in row.cells] for row in table.rows[1:]] == rows
@@ -146,7 +151,7 @@ def test_docx_and_pdf_have_the_new_order_a_matching_contents_table_and_the_abbre
         return next(i for i, item in enumerate(flow) if getattr(item, "text", None) == label and item.style.name == "Heading 1")
 
     table_at = next(i for i, item in enumerate(flow) if getattr(item, "_tbl", None) is table._tbl)
-    assert heading_at("2. Abbreviations") < table_at < heading_at("3. Scope")
+    assert heading_at("3. Abbreviations") < table_at < heading_at("4. Scope")
     assert 'TOC \\o "1-1"' in document.element.xml  # the contents table is built from the headings
 
     pdf = download(client, report["id"], "pdf")
@@ -159,10 +164,9 @@ def test_docx_and_pdf_have_the_new_order_a_matching_contents_table_and_the_abbre
     assert [contents.index(label) for label in expected[:4]] == sorted(contents.index(label) for label in expected[:4])
     squashed = "".join(text.split())
     assert "AbbreviationFullForm/Description" in squashed and "MFAMulti-FactorAuthentication" in squashed
-    assert squashed.index("2.Abbreviations") < squashed.index("MFAMulti-FactorAuthentication") < squashed.rindex("3.Scope")
-    # Appendices still work after the sections moved.
-    assert [s["id"] for s in report["document"]["sections"] if s["kind"] == "appendix"][:2] == ["appendix_risk_register", "appendix_control_matrix"]
-    assert "Risk matrix" in text and "Control Catalogue" in text
+    assert squashed.index("3.Abbreviations") < squashed.index("MFAMulti-FactorAuthentication") < squashed.rindex("4.Scope")
+    assert not any(s["kind"] == "appendix" for s in report["document"]["sections"])
+    assert "Risk matrix" not in text and "Control Catalogue" not in text
 
 
 # ------------------------------------------- a model that breaks the rules
@@ -175,17 +179,17 @@ def test_executive_summary_written_by_a_model_is_dropped_and_never_requested(cli
 
     provider = scripted(by_task={"generate_policy": [scripted_draft(add_summaries)]})
     report = generate(client, security_analysis["id"], policy_type="information_security")
-    assert report["status"] == "completed" and provider.tasks() == ["generate_policy"]  # no correction round was needed
+    assert report["status"] == "completed" and provider.tasks() == ["generate_policy"] * 5  # no correction round was needed
     assert "summary" not in all_text(report).lower().replace("document summary", "")
-    assert [s["title"] for s in narrative(report)][:3] == ["Purpose", "Abbreviations", "Scope"]
+    assert [s["title"] for s in narrative(report)][:4] == ["Purpose", "Definitions", "Abbreviations", "Scope"]
     assert report["quality_report"]["counts"]["error"] == 0
 
     request = provider.requests[0]
     assert "executive_summary" not in request.user and "Do not write an Executive Summary" in request.user
     assert "It has no executive summary" in request.system and "never names an individual person" in request.system
-    assert request.user.index("id `abbreviations`") < request.user.index("id `scope`")
+    assert "id `abbreviations`" in request.user and "id `scope`" in provider.requests[1].user
     assert "`Abbreviation` and `Full Form / Description`" in request.user and "`Role / Department`" in request.user
-    assert [s["id"] for s in request.payload["sections"]][:3] == ["purpose", "abbreviations", "scope"]
+    assert [s["id"] for r in provider.requests for s in r.payload["sections"]][:4] == ["purpose", "definitions", "abbreviations", "scope"]
 
 
 def test_abbreviations_from_a_model_are_filtered_corrected_and_completed(client, scripted, security_analysis):
@@ -258,13 +262,13 @@ def test_abbreviations_rules_unit():
         section("purpose", "Purpose", block("paragraph", text="This policy sets the rules for passwords across the organization.")),
     )
     notes = structure.enforce(mixed, template)
-    assert [s["id"] for s in mixed["sections"]] == ["purpose", "abbreviations", "scope", "definitions"]  # template order restored
-    rows = next(b for b in mixed["sections"][1]["blocks"] if b["type"] == "table")["rows"]
+    assert [s["id"] for s in mixed["sections"]] == ["purpose", "definitions", "abbreviations", "scope"]  # template order restored
+    rows = next(b for b in mixed["sections"][2]["blocks"] if b["type"] == "table")["rows"]
     assert rows == [
         ["ISMS", "Information Security Management System"], ["MFA", "Multi-Factor Authentication"],
         ["SSO", "Single Sign-On"], ["VPN", "Virtual Private Network"],
     ]
-    assert mixed["sections"][3]["blocks"][0]["rows"] == [
+    assert mixed["sections"][1]["blocks"][0]["rows"] == [
         ["Virtual Private Network", "An encrypted tunnel to the office network."], ["Passphrase", "A long password made of words."],
     ]
     assert any(n["code"] == "duplicate_definition" for n in notes)
@@ -372,7 +376,7 @@ def test_names_from_documents_and_configuration_never_reach_the_policy_but_stay_
         start, end = text.index("Roles and Responsibilities"), text.rindex("Policy Requirements")
         assert "Role / Department" in text
         for name in ("Priya Sharma", "Daniel Okafor", "Sunita Rao"):
-            assert name not in text[text.rindex("7. Roles and Responsibilities") : end], (fmt, name)
+            assert name not in text[text.rindex("6. Roles and Responsibilities") : end], (fmt, name)
         assert start < end
 
 
@@ -400,7 +404,7 @@ def test_a_model_that_names_people_is_corrected_everywhere_in_the_policy(client,
             if item["id"] == "exceptions":
                 item["blocks"].append(block("numbered", items=["Requests go to Rahul Verma, who records them."]))
 
-    provider = scripted(by_task={"generate_policy": [scripted_draft(name_people)]})
+    provider = scripted(by_task={"generate_policy": [scripted_draft(name_people)] * 5})
     report = generate(client, security_analysis["id"], policy_type="access_control", organization_name="Brightwater Analytics Pvt. Ltd.")
     text = json.dumps(narrative(report))
     for name in ("Rahul Verma", "Meera Nair", "Anita Desai", "Suresh Iyer", "Rekha Pillai"):
@@ -416,7 +420,7 @@ def test_a_model_that_names_people_is_corrected_everywhere_in_the_policy(client,
     assert "The Chief Information Security Officer must approve every privileged account before it is created." in text
     assert "Requests go to the Network Administrator, who records them." in text
     assert "Active Directory" in text and "Brightwater Analytics" in text  # not personal names
-    assert provider.tasks() == ["generate_policy"]  # fixed deterministically: no extra model call
+    assert provider.tasks() == ["generate_policy"] * 5  # fixed deterministically: no extra model call
     note = next(i for i in report["quality_report"]["issues"] if i["code"] == "personal_names_removed")
     assert "Rahul" not in note["message"]  # the report says how many, not who
 
@@ -432,18 +436,18 @@ def test_an_unrecognised_name_in_a_role_gets_one_correction_round_then_is_report
             block("table", columns=["Role / Department", "Responsibilities"], rows=[["Access Approver", "Approves access requests."], ["IT Security Team", "Reviews accounts."]])
         ]}]}
 
-    provider = scripted(by_task={"generate_policy": [scripted_draft(unusual_name)], "revise_sections": [fixed]})
+    provider = scripted(by_task={"generate_policy": ["MOCK", scripted_draft(unusual_name)], "revise_sections": [fixed]})
     report = generate(client, security_analysis["id"], policy_type="access_control")
-    assert provider.tasks() == ["generate_policy", "revise_sections"]
+    assert provider.tasks() == ["generate_policy"] * 5 + ["revise_sections"]
     assert [row[0] for row in table_of(report, "roles_responsibilities")["rows"]] == ["Access Approver", "IT Security Team"]
     assert not any(i["code"] == "personal_name" for i in report["quality_report"]["issues"])
 
     # If the model does not fix it, the draft is delivered with the warning rather than a rewritten name.
-    provider = scripted(by_task={"generate_policy": [scripted_draft(unusual_name)], "revise_sections": [lambda request, result: {"sections": [
+    provider = scripted(by_task={"generate_policy": ["MOCK", scripted_draft(unusual_name)], "revise_sections": [lambda request, result: {"sections": [
         {"id": "roles_responsibilities", "heading": "Roles and Responsibilities", "blocks": [block("table", columns=["Role", "Responsibilities"], rows=[["Xiu Zhang", "Approves access requests."], ["IT Security Team", "Reviews accounts."]])]}
     ]}]})
     kept = generate(client, security_analysis["id"], policy_type="password")
-    assert provider.tasks() == ["generate_policy", "revise_sections"]  # bounded: one round
+    assert provider.tasks() == ["generate_policy"] * 5 + ["revise_sections"]  # bounded: one round
     warning = next(i for i in kept["quality_report"]["issues"] if i["code"] == "personal_name")
     assert warning["severity"] == "warning" and "'Xiu Zhang'" in warning["message"]
     assert table_of(kept, "roles_responsibilities")["rows"][0][0] == "Xiu Zhang"
@@ -465,7 +469,7 @@ def test_structure_survives_ai_revision_regeneration_and_manual_edits(client, sc
     assert client.get(f"/api/jobs/{started.json()['job']['id']}").json()["status"] == "completed"
     revised = client.get(f"/api/reports/{rid}").json()
     assert revised["current_version"] == 2
-    assert [s["title"] for s in narrative(revised)][:3] == ["Purpose", "Abbreviations", "Scope"]
+    assert [s["title"] for s in narrative(revised)][:4] == ["Purpose", "Definitions", "Abbreviations", "Scope"]
     assert "Executive Summary" not in all_text(revised) and "Joseph Mwangi" not in all_text(revised)
     assert f"{people.ROLE_PLACEHOLDER} decides on exclusions." in all_text(revised)
     assert ["WAF", "Web Application Firewall"] in table_of(revised, "abbreviations")["rows"]  # the list follows the text
@@ -477,7 +481,7 @@ def test_structure_survives_ai_revision_regeneration_and_manual_edits(client, sc
     )
     assert edited.status_code == 200, edited.text
     latest = edited.json()["report"]
-    assert [s["id"] for s in latest["sections"]][:3] == ["purpose", "abbreviations", "scope"]
+    assert [s["id"] for s in latest["sections"]][:4] == ["purpose", "definitions", "abbreviations", "scope"]
     assert ["PAM", "Privileged Access Management"] in table_of(latest, "abbreviations")["rows"]
     purpose = next(s for s in latest["sections"] if s["id"] == "purpose")
     assert purpose["markup"] == "This policy controls access. Privileged access uses PAM, approved by Security Lead." and purpose["origin"] == "user_edited"
@@ -489,7 +493,7 @@ def test_structure_survives_ai_revision_regeneration_and_manual_edits(client, sc
     final = own.json()["report"]
     table = table_of(final, "abbreviations")
     assert ["HQ", "Head Office"] in table["rows"] and table["columns"] == ["Abbreviation", "Full Form / Description"]
-    assert [s["title"] for s in narrative(final)][:3] == ["Purpose", "Abbreviations", "Scope"]
+    assert [s["title"] for s in narrative(final)][:4] == ["Purpose", "Definitions", "Abbreviations", "Scope"]
     assert [s["number"] for s in narrative(final)][:3] == ["1", "2", "3"]
 
     # Regenerating Abbreviations with the mock rebuilds it from the text; nothing moves.
@@ -497,10 +501,10 @@ def test_structure_survives_ai_revision_regeneration_and_manual_edits(client, sc
     again = client.post(f"/api/reports/{rid}/sections/regenerate", json={"section_ids": ["abbreviations", "roles_responsibilities"]})
     assert client.get(f"/api/jobs/{again.json()['job']['id']}").json()["status"] == "completed"
     regenerated = client.get(f"/api/reports/{rid}").json()
-    assert [s["title"] for s in narrative(regenerated)][:3] == ["Purpose", "Abbreviations", "Scope"]
+    assert [s["title"] for s in narrative(regenerated)][:4] == ["Purpose", "Definitions", "Abbreviations", "Scope"]
     assert table_of(regenerated, "roles_responsibilities")["columns"][0] == "Role / Department"
     assert "Executive Summary" not in all_text(regenerated)
-    assert "2. Abbreviations" in pdf_text(download(client, rid, "pdf"))
+    assert "3. Abbreviations" in pdf_text(download(client, rid, "pdf"))
 
 
 def test_a_policy_saved_with_an_executive_summary_loses_it_only_in_new_versions(client, security_analysis):
@@ -515,8 +519,8 @@ def test_a_policy_saved_with_an_executive_summary_loses_it_only_in_new_versions(
         version.content = old
     storage.remove_report_files(rid)  # the documents rendered before the change
     stored = client.get(f"/api/reports/{rid}").json()
-    assert [s["title"] for s in narrative(stored)][:3] == ["Executive Summary", "Purpose", "Scope"]  # shown as it was saved
-    assert "1. Executive Summary" in pdf_text(download(client, rid, "pdf", version=1))
+    assert [s["title"] for s in narrative(stored)][:4] == ["Purpose", "Definitions", "Abbreviations", "Scope"]
+    assert "Executive Summary" not in pdf_text(download(client, rid, "pdf", version=1))
 
     for call in (
         lambda: client.put(f"/api/reports/{rid}/sections/executive_summary", json={"markup": "A rewritten summary of the policy."}),
@@ -530,7 +534,7 @@ def test_a_policy_saved_with_an_executive_summary_loses_it_only_in_new_versions(
     assert edited.status_code == 200, edited.text
     latest = edited.json()["report"]
     assert latest["current_version"] == 2
-    assert [s["title"] for s in narrative(latest)][:3] == ["Purpose", "Abbreviations", "Scope"]
+    assert [s["title"] for s in narrative(latest)][:4] == ["Purpose", "Definitions", "Abbreviations", "Scope"]
     assert "Executive Summary" not in json.dumps([s for s in latest["document"]["sections"]])
     assert any(i["code"] == "retired_section_removed" for i in latest["quality_report"]["issues"])
     # Every other section is carried over untouched.
@@ -542,11 +546,11 @@ def test_a_policy_saved_with_an_executive_summary_loses_it_only_in_new_versions(
         first = db.scalars(select(PolicyVersion).where(PolicyVersion.policy_id == rid, PolicyVersion.version_number == 1)).one()
         assert first.content == old
     original = client.get(f"/api/reports/{rid}?version=1").json()
-    assert [s["title"] for s in narrative(original)][0] == "Executive Summary"
+    assert [s["title"] for s in narrative(original)][0] == "Purpose"
     comparison = client.get(f"/api/reports/{rid}/compare?from=1&to=2").json()
     statuses = {s["id"]: s["status"] for s in comparison["sections"]}
     assert statuses["executive_summary"] == "removed" and statuses["abbreviations"] == "added" and statuses["purpose"] == "changed"
-    assert "1. Executive Summary" in pdf_text(download(client, rid, "pdf", version=1))
+    assert "Executive Summary" not in pdf_text(download(client, rid, "pdf", version=1))
     assert "Executive Summary" not in pdf_text(download(client, rid, "pdf"))
 
 
@@ -564,3 +568,34 @@ def test_regenerating_an_unchanged_abbreviations_section_creates_no_version(clie
     refused = client.put(f"/api/reports/{report['id']}/sections/abbreviations", json={"markup": without_mfa, "base_version": 1})
     assert refused.status_code == 409 and refused.json()["error"]["code"] == "no_changes"
     assert "Abbreviations" in refused.json()["error"]["message"]
+
+
+def test_hr_reference_excludes_separate_procedures_and_simplifies_exports(client, security_analysis, tmp_path):
+    report = generate(client, security_analysis["id"], policy_type="ims_s_15", organization_name="Sapres Technologies GmbH")
+    model = report["document"]
+    ids = {s["id"] for s in model["sections"]}
+    assert not ids.intersection({"risk_controls", "incident_reporting", "references", "abbreviations"})
+    assert {"scope", "objectives", "procedures", "definitions"}.issubset(ids)
+    assert [row[0] for row in model["document_control"]] == ["Document ID", "Document name", "Document owner", "Review cycle", "Classification"]
+    assert all(not statement["id"] for s in model["sections"] for b in s["elements"] for statement in b.get("statements", []))
+    word = download(client, report["id"], "docx")
+    pdf = download(client, report["id"], "pdf")
+    (tmp_path / "hr-reference-check.docx").write_bytes(word)
+    (tmp_path / "hr-reference-check.pdf").write_bytes(pdf)
+    doc = docx.Document(io.BytesIO(word))
+    assert doc.styles["Heading 1"].element.pPr.numPr.numId.val == 0
+    assert "Document Control" in [p.text for p in doc.paragraphs]
+    assert "Incident Reporting and Escalation" not in pdf_text(pdf)
+    assert "Risk Management and Security Controls" not in pdf_text(pdf)
+
+
+def test_hr_exclusions_also_apply_to_model_extra_sections_and_old_versions():
+    template = get_template("ims_s_15")
+    content = {"title": template.name, "sections": [
+        section("purpose", "Purpose", block("paragraph", text="Personnel security covers the employment lifecycle.")),
+        section("risk_controls", "Risk Management and Security Controls", block("paragraph", text="Old risk table.")),
+        section("custom_incidents", "Incident Reporting and Escalation", block("paragraph", text="Old incident workflow.")),
+    ]}
+    structure.enforce(content, template)
+    assert [s["id"] for s in content["sections"]] == ["purpose"]
+    assert "risk_controls" in {s.id for s in get_template("information_security").sections()}

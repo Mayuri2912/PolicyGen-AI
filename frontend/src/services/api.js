@@ -11,6 +11,7 @@ export class ApiError extends Error {
     this.status = status;
     this.code = code;
     this.details = details;
+    this.retryAfter = details?.retryAfter || 0;
   }
 }
 
@@ -53,7 +54,7 @@ async function toError(response) {
   return new ApiError(error.message || fallback, {
     status: response.status,
     code: error.code || 'http_error',
-    details: error.details || null,
+    details: { ...(error.details || {}), retryAfter: Number(response.headers.get("Retry-After")) || 0 },
   });
 }
 
@@ -67,18 +68,21 @@ async function send(path, { method = 'GET', body, formData } = {}) {
     payload = JSON.stringify(body);
   }
   let response;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), formData ? 180000 : 45000);
   try {
-    response = await fetch(`${BASE}${path}`, { method, headers, body: payload });
-  } catch {
-    throw new ApiError('The server could not be reached. Check that the backend is running.', { code: 'network_error' });
-  }
+    response = await fetch(`${BASE}${path}`, { method, headers, body: payload, signal: controller.signal });
+  } catch (error) {
+    throw new ApiError(error.name === 'AbortError' ? 'The server is taking longer than expected. It may be starting up. Check the task status before submitting again.' : 'The server could not be reached. Check your connection and try again.', { code: error.name === 'AbortError' ? 'timeout' : 'network_error' });
+  } finally { clearTimeout(timer); }
   if (!response.ok) throw await toError(response);
   return response;
 }
 
 async function json(path, options) {
   const response = await send(path, options);
-  return response.json();
+  try { return await response.json(); }
+  catch { throw new ApiError('The API is starting up or returned an unexpected response. Wait a moment, then try again.', { code: 'server_starting' }); }
 }
 
 function query(params) {
@@ -91,6 +95,16 @@ function query(params) {
 }
 
 export const api = {
+  authStatus: () => json('/auth/status'),
+  me: () => json('/auth/me'),
+  login: (body) => json('/auth/login', { method: 'POST', body }),
+  setupAccount: (body) => json('/auth/setup', { method: 'POST', body }),
+  changePassword: (body) => json('/auth/password', { method: 'POST', body }),
+  logout: () => json('/auth/logout', { method: 'POST' }),
+  accounts: () => json('/auth/accounts'),
+  createAccount: (body) => json('/auth/accounts', { method: 'POST', body }),
+  disableAccount: (id) => json(`/auth/accounts/${id}/disable`, { method: 'POST' }),
+  completeMissing: (id, body) => json(`/reports/${id}/missing-information`, { method: 'POST', body }),
   // System
   health: () => json('/health'),
   config: () => json('/config'),

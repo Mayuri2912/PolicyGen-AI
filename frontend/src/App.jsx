@@ -7,6 +7,7 @@ import HelpPage from './pages/HelpPage.jsx';
 import NotFound from './pages/NotFound.jsx';
 import ReportPage from './pages/ReportPage.jsx';
 import ReportsPage from './pages/ReportsPage.jsx';
+import AccountPage from './pages/AccountPage.jsx';
 import UploadPage from './pages/UploadPage.jsx';
 
 export default function App() {
@@ -19,6 +20,7 @@ export default function App() {
         <Route path="analyses/:analysisId/configure" element={<ConfigurePage />} />
         <Route path="reports" element={<ReportsPage />} />
         <Route path="reports/:reportId" element={<ReportPage />} />
+        <Route path="account" element={<AccountPage />} />
         <Route path="help" element={<HelpPage />} />
         <Route path="*" element={<NotFound />} />
       </Route>

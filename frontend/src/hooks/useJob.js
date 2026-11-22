@@ -21,12 +21,15 @@ export function useJob(jobId, onFinished) {
     }
     let active = true;
     let timer;
+    let failures = 0;
+    let retryAfter = 0;
     setError(null);
 
     const poll = async () => {
       try {
         const next = await api.getJob(jobId);
         if (!active) return;
+        failures = 0; retryAfter = next.result?.next_retry_at ? Math.min(30, Math.max(1, (Date.parse(next.result.next_retry_at) - Date.now()) / 1000)) : 0;
         setJob(next);
         setError(null);
         if (TERMINAL_JOB.includes(next.status)) {
@@ -35,10 +38,11 @@ export function useJob(jobId, onFinished) {
         }
       } catch (err) {
         if (!active) return;
+        failures += 1; retryAfter = err.retryAfter || 0;
         setError(err.message);
-        if (err.status === 404) return;
+        if ([401, 403, 404].includes(err.status)) return;
       }
-      timer = setTimeout(poll, POLL_MS);
+      timer = setTimeout(poll, Math.max(retryAfter * 1000, Math.min(30000, POLL_MS * 2 ** failures)));
     };
     poll();
 

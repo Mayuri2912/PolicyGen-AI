@@ -69,7 +69,7 @@ class _Writer:
         self.requirements = [r for r in self.analysis["requirements"] if self._relevant(r["statement"], r.get("category"))]
         self.other_requirements = len(self.analysis["requirements"]) - len(self.requirements)
         self.risks = sorted(
-            self.analysis["risks"],
+            [r for r in self.analysis["risks"] if self._relevant(f"{r['title']} {r.get('description', '')}", r.get("category"))],
             key=lambda r: (
                 not self._relevant(f"{r['title']} {r.get('description', '')}", None),
                 _LEVEL_ORDER.get(r.get("level"), 4),
@@ -115,6 +115,11 @@ class _Writer:
         return []
 
     def scope(self) -> list[dict]:
+        if self.policy["id"] in ("vendor_management", "ims_i_08", "ims_s_11"):
+            return [para(f"This document applies to {self.org}'s suppliers, outsourced services and cloud providers, "
+                         "and the personnel who select, approve, contract, monitor and terminate those relationships. "
+                         "Coverage includes vendor access, information handling, subcontractors, service dependencies and exit. "
+                         "The vendor inventory and criticality tiers are " + ph("vendor inventory and classification criteria") + ".")]
         summary = self.analysis["summary"]
         department = self.config.get("department")
         items = ["All employees, contractors and temporary staff of " + self.org + (f" ({department})" if department else "") + "."]
@@ -131,7 +136,7 @@ class _Writer:
         return [para("This policy applies to:"), block("bullets", items=items), para("Out of scope: " + ph("any exclusions") + ".")]
 
     def objectives(self) -> list[dict]:
-        items = list(self.policy.get("objectives", []))
+        items = list(self.policy.get("objectives", [])) + list(self.policy.get("principles", []))
         if self.risks:
             items.append("Reduce the risks recorded in the risk register, in particular: " + "; ".join(r["title"] for r in self.risks[:3]) + ".")
         return [block("bullets", items=items)]
@@ -273,7 +278,7 @@ class _Writer:
     def procedures(self) -> list[dict]:
         steps = [
             "Communicate this policy to everyone in scope and record their acknowledgement.",
-            "Assign an owner to each requirement in this policy and record it in the Control Matrix.",
+            "Assign an owner to each requirement in this document and retain implementation evidence.",
         ]
         actions: list[str] = []
         in_scope = {r["ref_id"] for r in self.requirements}
@@ -308,6 +313,14 @@ class _Writer:
             )
         ]
         if not self.risks:
+            if self.policy["id"] in ("vendor_management", "ims_i_08", "ims_s_11"):
+                blocks += [para("No vendor-specific risk assessment is evidenced. The following supplier risk assessments are proposed requirements, not findings that these events have occurred."),
+                           block("bullets", items=[
+                               "Assess vendor access and data handling for unauthorised disclosure, excessive privileges and subcontractor exposure.",
+                               "Assess supplier and cloud service outages, concentration and lock-in against service recovery and exit needs.",
+                               "Assess missing contractual assurance, delayed supplier incident notification and incomplete data return or deletion at exit.",
+                           ]), para("The supplier relationship owner must confirm vendor criticality, likelihood, impact, treatment owners and assessment frequency: " + ph("vendor risk assessment owners and criteria") + ".")]
+                return blocks
             blocks.append(para("The analysis did not identify specific risks in the source documents. A risk assessment should be completed: " + ph("risk assessment date and owner") + "."))
             return blocks
         rows = [
@@ -322,7 +335,7 @@ class _Writer:
         ]
         blocks.append(block("table", columns=["ID", "Risk", "Level", "Origin", "Treatment"], rows=rows))
         if len(self.risks) > self.max_risks:
-            blocks.append(para(f"The full list of {len(self.risks)} risks is in the Risk Register appendix."))
+            blocks.append(para("Additional relevant risks are retained in the assessment records."))
         existing = [c for c in self.controls if c.get("basis") == "existing"]
         recommended = [c for c in self.controls if c.get("basis") == "recommended"]
 
@@ -408,7 +421,8 @@ class _Writer:
 
     def references(self) -> list[dict]:
         items = [f"Source document: {f['file_name']} ({f['file_type'].upper()})" for f in self.analysis["source_files"]]
-        blocks = [para("This policy was drafted from the following uploaded documents:"), block("bullets", items=items)]
+        blocks = ([para("This policy was drafted from the following uploaded documents:"), block("bullets", items=items)]
+                  if items else [para("Source document references: " + ph("reviewed source documents") + ".")])
         standards = self.analysis.get("standards_mentioned") or []
         if standards:
             blocks += [
@@ -422,6 +436,13 @@ class _Writer:
     def build(self, section_spec: dict) -> dict:
         builder = getattr(self, section_spec["id"], None)
         blocks = builder() if builder else [para(ph(f"content for {section_spec['heading']}"))]
+        project_items = self.policy.get("customer_project_sections", {}).get(section_spec["id"], [])
+        if project_items:
+            blocks.append(block("subheading", text="Customer-Managed Projects"))
+            if section_spec["id"] == "policy_requirements":
+                blocks.append(block("statements", statements=[{"id": "", "text": text, "basis": "proposed", "refs": []} for text in project_items]))
+            else:
+                blocks.append(block("bullets", items=project_items))
         return {"id": section_spec["id"], "heading": section_spec["heading"], "blocks": blocks}
 
 

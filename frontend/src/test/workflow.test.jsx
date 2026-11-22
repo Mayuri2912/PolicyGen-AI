@@ -171,7 +171,7 @@ describe('PolicyConfigForm', () => {
     await userEvent.selectOptions(screen.getByLabelText('Review frequency'), 'Quarterly');
     await userEvent.click(screen.getByRole('radio', { name: /Technical/ }));
     await userEvent.click(screen.getByRole('radio', { name: /Comprehensive/ }));
-    await userEvent.click(screen.getByRole('checkbox', { name: /Gap analysis/ }));
+    expect(screen.queryByRole('checkbox', { name: /Gap analysis/ })).not.toBeInTheDocument();
     await userEvent.click(screen.getByRole('checkbox', { name: /Word document/ }));
     await userEvent.click(screen.getByRole('button', { name: 'Generate policy' }));
     expect(onSubmit).toHaveBeenCalledTimes(1);
@@ -185,7 +185,7 @@ describe('PolicyConfigForm', () => {
       writing_style: 'technical',
       detail_level: 'comprehensive',
       include_gap_analysis: false,
-      include_risk_register: true,
+      include_risk_register: false,
       output_formats: ['pdf'],
       effective_date: '',
     });

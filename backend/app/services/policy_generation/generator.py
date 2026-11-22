@@ -26,28 +26,54 @@ from app.core.errors import ConflictError, NotFoundError, ValidationFailed
 from app.core.logging import get_logger
 from app.core.stages import JobStatus, Stage
 from app.database.session import session_scope
-from app.models.entities import Analysis, Job, Policy, PolicyVersion, ReviewEvent, iso, new_id
-from app.schemas.policy import DETAIL_GUIDANCE, STYLE_GUIDANCE, PolicyConfig, PolicyContent, SectionRevision
+from app.models.entities import (
+    Analysis,
+    Job,
+    Policy,
+    PolicyVersion,
+    ReviewEvent,
+    iso,
+    new_id,
+)
 from app.schemas.analysis import llm_json_schema
+from app.schemas.policy import (
+    DETAIL_GUIDANCE,
+    STYLE_GUIDANCE,
+    PolicyConfig,
+    PolicyContent,
+    SectionRevision,
+)
 from app.services import storage
 from app.services.ai_analysis.engine import findings_by_kind
-from app.services.ai_analysis.providers.base import LLMConfigurationError, LLMError, LLMProvider, LLMRequest
+from app.services.ai_analysis.providers.base import (
+    LLMConfigurationError,
+    LLMError,
+    LLMProvider,
+    LLMRequest,
+)
 from app.services.ai_analysis.providers.factory import get_provider
 from app.services.ai_analysis.safety import new_nonce, wrap_untrusted
 from app.services.ai_analysis.structured import progress_reporter, structured_call
 from app.services.document_generation.model import build_document_model
 from app.services.document_generation.rendering import RenderError, render_version
 from app.services.jobs import JobContext, JobFailure, create_job, runner
-from app.services.policy_generation import quality, structure
-from app.services.policy_generation.people import PeopleIndex
+from app.services.policy_generation import quality, readiness, structure
 from app.services.policy_generation.content import (
+    REF_PATTERN,
     markup_to_blocks,
     normalise_sections,
     number_statements,
+    section_text,
     section_to_markup,
     strip_unknown_refs,
 )
-from app.services.policy_generation.templates import PolicyTemplate, get_template, is_retired
+from app.services.policy_generation.people import PeopleIndex
+from app.services.policy_generation.scope import scoped_context
+from app.services.policy_generation.templates import (
+    PolicyTemplate,
+    get_template,
+    is_retired,
+)
 from app.services.policy_generation.versioning import same_content
 from app.services.risk_analysis import scoring
 
@@ -122,6 +148,9 @@ def _template_payload(template: PolicyTemplate) -> dict:
         "principles": list(template.principles),
         "definitions": template.definitions,
         "monitoring": list(template.monitoring),
+        "document_kind": template.document_kind,
+        "management_system": template.management_system,
+        "customer_project_sections": template.customer_project_sections,
     }
 
 
@@ -135,6 +164,12 @@ def _configuration_text(config: PolicyConfig) -> str:
         ("Effective date", config.effective_date),
         ("Review frequency", config.review_frequency),
         ("Classification", config.classification),
+        ("Delivery scope", config.delivery_scope),
+        ("Customer obligations", config.customer_obligations),
+        ("Assigned roles", config.assigned_roles),
+        ("Approved timings and retention", config.approved_timings),
+        ("Approved tools and repositories", config.approved_tools),
+        ("Confirmed applicable obligations", config.applicable_obligations),
     )
     return "\n".join(f"- {label}: {value or '(not provided)'}" for label, value in rows)
 
@@ -146,18 +181,34 @@ def _section_specs(template: PolicyTemplate, only: list[str] | None = None) -> l
         if only is not None and spec.id not in only:
             continue
         guidance = spec.guidance
+        guidance += f" Keep every item specific to {template.name}; do not restate organization-wide ISMS requirements."
+        guidance += " Do not invent fixed timings, implemented roles, legislation applicability or tool mandates. Use confirmed configuration and approved supporting records. Distinguish customer authority from internally controlled responsibilities. Write operational policy requirements, never instructions to the drafting model."
+        if template.id in ("bcdr", "business_continuity", "ims_i12", "ims_s10"):
+            guidance += " Address security during disruption: restricted monitored emergency access, logging, secure alternate working, approved deviations, safe recovery validation, declaration authority and deputies."
+        if template.id == "configuration_management":
+            guidance += " Address independent approvals or compensating review, emergency authority and retrospective review, customer-approved tools, risk-assessed remediation, post-change validation, baseline/record update and closure."
+        guidance += " " + template.section_guidance.get(spec.id, "")
+        if spec.id in template.customer_project_sections:
+            guidance += " Required customer-managed project coverage: " + " ".join(template.customer_project_sections[spec.id])
+        if spec.id == "objectives":
+            guidance += " Suggested objectives: " + "; ".join(template.objectives) + ". Principles: " + "; ".join(template.principles)
         if spec.id == "policy_requirements" and topics:
             guidance += f" Suggested topic groupings for this policy type: {topics}."
         specs.append({"id": spec.id, "heading": spec.heading, "mandatory": spec.mandatory, "guidance": guidance})
     return specs
 
 
-def build_generate_request(template: PolicyTemplate, config: PolicyConfig, context: dict) -> LLMRequest:
+def build_generate_request(template: PolicyTemplate, config: PolicyConfig, context: dict, section_ids: list[str] | None = None) -> LLMRequest:
+    context = scoped_context(context, template)
     schema = llm_json_schema(PolicyContent)
-    specs = _section_specs(template)
+    specs = _section_specs(template, only=section_ids)
     user = prompts.render(
         "policy_generate_user",
         policy_name=template.name,
+        document_guidance=f"Document kind: {template.document_kind}. Management system: {template.management_system or 'governance'}. "
+        "For procedures use ordered steps with responsible roles, inputs, outputs, approvals, records and escalation. "
+        "For plans include activation, response, recovery, testing and ownership. For registers provide the register fields "
+        "and honest evidence-backed rows; never invent completed records. For manuals explain boundaries and process interactions.",
         configuration=_configuration_text(config),
         style_guidance=STYLE_GUIDANCE[config.writing_style],
         detail_guidance=DETAIL_GUIDANCE[config.detail_level],
@@ -166,6 +217,8 @@ def build_generate_request(template: PolicyTemplate, config: PolicyConfig, conte
         nonce=new_nonce(),
         analysis=wrap_untrusted(json.dumps(context, ensure_ascii=False, indent=1)),
     )
+    if template.id == "ims_s_15" and config.organization_name.strip().casefold() == "sapres technologies gmbh":
+        user += "\nReviewed Sapres HR procedure requirements: HR/recruitment covers CV screening and interviews. HR retains restricted screening and training evidence. IT arranges asset and access-token return within 5 business days and revokes credentials immediately on the final working day; for customer-controlled systems, obtain the authorised customer's completion confirmation. Review at least annually and following material changes. These HR requirements do not authorise Sapres to administer customer systems without customer approval. If supplied current evidence conflicts with this reviewed reference, flag the conflict for confirmation rather than silently choosing a value."
     payload = {"policy": _template_payload(template), "sections": specs, "config": config.model_dump(), "analysis": context}
     return LLMRequest(
         "generate_policy", prompts.render("policy_system"), user, schema, payload,
@@ -183,6 +236,7 @@ def build_revise_request(
     reason: str,
     instruction: str = "",
 ) -> LLMRequest:
+    context = scoped_context(context, template)
     schema = llm_json_schema(SectionRevision)
     specs = _section_specs(template, only=section_ids)
     current = {s["id"]: s for s in content["sections"]}
@@ -261,6 +315,19 @@ def _finalise(content: dict, template: PolicyTemplate, analysis: Analysis, confi
     number_statements(content, template.code)
     standards = {s["name"] for s in (analysis.summary or {}).get("standards_mentioned", [])}
     report = quality.validate_policy(content, template, valid_ids=valid, source_standards=standards, people=index)
+    scoped = scoped_context(analysis_context(analysis), template)
+    selected = {i["ref_id"] for kind in ("requirements", "risks", "controls", "gaps", "recommendations")
+                for i in scoped.get(kind, []) if i.get("ref_id")}
+    for section in content["sections"]:
+        mentioned = set(REF_PATTERN.findall(section_text(section)))
+        mentioned.update(r for b in section["blocks"] for st in b.get("statements", []) for r in st.get("refs", []))
+        unrelated = mentioned.intersection(valid) - selected
+        if unrelated:
+            report["issues"].append({"code": "out_of_scope_evidence", "severity": "error", "section_id": section["id"],
+                                     "message": f"Remove findings unrelated to {template.name}: {', '.join(sorted(unrelated))}."})
+            report["counts"]["error"] += 1
+            report["score"] = max(0, report["score"] - 12)
+    report["passed"] = report["counts"]["error"] == 0
     report["issues"] += notes
     report["counts"]["info"] += len(notes)
     if removed:
@@ -291,7 +358,7 @@ def add_version(db: Session, policy: Policy, content: dict, report: dict, *, ori
     version = PolicyVersion(
         policy_id=policy.id,
         version_number=policy.current_version + 1,
-        content=content,
+        content={**content, "_config": copy.deepcopy(policy.config)},
         quality=report,
         origin=origin,
         change_note=note,
@@ -386,9 +453,7 @@ def run_generation(ctx: JobContext) -> dict:
     else:
         ctx.update(stage=Stage.GENERATING_POLICY, progress=10, message=f"Drafting the {template.name}.")
         try:
-            drafting = build_generate_request(template, config, context)
-            drafting.observer = progress_reporter(ctx.update, f"Drafting the {template.name}.")
-            draft, _ = structured_call(provider, drafting, PolicyContent, repair_attempts=settings.llm_json_repair_attempts)
+            draft = generate_checkpointed(ctx, policy_id, template, config, context, provider)
         except LLMError as exc:
             raise JobFailure(f"Policy generation failed. {exc.message}", exc.code) from exc
         content = {
@@ -433,6 +498,7 @@ def run_generation(ctx: JobContext) -> dict:
             policy = db.get(Policy, policy_id)
             add_version(db, policy, content, report, origin="generated", note="Initial draft generated from the analysis.")
             policy.status = Stage.FORMATTING_DOCUMENT.value
+        storage.remove(storage.cache_path(f"policy_{policy_id}.json"))
 
     ctx.update(stage=Stage.FORMATTING_DOCUMENT, progress=75, message="Formatting the DOCX and PDF documents.")
     with session_scope() as db:
@@ -608,8 +674,9 @@ def save_user_edit(db: Session, policy: Policy, section_id: str, markup: str, no
     return version
 
 
-def record_review(db: Session, policy: Policy, action: str, actor: str, comment: str) -> Policy:
+def record_review(db: Session, policy: Policy, action: str, actor: str, comment: str, acknowledged_checks: list[str] | None = None, base_version: int | None = None) -> Policy:
     """Record a human review decision for the current version."""
+    db.refresh(policy, with_for_update=True)
     if action not in REVIEW_ACTIONS:
         raise ValidationFailed("Unknown review action.")
     if policy.current_version < 1 or policy.status != Stage.COMPLETED.value:
@@ -626,6 +693,18 @@ def record_review(db: Session, policy: Policy, action: str, actor: str, comment:
     if action not in allowed:
         raise ConflictError(f"A policy that is '{policy.review_status.replace('_', ' ')}' cannot be moved with '{action}'.", code="invalid_review_action")
 
+    if base_version is not None and base_version != policy.current_version:
+        raise ConflictError("The policy changed. Reload before reviewing.", code="version_conflict")
+    if action == "approve":
+        latest = policy.versions[-1]
+        cfg = PolicyConfig.model_validate(policy.config)
+        _, current_quality = _finalise(latest.content, get_template(policy.policy_type), policy.analysis, cfg)
+        check = readiness.assess(policy, latest, current_quality)
+        if not check["ready_for_approval"]:
+            raise ConflictError("Complete missing information and resolve blocking issues before approval.", code="not_ready")
+        required = {i["code"] for i in check["review_checks"]}
+        if not required.issubset(set(acknowledged_checks or [])) or (required and not comment.strip()):
+            raise ValidationFailed("Acknowledge each professional review check and record your review rationale.")
     policy.review_status = REVIEW_ACTIONS[action]
     if action == "approve":
         policy.approved_version = policy.current_version
@@ -634,7 +713,7 @@ def record_review(db: Session, policy: Policy, action: str, actor: str, comment:
     db.add(
         ReviewEvent(
             policy_id=policy.id, version_number=policy.current_version, action=action,
-            actor=actor[:120], comment=(comment or "").strip()[:2000],
+            actor=actor[:120], comment=((comment or "").strip() + ("\nAcknowledged checks: " + ", ".join(sorted(set(acknowledged_checks or []))) if action == "approve" and acknowledged_checks else ""))[:3000],
         )
     )
     db.commit()
@@ -645,6 +724,7 @@ def record_review(db: Session, policy: Policy, action: str, actor: str, comment:
 
 def delete_policy(db: Session, policy: Policy) -> None:
     storage.remove_report_files(policy.id)
+    storage.remove(storage.cache_path(f"policy_{policy.id}.json"))
     db.delete(policy)
     db.commit()
     logger.info("report deleted", extra={"policy_id": policy.id})
@@ -673,6 +753,9 @@ def policy_summary(policy: Policy) -> dict:
         "simulated": policy.simulated,
         "output_formats": (policy.config or {}).get("output_formats", ["docx", "pdf"]),
         "quality": {k: latest.quality.get(k) for k in ("passed", "score", "counts")} if latest and latest.quality else None,
+        "organization": (policy.config or {}).get("organization_name", ""),
+        "review_due": readiness.review_due(policy),
+        "missing_information_count": len(readiness.assess(policy, latest, latest.quality or {})["missing_information"]) if latest else 0,
         "created_at": iso(policy.created_at),
         "updated_at": iso(policy.updated_at),
     }
@@ -701,11 +784,70 @@ def policy_detail(policy: Policy, version: PolicyVersion | None = None) -> dict:
     if version is None:
         detail.update({"version": None, "document": None, "sections": [], "quality_report": None})
         return detail
+    detail["config"] = version.content.get("_config", policy.config)
     detail["version"] = version_summary(version)
     detail["document"] = build_document_model(policy, version, policy.analysis)
     detail["sections"] = [
         {"id": s["id"], "heading": s["heading"], "origin": s.get("origin", "ai_generated"), "markup": section_to_markup(s)}
         for s in version.content["sections"]
     ]
-    detail["quality_report"] = version.quality
+    _, checked = _finalise(version.content, get_template(policy.policy_type), policy.analysis, PolicyConfig.model_validate(version.content.get("_config", policy.config)))
+    for issue in (version.quality or {}).get("issues", []):
+        if issue["severity"] == "info" and issue not in checked["issues"] and issue["code"] != "unresolved_placeholders":
+            checked["issues"].append(issue)
+            checked["counts"]["info"] += 1
+    checked["correction_rounds"] = (version.quality or {}).get("correction_rounds", 0)
+    detail["quality_report"] = checked
+    detail["readiness"] = readiness.assess(policy, version, checked)
     return detail
+
+
+def generate_checkpointed(ctx, policy_id, template, config, context, provider):
+    # Use stable inputs: generation prompts include a random safety nonce.
+    fingerprint = hashlib.sha256(json.dumps({"config": config.model_dump(), "context": context, "specs": _section_specs(template), "system": prompts.render("policy_system"), "format": 2}, sort_keys=True).encode()).hexdigest()
+    path = storage.cache_path(f"policy_{policy_id}.json")
+    storage.materialize(path)
+    saved = storage.read_json(path) if path.exists() else {}
+    if saved.get("fingerprint") != fingerprint:
+        saved = {"fingerprint": fingerprint, "sections": {}, "title": template.name}
+    specs = _section_specs(template)
+
+    def draft(ids, *, recovery=False):
+        ctx.check_cancelled()
+        request = build_generate_request(template, config, context, section_ids=ids)
+        request.user += "\nGenerate ONLY these section ids for this saved part: " + ", ".join(ids) + ". Return each exactly once. Previously saved sections are not to be regenerated."
+        if recovery:
+            request.user += "\nThe previous response omitted this section or returned empty content. Supply substantive content for this exact section id, using the supplied evidence and section guidance."
+        request.observer = progress_reporter(ctx.update, "Completing missing section: " + ids[0] if recovery else f"Drafting {len(ids)} remaining sections.")
+        result, _ = structured_call(provider, request, PolicyContent, repair_attempts=get_settings().llm_json_repair_attempts)
+        # Save valid members even when another member is absent, empty or duplicated.
+        # Never replace a checkpoint with an unsolicited or duplicate response section.
+        for sid in ids:
+            matches = [section for section in result.sections if section.id == sid]
+            if len(matches) != 1:
+                continue
+            section = matches[0]
+            if sid != "abbreviations" and (not section.blocks or all(b.is_empty() for b in section.blocks)):
+                continue
+            saved["sections"][sid] = section.model_dump()
+        saved["title"] = result.title
+        storage.write_json(path, saved)
+        ctx.update(progress=10 + int(38 * len(saved["sections"]) / len(specs)), message=f"Saved {len(saved['sections'])} of {len(specs)} sections. Continuing with unfinished sections.")
+
+    for start in range(0, len(specs), 3):
+        ctx.check_cancelled()
+        ids = [s["id"] for s in specs[start:start + 3] if s["id"] not in saved["sections"]]
+        if not ids:
+            continue
+        draft(ids)
+        # Smaller, explicit requests recover partial model answers without repeating
+        # completed sections. The bound prevents an endless loop on persistent omissions.
+        for sid in ids:
+            for _ in range(2):
+                if sid in saved["sections"]:
+                    break
+                draft([sid], recovery=True)
+        missing = [sid for sid in ids if sid not in saved["sections"]]
+        if missing:
+            raise JobFailure("The model omitted a requested section after automatic recovery: " + ", ".join(missing) + ". Saved sections are kept; retry to continue.", "missing_sections")
+    return PolicyContent.model_validate({"title": saved["title"], "sections": [saved["sections"][s["id"]] for s in specs]})

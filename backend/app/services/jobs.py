@@ -15,21 +15,40 @@ Job state is persisted, which gives three guarantees:
 
 from __future__ import annotations
 
+import hashlib
+import json
+import math
 import threading
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
-from typing import Callable
+from contextvars import copy_context
+from datetime import datetime, timedelta
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.core.config import get_settings
+from app.core.config import get_llm_settings, get_settings
 from app.core.errors import AppError
 from app.core.logging import get_logger
-from app.core.stages import JobStatus, Stage, TERMINAL_JOB_STATUSES, advance
+from app.core.stages import TERMINAL_JOB_STATUSES, JobStatus, Stage, advance
 from app.database.session import session_scope
-from app.models.entities import Analysis, Job, Policy, ProcessingError, UploadedFile, utcnow
+from app.models.entities import (
+    Analysis,
+    Job,
+    Policy,
+    ProcessingError,
+    UploadedFile,
+    utcnow,
+)
 
 logger = get_logger("jobs")
+
+def _quota_configuration():
+    # Store only a non-reversible fingerprint, never credentials, in job state.
+    values = {k: v for k, v in get_llm_settings().model_dump().items()
+              if k.startswith(("llm_", "gemini_", "openrouter_", "groq_", "nvidia_", "anthropic_"))}
+    return hashlib.sha256(json.dumps(values, sort_keys=True).encode()).hexdigest()
+
 
 ACTIVE_STATUSES = (JobStatus.QUEUED.value, JobStatus.RUNNING.value)
 RESTART_MESSAGE = "Processing was interrupted by an application restart. Retry to run it again."
@@ -90,6 +109,8 @@ class JobRunner:
         self._on_failure: dict[str, Callable[[Session, Job, str, str], None]] = {}
         self._executor: ThreadPoolExecutor | None = None
         self._lock = threading.Lock()
+        self._claim_lock = threading.Lock()
+        self._timers: dict[str, threading.Timer] = {}
 
     def register(self, job_type: str, handler: Handler, on_failure=None) -> None:
         self._handlers[job_type] = handler
@@ -108,23 +129,72 @@ class JobRunner:
         if get_settings().job_execution_mode == "inline":
             self._run(job_id)
         else:
-            self._pool().submit(self._run, job_id)
+            self._pool().submit(copy_context().run, self._run, job_id)
 
     def shutdown(self) -> None:
         with self._lock:
+            for timer in self._timers.values():
+                timer.cancel()
+            self._timers.clear()
             if self._executor is not None:
                 self._executor.shutdown(wait=False, cancel_futures=True)
                 self._executor = None
 
-    # ------------------------------------------------------------------ run
-    def _run(self, job_id: str) -> None:
+    def cancel_schedule(self, job_id):
+        with self._lock:
+            timer = self._timers.pop(job_id, None)
+            if timer:
+                timer.cancel()
+
+    def schedule(self, job_id, delay):
+        context = copy_context()
+        def resume():
+            self.cancel_schedule(job_id)
+            self.submit(job_id)
+        timer = threading.Timer(max(1, math.ceil(delay) + 1), lambda: context.run(resume))
+        timer.daemon = True
+        self.cancel_schedule(job_id)
+        with self._lock:
+            self._timers[job_id] = timer
+        timer.start()
+
+    def _defer_quota(self, job_id, exc):
+        if get_settings().job_execution_mode == "inline" or exc.code not in ("llm_quota_exceeded", "llm_rate_limited", "llm_providers_unavailable"):
+            return False
+        cause = exc
+        delay = None
+        while cause is not None:
+            delay = getattr(cause, "retry_after_seconds", None)
+            if delay is not None:
+                break
+            cause = cause.__cause__
+        delay = max(60, min(86400, delay or 60))
         with session_scope() as db:
             job = db.get(Job, job_id)
+            count = (job.result or {}).get("quota_deferrals", 0)
+            if count >= 3 or job.cancel_requested:
+                return False
+            due = utcnow() + timedelta(seconds=delay)
+            job.status = JobStatus.QUEUED.value
+            job.error_message = None
+            job.message = f"Waiting for free API quota. Automatic eligibility check at {due.isoformat(timespec='seconds')}. Saved work is retained."
+            job.result = {**(job.result or {}), "next_retry_at": due.isoformat(), "quota_deferrals": count + 1, "quota_config": _quota_configuration()}
+        self.schedule(job_id, delay)
+        return True
+
+    # ------------------------------------------------------------------ run
+    def _run(self, job_id: str) -> None:
+        with self._claim_lock, session_scope() as db:
+            job = db.scalars(select(Job).where(Job.id == job_id).with_for_update()).first()
             if job is None or job.status != JobStatus.QUEUED.value:
                 return
             if job.cancel_requested:
                 self._finish(db, job, JobStatus.CANCELLED, "Cancelled before it started.")
                 return
+            due = (job.result or {}).get("next_retry_at")
+            if due and datetime.fromisoformat(due) > utcnow():
+                return
+            job.result = {k: v for k, v in (job.result or {}).items() if k != "next_retry_at"}
             job.status = JobStatus.RUNNING.value
             job.attempts += 1
             job.error_message = None
@@ -138,9 +208,11 @@ class JobRunner:
         except JobCancelled:
             self._fail(job_id, JobStatus.CANCELLED, "Cancelled by the user.", "cancelled")
         except (JobFailure, AppError) as exc:
+            if self._defer_quota(job_id, exc):
+                return
             logger.warning("job failed", extra={"job_id": job_id, "job_type": job_type, "code": exc.code})
             self._fail(job_id, JobStatus.FAILED, exc.message, exc.code)
-        except Exception as exc:  # noqa: BLE001 - last line of defence for a worker
+        except Exception as exc:
             logger.error(
                 "job crashed",
                 exc_info=(type(exc), exc, exc.__traceback__),
@@ -224,6 +296,13 @@ def request_cancel(db: Session, job: Job) -> Job:
         return job
     job.cancel_requested = True
     job.message = "Cancellation requested."
+    if job.status == JobStatus.QUEUED.value and (job.result or {}).get("next_retry_at"):
+        runner.cancel_schedule(job.id)
+        job.stage = Stage.CANCELLED.value
+        runner._finish(db, job, JobStatus.CANCELLED, "Cancelled while waiting for API quota.")
+        callback = runner._on_failure.get(job.type)
+        if callback:
+            callback(db, job, job.message, "cancelled")
     db.commit()
     return job
 
@@ -235,15 +314,27 @@ def requeue(db: Session, job: Job) -> Job:
     job.progress = 0
     job.finished_at = None
     job.message = "Queued for retry."
+    job.result = {k: v for k, v in (job.result or {}).items() if k not in ("next_retry_at", "quota_deferrals")}
     db.commit()
     return job
 
 
 def recover_interrupted_jobs() -> int:
     """Mark work that was in flight during a restart as failed and retryable."""
+    waiting = []
     with session_scope() as db:
         jobs = db.scalars(select(Job).where(Job.status.in_(ACTIVE_STATUSES))).all()
+        waiting_ids = set()
         for job in jobs:
+            due = (job.result or {}).get("next_retry_at")
+            if job.status == JobStatus.QUEUED.value and due and not job.cancel_requested:
+                if (job.result or {}).get("quota_config") != _quota_configuration():
+                    due = utcnow().isoformat()
+                    job.result = {**job.result, "next_retry_at": due, "quota_deferrals": 0, "quota_config": _quota_configuration()}
+                    job.message = "Provider configuration changed. Resuming saved work with the available keys."
+                waiting.append((job.id, job.workspace_id, max(0, (datetime.fromisoformat(due) - utcnow()).total_seconds())))
+                waiting_ids.add((job.payload or {}).get("subject_id"))
+                continue
             job.status = JobStatus.FAILED.value
             job.stage = Stage.FAILED.value
             job.error_message = RESTART_MESSAGE
@@ -256,14 +347,21 @@ def recover_interrupted_jobs() -> int:
             file.status = Stage.FAILED.value
             file.error_code = "interrupted"
             file.error_message = RESTART_MESSAGE
-        for analysis in db.scalars(select(Analysis).where(Analysis.status == Stage.ANALYZING.value)).all():
+        for analysis in db.scalars(select(Analysis).where(Analysis.status == Stage.ANALYZING.value, Analysis.id.not_in([i for i in waiting_ids if i]))).all():
             analysis.status = Stage.FAILED.value
             analysis.error_message = RESTART_MESSAGE
         in_flight_policy = (Stage.GENERATING_POLICY.value, Stage.FORMATTING_DOCUMENT.value)
-        for policy in db.scalars(select(Policy).where(Policy.status.in_(in_flight_policy))).all():
+        for policy in db.scalars(select(Policy).where(Policy.status.in_(in_flight_policy), Policy.id.not_in([i for i in waiting_ids if i]))).all():
             policy.status = Stage.FAILED.value
             policy.error_message = RESTART_MESSAGE
-        count = len(jobs)
+        count = len(jobs) - len(waiting)
+    from app.core.identity import workspace
+    for job_id, workspace_id, delay in waiting:
+        token = workspace.set(workspace_id)
+        try:
+            runner.schedule(job_id, delay)
+        finally:
+            workspace.reset(token)
     if count:
         logger.warning("recovered interrupted jobs", extra={"count": count})
     return count

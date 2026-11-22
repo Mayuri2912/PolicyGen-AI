@@ -4,6 +4,8 @@ You are given segment {{chunk_index}} of {{chunk_count}} of the file "{{file_nam
 
 ### What to extract
 
+Keep each finding concise while retaining every distinct obligation and its source evidence. Merge repeated statements within this segment. Avoid restating the same explanation in multiple fields, and do not invent generic risks or controls unrelated to the supplied content. Use short evidence excerpts sufficient to verify the finding.
+
 **requirements**: obligations, rules and expectations the organization sets or is subject to. Give each a `category`, using exactly one of these ids:
 {{requirement_categories}}
 

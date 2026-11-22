@@ -6,6 +6,12 @@
     "guidance": "Why the policy exists and what it is intended to achieve for the organization."
   },
   {
+    "id": "definitions",
+    "heading": "Definitions",
+    "mandatory": true,
+    "guidance": "A table of the specialist terms this policy uses, with plain definitions. Include only terms the policy actually uses. Abbreviations are expanded in the Abbreviations section, so do not repeat them here; define the full term instead when it needs explaining."
+  },
+  {
     "id": "abbreviations",
     "heading": "Abbreviations",
     "mandatory": true,
@@ -18,22 +24,17 @@
     "guidance": "Who and what the policy applies to: roles, departments, systems, data, locations and third parties named in the analysis. State anything explicitly out of scope if the documents say so."
   },
   {
-    "id": "definitions",
-    "heading": "Definitions",
-    "mandatory": false,
-    "guidance": "A table of the specialist terms this policy uses, with plain definitions. Include only terms the policy actually uses. Abbreviations are expanded in the Abbreviations section, so do not repeat them here; define the full term instead when it needs explaining."
-  },
-  {
     "id": "objectives",
-    "heading": "Policy Objectives",
+    "heading": "Policy Objectives and Principles",
     "mandatory": true,
-    "guidance": "Specific outcomes the policy must deliver, tied to the requirements and risks in the analysis."
+    "guidance": "One combined section of subject-specific objectives and guiding principles. Do not create separate Objectives or Principles sections. Avoid general ISMS goals in specialist documents."
   },
   {
     "id": "principles",
     "heading": "Policy Principles",
     "mandatory": true,
-    "guidance": "The guiding principles behind the detailed requirements."
+    "guidance": "The guiding principles behind the detailed requirements.",
+    "retired": true
   },
   {
     "id": "roles_responsibilities",
@@ -57,7 +58,7 @@
     "id": "risk_controls",
     "heading": "Risk Management and Security Controls",
     "mandatory": true,
-    "guidance": "How risks relevant to this policy are identified, scored and treated, the key risks from the analysis, and the existing and recommended controls that address them. Refer to risk and control ids."
+    "guidance": "Identify risks specific to this document, with scenario, consequence, responsible role, treatment and review. Use only relevant evidence. If no subject-specific risk is evidenced, state proposed risk assessment requirements and missing inputs rather than listing unrelated ISMS risks."
   },
   {
     "id": "monitoring_compliance",

@@ -8,8 +8,8 @@ prompts, schemas, validation and the pipeline stay unchanged.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Callable
 
 
 @dataclass
@@ -22,6 +22,7 @@ class LLMRequest:
     # ``system``/``user``; the offline mock provider works from this instead.
     payload: dict = field(default_factory=dict)
     max_tokens: int = 16000
+    timeout_seconds: float | None = None
     # Called every few seconds while a provider waits for the model, with
     # ``{"model", "phase", "elapsed", "attempt"}``.  It lets a job show what
     # the model is doing, and stops the call by raising (a cancelled job).
@@ -43,9 +44,10 @@ class LLMError(Exception):
     code = "llm_error"
     retryable = False
 
-    def __init__(self, message: str, *, code: str | None = None):
+    def __init__(self, message: str, *, code: str | None = None, retry_after_seconds: float | None = None):
         super().__init__(message)
         self.message = message
+        self.retry_after_seconds = retry_after_seconds
         if code:
             self.code = code
 

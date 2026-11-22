@@ -131,13 +131,10 @@ describe('ReportPage preview', () => {
 
     await userEvent.click(screen.getByRole('tab', { name: /Review & approval/ }));
     expect(screen.getByText('Human review is required.')).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: 'Approve' }));
-    expect(screen.getByRole('alert')).toHaveTextContent("Enter the reviewer's name");
+    expect(screen.getByRole('button', { name: 'Approve' })).toBeDisabled();
+    expect(screen.getByLabelText('Reviewer name')).toHaveValue('Asha Rao (asha@example.test)');
     expect(api.calls.some((call) => call.method === 'POST')).toBe(false);
-    await userEvent.type(screen.getByLabelText('Reviewer name'), 'Asha Rao');
-    await userEvent.click(screen.getByRole('button', { name: 'Approve' }));
-    expect(await screen.findByText('Review: Approved')).toBeInTheDocument();
-    expect(JSON.parse(api.calls.find((call) => call.method === 'POST').body)).toEqual({ action: 'approve', actor: 'Asha Rao', comment: '' });
+    expect(screen.getByText(/Approval is blocked/)).toBeInTheDocument();
   });
 
   it('shows generation progress, and a failure with Retry instead of a preview', async () => {
@@ -211,8 +208,8 @@ describe('Dashboard and layout', () => {
     expect(screen.getByRole('link', { name: 'Access Control Policy' })).toHaveAttribute('href', '/reports/r1');
     expect(screen.getByText('File extraction: scan.png')).toBeInTheDocument();
     expect(screen.getByText('OCR is not available on this server.')).toBeInTheDocument();
-    expect(screen.getByText(/Mock mode \(no AI model; results are simulated\)/)).toBeInTheDocument();
-    expect(screen.getByText(/OCR not installed/)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Next actions' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Account & administration' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'How it works' })).toBeInTheDocument();
   });
 
@@ -231,9 +228,9 @@ describe('Dashboard and layout', () => {
   it('shows a clear error with retry when the backend is unreachable', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => { throw new TypeError('Failed to fetch'); }));
     renderPage(<AppLayout />);
-    expect(await screen.findByRole('alert')).toHaveTextContent('The server could not be reached. Check that the backend is running.');
+    expect(await screen.findByRole('alert', {}, { timeout: 18000 })).toHaveTextContent('The server could not be reached. Check your connection and try again.');
     expect(screen.getByRole('button', { name: 'Try again' })).toBeInTheDocument();
-  });
+  }, 20000);
 
   it('asks for the access token when the server requires one', async () => {
     const { calls } = mockApi({ 'GET /api/health': { ...HEALTH, auth_required: true } });

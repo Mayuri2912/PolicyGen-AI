@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AlertTriangle, CheckCircle2, Info, XCircle } from 'lucide-react';
+import { useSystem } from '../context/SystemContext.jsx';
 import { api } from '../services/api.js';
 import { REVIEW_LABELS, VERSION_ORIGIN_LABELS, formatDateTime } from '../utils/format.js';
 import { Badge, ConfirmDialog, LoadingBlock, Modal } from './ui.jsx';
@@ -177,7 +178,7 @@ export function QualityPanel({ report, onJump }) {
           </p>
         )}
         <div className="badge-row">
-          <Badge tone="info" label={`Quality score ${report.score}/100`} />
+          <Badge tone="info" label="Automated structural checks" />
           <Badge tone="bad" label={`${report.counts.error} errors`} />
           <Badge tone="warn" label={`${report.counts.warning} warnings`} />
           <Badge tone="muted" label={`${report.statement_count ?? 0} policy statements`} />
@@ -266,7 +267,7 @@ export function VersionPanel({ report, viewing, onView }) {
               <th scope="col">Created</th>
               <th scope="col">Change</th>
               <th scope="col">Note</th>
-              <th scope="col">Quality</th>
+              <th scope="col">Structural errors</th>
               <th scope="col">
                 <span className="sr-only">Actions</span>
               </th>
@@ -283,7 +284,7 @@ export function VersionPanel({ report, viewing, onView }) {
                 <td className="nowrap">{formatDateTime(version.created_at)}</td>
                 <td>{VERSION_ORIGIN_LABELS[version.origin] || version.origin}</td>
                 <td>{version.change_note}</td>
-                <td>{version.quality?.score ?? '–'}</td>
+                <td>{version.quality?.counts?.error ?? '–'}</td>
                 <td>
                   <button type="button" className="btn btn-small" disabled={version.version_number === viewing} onClick={() => onView(version.version_number)}>
                     {version.version_number === viewing ? 'Viewing' : 'View'}
@@ -383,7 +384,10 @@ const REVIEW_ACTIONS = {
 };
 
 export function ReviewPanel({ report, onReview }) {
-  const [actor, setActor] = useState('');
+  const { user } = useSystem();
+  const [acknowledged, setAcknowledged] = useState([]);
+  const actor = user?.name || '';
+  const checks = report.readiness?.review_checks || [];
   const [comment, setComment] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
@@ -397,7 +401,7 @@ export function ReviewPanel({ report, onReview }) {
     setBusy(true);
     setError(null);
     try {
-      await onReview({ action: item.action, actor: actor.trim(), comment: comment.trim() });
+      await onReview({ action: item.action, actor: actor.trim(), comment: comment.trim(), acknowledged_checks: acknowledged, base_version: report.current_version });
       setComment('');
     } catch (err) {
       setError(err.message);
@@ -422,10 +426,10 @@ export function ReviewPanel({ report, onReview }) {
       <div className="form-grid">
         <label className="field">
           <span>Reviewer name</span>
-          <input type="text" value={actor} onChange={(e) => setActor(e.target.value)} maxLength={120} autoComplete="name" />
+          <input type="text" value={user ? (user.public_access ? user.name : `${user.name} (${user.email})`) : 'Sign in with a reviewer account to approve'} readOnly />
         </label>
         <label className="field form-span">
-          <span>Comment (optional)</span>
+          <span>Review rationale (required when acknowledging professional checks)</span>
           <textarea rows={2} value={comment} onChange={(e) => setComment(e.target.value)} maxLength={2000} />
         </label>
       </div>
@@ -434,9 +438,11 @@ export function ReviewPanel({ report, onReview }) {
           {error}
         </p>
       )}
+      {report.readiness && !report.readiness.ready_for_approval && <p className="notice notice-warn">Approval is blocked until missing information and blocking issues are resolved. Simulated drafts cannot be approved.</p>}
+      {checks.length > 0 && <fieldset><legend>Professional review checks</legend>{checks.map((check, index) => <label className="choice" key={`${check.code}-${index}`}><input type="checkbox" checked={acknowledged.includes(check.code)} onChange={(e) => setAcknowledged(e.target.checked ? [...new Set([...acknowledged, check.code])] : acknowledged.filter((code) => code !== check.code))} /><span>{check.message}</span></label>)}</fieldset>}
       <div className="row-actions">
         {actions.map((item) => (
-          <button key={item.action} type="button" className={`btn ${item.primary ? 'btn-primary' : ''}`} disabled={busy} onClick={() => run(item)}>
+          <button key={item.action} type="button" className={`btn ${item.primary ? 'btn-primary' : ''}`} disabled={busy || !user || !['admin', 'reviewer', 'editor'].includes(user.role) || (['approve', 'request_changes'].includes(item.action) && !['admin', 'reviewer'].includes(user.role)) || (item.action === 'approve' && (!report.readiness?.ready_for_approval || checks.some((c) => !acknowledged.includes(c.code)) || (checks.length > 0 && !comment.trim())))} onClick={() => run(item)}>
             {item.label}
           </button>
         ))}

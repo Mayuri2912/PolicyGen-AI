@@ -275,11 +275,11 @@ def test_provider_selection_keeps_existing_providers(settings, monkeypatch):
     monkeypatch.setattr(settings, "llm_provider", "openrouter")
     set_provider_override(None)
     provider = get_provider()
-    assert isinstance(provider, OpenRouterProvider) and provider.model == "openrouter/free"  # the default model
+    assert isinstance(getattr(provider, "provider", provider), OpenRouterProvider) and provider.model == "openrouter/free"  # the default model
 
     monkeypatch.setattr(settings, "llm_provider", "mock")
     assert isinstance(get_provider(), MockProvider)
-    assert set(PROVIDER_LABELS) == {"anthropic", "gemini", "openrouter", "mock"}
+    assert set(PROVIDER_LABELS) == {"anthropic", "gemini", "openrouter", "groq", "nvidia", "mock"}
 
 
 def test_openrouter_without_key_or_model_fails_clearly(client, settings, monkeypatch):
@@ -313,7 +313,7 @@ def test_health_and_config_report_the_configured_provider_and_model(client, sett
     assert health["status"] == "ok"
     assert health["llm"] == {
         "provider": "openrouter", "display_name": "OpenRouter", "model": "vendor/some-model:free", "simulated": False,
-        "service_name": "OpenRouter API", "ready": True,
+        "service_name": "OpenRouter API", "ready": True, "automatic_retries": 2,
         "message": "Documents are sent to the OpenRouter API for analysis and policy generation.",
     }
     assert "sent to the OpenRouter API" in health["privacy"]["llm"]
@@ -389,13 +389,13 @@ def test_analysis_and_policy_generation_through_openrouter(client, settings, mon
     report = generate(client, analysis["id"], policy_type="information_security", organization_name="Brightwater Analytics Pvt. Ltd.")
     assert report["status"] == "completed" and report["quality_report"]["counts"]["error"] == 0
     assert (report["provider"], report["model"], report["simulated"]) == ("openrouter", "vendor/model-x:free", False)
-    assert "PolicyGen AI using vendor/model-x:free (OpenRouter)" in all_text(report)
+    assert "PolicyGen AI using vendor/model-x:free (OpenRouter)" not in all_text(report)
     assert "SIMULATED OUTPUT" not in all_text(report)
     assert client.get(f"/api/reports/{report['id']}/download?format=docx").content[:2] == b"PK"
 
     # The same prompts and schemas as every other provider reached OpenRouter.
     tasks = [body["response_format"]["json_schema"]["name"] for body in seen]
-    assert tasks[-2:] == ["consolidate", "generate_policy"] and len(tasks) >= 4 and set(tasks[:-2]) == {"extract_findings"}
+    assert tasks[-6:] == ["consolidate"] + ["generate_policy"] * 5 and len(tasks) >= 8 and set(tasks[:-6]) == {"extract_findings"}
     first = seen[0]
     assert "analysis engine of PolicyGen AI" in first["messages"][0]["content"]
     assert "<untrusted_document id=" in first["messages"][1]["content"]
@@ -517,7 +517,7 @@ def test_editing_the_env_file_changes_the_provider_without_a_restart(client, mon
         env_file.write_text(f"LLM_PROVIDER=openrouter\nOPENROUTER_API_KEY={FAKE_KEY}\nOPENROUTER_MODEL=vendor/model-x:free\n", encoding="utf-8")
         llm = client.get("/api/health").json()["llm"]
         assert (llm["provider"], llm["model"], llm["ready"]) == ("openrouter", "vendor/model-x:free", True)
-        assert isinstance(get_provider(), OpenRouterProvider)
+        assert isinstance(getattr(get_provider(), "provider", get_provider()), OpenRouterProvider)
 
         # An edit that does not validate keeps the last good settings instead of breaking the server.
         env_file.write_text("LLM_PROVIDER=openrouter\nOPENROUTER_MAX_OUTPUT_TOKENS=lots\n", encoding="utf-8")
@@ -595,6 +595,19 @@ def test_a_model_that_cannot_switch_reasoning_off_gets_its_default(openrouter):
     assert "reasoning" in first and "reasoning" not in second and recorder.sleeps == []
     provider.complete(request())
     assert "reasoning" not in recorder.bodies()[2]  # remembered
+
+
+def test_analysis_request_deadline_does_not_change_generation_deadline(settings, monkeypatch):
+    monkeypatch.setattr(settings, "openrouter_api_key", FAKE_KEY)
+    monkeypatch.setattr(settings, "llm_max_retries", 0)
+    provider, recorder = streaming(settings, [sse(keepalives=400, done=False)], step=2.0)
+    r = request()
+    r.timeout_seconds = 180
+    with pytest.raises(LLMTimeoutError, match="time limit \\(180 s\\)"):
+        provider.complete(r)
+    assert len(recorder.requests) == 1
+    assert provider._monotonic.now < 200
+    assert provider._timeout == settings.openrouter_timeout_seconds == 600
 
 
 def test_a_request_the_model_never_finishes_ends_at_the_total_time_limit(settings, monkeypatch):
@@ -746,7 +759,7 @@ def test_a_timed_out_analysis_is_reported_as_failed_with_the_reason(client, sett
     started = client.post("/api/analyses", json={"file_ids": upload_ok(client, sample("sample_security.txt"))}).json()
     job = client.get(f"/api/jobs/{started['job']['id']}").json()
     assert job["status"] == "failed" and job["result"]["failed_stage"] == "analyzing"
-    assert f"spent the whole time limit ({settings.llm_timeout_seconds} s)" in job["error_message"] and "vendor/slow-thinker:free" in job["error_message"]
+    assert f"spent the whole time limit ({settings.analysis_call_timeout_seconds} s)" in job["error_message"] and "vendor/slow-thinker:free" in job["error_message"]
     analysis = client.get(f"/api/analyses/{started['analysis_id']}").json()
     assert analysis["status"] == "failed" and not analysis["completed"]
 

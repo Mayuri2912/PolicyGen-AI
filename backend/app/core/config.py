@@ -39,10 +39,17 @@ class Settings(BaseSettings):
     # Empty means "SQLite file inside data_dir".  Any SQLAlchemy URL works, e.g.
     # postgresql+psycopg://user:pass@host/dbname
     database_url: str = ""
-    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
+    database_schema: str = "public"
+    storage_backend: str = "local"
+    supabase_url: str = ""
+    supabase_database_url: str = ""
+    supabase_service_key: str = ""
+    supabase_storage_bucket: str = "policygen-files"
+    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173,https://policygen-workspace.onrender.com"
     # Optional shared secret.  When set, every /api request must send it as
     # "Authorization: Bearer <token>".
     api_access_token: str = ""
+    public_access: bool = False
 
     # --- Upload and extraction limits ----------------------------------------
     max_upload_mb: int = 25
@@ -64,8 +71,28 @@ class Settings(BaseSettings):
     # auto: Anthropic when ANTHROPIC_API_KEY is set, else Gemini when
     # GEMINI_API_KEY is set, else OpenRouter when OPENROUTER_API_KEY is set,
     # otherwise the simulated mock.
-    # anthropic | gemini | openrouter | mock select a provider explicitly.
+    # anthropic | gemini | openrouter | groq | mock select a provider explicitly.
     llm_provider: str = "auto"
+    # Comma-separated server-side key pools; the singular key remains supported.
+    anthropic_api_keys: str = ""
+    gemini_api_keys: str = ""
+    openrouter_api_keys: str = ""
+    groq_api_keys: str = ""
+    nvidia_api_keys: str = ""
+    nvidia_api_key: str = ""
+    nvidia_model: str = "nvidia/nemotron-3.5-lightning-30b-a3b"
+    nvidia_max_output_tokens: int = 4096
+    nvidia_chunk_max_chars: int = 5000
+    nvidia_timeout_seconds: int = 300
+    groq_api_key: str = ""
+    groq_model: str = "openai/gpt-oss-120b"
+    groq_max_output_tokens: int = 32000
+    groq_chunk_max_chars: int = 5000
+    groq_timeout_seconds: int = 300
+    llm_key_cooldown_seconds: int = 60
+    llm_fallback_providers: str = ""
+    llm_auto_retries: int = 2
+    llm_auto_retry_delay_seconds: int = 5
     anthropic_api_key: str = ""
     anthropic_model: str = "claude-opus-5-5"
     anthropic_effort: str = "high"
@@ -73,11 +100,14 @@ class Settings(BaseSettings):
     anthropic_structured_outputs: bool = True
     anthropic_refusal_fallback: bool = True
     gemini_api_key: str = ""
-    gemini_model: str = "gemini-3.8-flash"
+    gemini_api_key2: str = ""
+    gemini_model: str = "gemini-3.1-flash-lite"
     # Thinking tokens count towards this limit on Gemini, so it is generous.
     gemini_max_output_tokens: int = 65536
     gemini_structured_outputs: bool = True
     openrouter_api_key: str = ""
+    openrouter_api_key2: str = ""
+    openrouter_api_key3: str = ""
     # Any model id from openrouter.ai/models.  "openrouter/free" lets OpenRouter
     # pick a free model; ids ending in ":free" name a specific free model.
     openrouter_model: str = "openrouter/free"
@@ -102,6 +132,8 @@ class Settings(BaseSettings):
     llm_max_retries: int = 2
     llm_json_repair_attempts: int = 1
     chunk_max_chars: int = 48_000
+    analysis_call_timeout_seconds: int = 180
+    consolidation_batch_chars: int = 10000
     max_chunks_per_analysis: int = 40
     quality_correction_rounds: int = 1
 
@@ -138,7 +170,7 @@ class Settings(BaseSettings):
     # A key or model id pasted with a stray space, quote or line ending would
     # otherwise be sent as-is and rejected by the provider.
     @field_validator(
-        "anthropic_api_key", "anthropic_model", "gemini_api_key", "gemini_model", "openrouter_api_key", "openrouter_model"
+        "anthropic_api_key", "anthropic_model", "gemini_api_key", "gemini_api_key2", "gemini_model", "openrouter_api_key", "openrouter_api_key2", "openrouter_api_key3", "openrouter_model", "groq_api_key", "groq_model", "nvidia_api_key", "nvidia_model"
     )
     @classmethod
     def _strip(cls, value: str) -> str:
@@ -147,6 +179,11 @@ class Settings(BaseSettings):
     # --- Derived values ------------------------------------------------------
     @property
     def resolved_database_url(self) -> str:
+        if self.storage_backend == "supabase":
+            url = self.supabase_database_url or self.database_url
+            if not url.startswith("postgresql") or "sslmode=require" not in url:
+                raise ValueError("Supabase storage requires a PostgreSQL URL with sslmode=require.")
+            return url
         if self.database_url:
             return self.database_url
         return f"sqlite:///{(self.data_dir / 'policygen.db').as_posix()}"

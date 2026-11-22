@@ -3,8 +3,8 @@
 LLM_PROVIDER=auto (default) uses Anthropic when ANTHROPIC_API_KEY is set, else
 Gemini when GEMINI_API_KEY is set, else OpenRouter when OPENROUTER_API_KEY is
 set, and the simulated mock otherwise, so the app runs out of the box.
-``anthropic``, ``gemini``, ``openrouter`` and ``mock`` select a provider
-explicitly; an explicit choice never falls back to another provider, it
+``anthropic``, ``gemini``, ``openrouter``, ``groq``, ``nvidia`` and ``mock`` select a provider
+explicitly; additional providers can be configured with LLM_FALLBACK_PROVIDERS; otherwise it
 reports what is missing instead.  To add a vendor, write an ``LLMProvider`` subclass and add it to
 ``_BUILDERS``.
 """
@@ -13,8 +13,8 @@ from __future__ import annotations
 
 import os
 import threading
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable
 
 from app.core.config import Settings, get_llm_settings
 from app.services.ai_analysis.providers.base import LLMConfigurationError, LLMProvider
@@ -74,12 +74,30 @@ def _build_openrouter(settings: Settings) -> LLMProvider:
         )
     if not settings.openrouter_model.strip():
         raise LLMConfigurationError("No OpenRouter model is configured. Set OPENROUTER_MODEL in backend/.env.")
-    from app.services.ai_analysis.providers.openrouter_provider import OpenRouterProvider
+    from app.services.ai_analysis.providers.openrouter_provider import (
+        OpenRouterProvider,
+    )
 
     return OpenRouterProvider(settings)
 
 
+def _build_groq(settings: Settings) -> LLMProvider:
+    if not settings.groq_api_key or not settings.groq_model:
+        raise LLMConfigurationError("Set GROQ_API_KEY and GROQ_MODEL to use Groq.")
+    from app.services.ai_analysis.providers.groq_provider import GroqProvider
+    return GroqProvider(settings)
+
+
+def _build_nvidia(settings: Settings) -> LLMProvider:
+    if not settings.nvidia_api_key or not settings.nvidia_model:
+        raise LLMConfigurationError("Set NVIDIA_API_KEY and NVIDIA_MODEL to use NVIDIA NIM.")
+    from app.services.ai_analysis.providers.nvidia_provider import NvidiaProvider
+    return NvidiaProvider(settings)
+
+
 _BUILDERS: dict[str, Callable[[Settings], LLMProvider]] = {
+    "nvidia": _build_nvidia,
+    "groq": _build_groq,
     "anthropic": _build_anthropic,
     "gemini": _build_gemini,
     "openrouter": _build_openrouter,
@@ -93,20 +111,26 @@ PROVIDER_LABELS: dict[str, str] = {
     "gemini": "Google Gemini",
     "openrouter": "OpenRouter",
     "mock": "Mock mode",
+    "groq": "Groq",
+    "nvidia": "NVIDIA NIM",
 }
 
 
-_PROVIDER_FIELDS = ("anthropic_", "gemini_", "openrouter_", "llm_")
+_PROVIDER_FIELDS = ("anthropic_", "gemini_", "openrouter_", "groq_", "nvidia_", "llm_")
 
 
 def resolve_provider_name(settings: Settings) -> str:
     if settings.llm_provider == "auto":
-        if settings.anthropic_api_key:
+        if settings.anthropic_api_key or settings.anthropic_api_keys:
             return "anthropic"
-        if settings.gemini_api_key:
+        if settings.gemini_api_key or settings.gemini_api_keys or settings.gemini_api_key2:
             return "gemini"
-        if settings.openrouter_api_key:
+        if settings.openrouter_api_key or settings.openrouter_api_keys or settings.openrouter_api_key2 or settings.openrouter_api_key3:
             return "openrouter"
+        if settings.groq_api_key or settings.groq_api_keys:
+            return "groq"
+        if settings.nvidia_api_key or settings.nvidia_api_keys:
+            return "nvidia"
         return "mock"
     return settings.llm_provider
 
@@ -116,6 +140,8 @@ def _configured_model(name: str, settings: Settings) -> str:
         "anthropic": settings.anthropic_model,
         "gemini": settings.gemini_model,
         "openrouter": settings.openrouter_model,
+        "groq": settings.groq_model,
+        "nvidia": settings.nvidia_model,
     }.get(name, "")
 
 
@@ -135,7 +161,34 @@ def get_provider() -> LLMProvider:
                 raise LLMConfigurationError(
                     f"Unknown LLM_PROVIDER '{name}'. Supported values: auto, {', '.join(sorted(_BUILDERS))}."
                 )
-            _cached = (key, builder(settings))
+            names = list(dict.fromkeys([name, *[n.strip().lower() for n in settings.llm_fallback_providers.split(",") if n.strip()]]))
+            if name == "mock":
+                names = ["mock"]
+            providers = []
+            for candidate in names:
+                if candidate == "mock" and name != "mock":
+                    raise LLMConfigurationError("Mock mode cannot be used as a production fallback.")
+                candidate_builder = _BUILDERS.get(candidate)
+                if candidate_builder is None:
+                    raise LLMConfigurationError(f"Unknown fallback provider '{candidate}'.")
+                singular = f"{candidate}_api_key"
+                pool = getattr(settings, f"{candidate}_api_keys", "")
+                numbered = [getattr(settings, f"{candidate}_api_key{slot}", "") for slot in (2, 3)]
+                keys = list(dict.fromkeys(k.strip().strip("\"'") for k in [getattr(settings, singular, ""), *numbered, *pool.split(",")] if k.strip()))
+                if keys:
+                    providers.extend(candidate_builder(settings.model_copy(update={singular: credential, "llm_max_retries": 0 if len(names) > 1 or len(keys) > 1 else settings.llm_max_retries})) for credential in keys)
+                elif candidate == name and len(names) == 1:
+                    providers.append(candidate_builder(settings))
+            if not providers:
+                raise LLMConfigurationError("No API credentials are configured for the selected providers.")
+            from app.services.ai_analysis.providers.fallback import (
+                FallbackProvider,
+                RetryingProvider,
+            )
+            provider = FallbackProvider(providers, settings.llm_key_cooldown_seconds) if len(providers) > 1 else providers[0]
+            if not provider.simulated and settings.llm_auto_retries > 0:
+                provider = RetryingProvider(provider, settings.llm_auto_retries, settings.llm_auto_retry_delay_seconds)
+            _cached = (key, provider)
         return _cached[1]
 
 
@@ -169,7 +222,7 @@ def provider_status() -> dict:
     info["ready"] = True
     info["message"] = (
         "Mock mode: results are produced by keyword rules, not by an AI model. "
-        "Set ANTHROPIC_API_KEY, GEMINI_API_KEY or OPENROUTER_API_KEY to use a real model."
+        "Set ANTHROPIC_API_KEY, GEMINI_API_KEY, OPENROUTER_API_KEY or GROQ_API_KEY to use a real model."
         if provider.simulated
         else f"Documents are sent to the {provider.service_name or provider.name} for analysis and policy generation."
     )

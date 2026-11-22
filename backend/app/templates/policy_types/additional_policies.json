@@ -1,0 +1,324 @@
+[
+  {
+    "id": "configuration_management",
+    "name": "Configuration Management Policy",
+    "code": "CFG",
+    "management_system": "ISMS",
+    "description": "Secure configuration baselines, configuration records, controlled changes and detection of configuration drift.",
+    "purpose": "identify, maintain and protect approved configurations of systems, applications, networks and services throughout their lifecycle",
+    "keywords": [
+      "configuration",
+      "secure baseline",
+      "hardening",
+      "configuration item",
+      "cmdb",
+      "configuration drift",
+      "golden image",
+      "infrastructure as code",
+      "default settings",
+      "default credentials"
+    ],
+    "categories": [],
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Configuration Identification and Records",
+        "keywords": [
+          "configuration item",
+          "inventory",
+          "cmdb",
+          "version",
+          "dependency"
+        ]
+      },
+      {
+        "title": "Secure Baselines and Hardening",
+        "keywords": [
+          "baseline",
+          "hardening",
+          "default",
+          "benchmark"
+        ]
+      },
+      {
+        "title": "Configuration Change Control",
+        "keywords": [
+          "configuration change",
+          "approval",
+          "rollback",
+          "version control"
+        ]
+      },
+      {
+        "title": "Drift Detection and Compliance",
+        "keywords": [
+          "drift",
+          "configuration audit",
+          "scan",
+          "deviation"
+        ]
+      },
+      {
+        "title": "Lifecycle and Recovery",
+        "keywords": [
+          "configuration backup",
+          "restoration",
+          "decommission",
+          "retirement"
+        ]
+      },
+      {
+        "title": "Customer-Managed Projects and Contractual Compliance",
+        "keywords": [
+          "customer-managed",
+          "client-managed",
+          "customer requirements",
+          "contractual",
+          "shared responsibility",
+          "customer approval"
+        ]
+      }
+    ],
+    "objectives": [
+      "Maintain accurate configuration records and ownership for in-scope systems.",
+      "Apply approved secure baselines and minimize exposed services and insecure defaults.",
+      "Detect and resolve unauthorized changes and configuration drift.",
+      "Preserve versioned configuration records and support controlled restoration.",
+      "Meet agreed customer-managed project requirements and maintain evidence of contractual compliance within the assigned scope of responsibility."
+    ],
+    "principles": [
+      "Configurations are approved, documented and managed throughout their lifecycle.",
+      "Administrative access to configuration settings and repositories follows least privilege.",
+      "Changes are tested, authorized and traceable to approved baselines.",
+      "Exceptions to a baseline require documented risk assessment and approval."
+    ],
+    "definitions": {
+      "Configuration item": "A component whose configuration is identified and controlled.",
+      "Configuration baseline": "An approved reference configuration used to assess and control changes.",
+      "Configuration drift": "A difference between an actual configuration and its approved baseline.",
+      "Configuration management database": "A repository of configuration items, attributes and relationships."
+    },
+    "monitoring": [
+      "Review baseline compliance and configuration drift.",
+      "Track unauthorized changes, approved exceptions and remediation.",
+      "Check configuration records and restoration readiness after material changes."
+    ],
+    "section_guidance": {
+      "scope": "Cover configuration settings of infrastructure, operating systems, applications, cloud services and network devices supported by the evidence.",
+      "procedures": "Describe identification and inventory, baseline approval and deployment, change assessment/testing/approval, version recording, drift detection and remediation, rollback or restoration, and retirement.",
+      "risk_controls": "Address insecure defaults, unnecessary services, unauthorized changes, drift, incomplete configuration records, exposed secrets in repositories and inability to restore configurations. Tie controls to these configuration-specific risks.",
+      "policy_requirements": "Define configuration-item ownership, records and dependencies, approved secure baselines, hardening, restricted administration, versioned configuration backups, change approval and exception handling. Do not invent a deployed CMDB or benchmark."
+    },
+    "customer_project_sections": {
+      "scope": [
+        "This policy applies to work delivered in customer-managed projects and customer-controlled environments as well as internally managed services, including employees, contractors and remote or client-site delivery. Responsibilities must follow the agreed contract and shared-responsibility matrix; customer ownership does not remove the organization's delivery and compliance obligations."
+      ],
+      "roles_responsibilities": [
+        "For customer-managed projects, the Project Manager coordinates requirements and evidence, authorized delivery personnel perform only assigned configuration activities, and the customer-designated configuration/change authority approves customer-controlled baselines and changes. Confirm project-specific role assignments."
+      ],
+      "policy_requirements": [
+        "At onboarding and after material contract changes, identify and record the customer-managed project's contractual configuration requirements, customer-approved baselines, authorized tools/repositories, access restrictions, change windows, approval authority and required compliance evidence.",
+        "Personnel must use the customer-approved configuration and change process for customer-controlled assets, maintain project configuration records in the approved repository, and segregate customer configuration data and secrets. An internal CMDB or tool must not be mandated for customer assets without customer authorization.",
+        "Document the shared-responsibility matrix and obtain customer approval for baseline deviations, emergency changes, rollback or restoration within the agreed scope; escalate conflicting requirements instead of bypassing customer controls."
+      ],
+      "procedures": [
+        "For customer-managed projects, review contractual and customer configuration requirements, agree and record the shared-responsibility matrix and baseline, obtain authorized access, raise changes through the customer-approved workflow, test within authorized boundaries, obtain approval before deployment or rollback, validate results and retain permitted evidence in the approved project repository.",
+        "When customer-managed tooling, permissions or approvals prevent a required control, record the dependency, notify the Project Manager and customer-designated authority, agree compensating controls or a formally approved exception, and track closure."
+      ],
+      "risk_controls": [
+        "Assess customer-managed project risks including conflicting baselines, unauthorized changes in customer environments, unavailable customer approvals, shared-responsibility gaps and exposure of customer configurations or secrets; treat them through agreed authority, segregated repositories, controlled access, approval records and escalation."
+      ],
+      "monitoring_compliance": [
+        "For each customer-managed project, review conformity with contractual configuration obligations and customer-approved baselines, change approvals, drift remediation, exceptions and required audit evidence at the agreed frequency. Obtain customer attestations or permitted reports where direct access is restricted; record and escalate evidence gaps."
+      ],
+      "incident_reporting": [
+        "In customer-managed projects, report configuration incidents through agreed internal and customer channels and contractual notification timelines. Coordinate investigation and remediation with the customer-designated authority and retain permitted records; use [To be confirmed: project notification contacts and deadlines] where these are not evidenced."
+      ],
+      "exceptions": [
+        "Exceptions affecting customer-managed projects require documented risk assessment, internal approval and the customer-designated authority's approval where customer assets or contractual obligations are affected. Record compensating controls, expiry and review; internal approval alone cannot waive customer requirements."
+      ]
+    }
+  },
+  {
+    "id": "bcdr",
+    "name": "Business Continuity and Disaster Recovery (BCDR) Policy",
+    "code": "BCDR",
+    "description": "Business continuity and technology disaster recovery, from business impact analysis through recovery testing and return to normal operations.",
+    "purpose": "maintain critical business services during disruption and restore technology, data and dependencies within approved recovery objectives",
+    "keywords": [
+      "business continuity",
+      "disaster recovery",
+      "continuity plan",
+      "bcp",
+      "drp",
+      "rto",
+      "rpo",
+      "recovery time",
+      "recovery point",
+      "business impact",
+      "bia",
+      "crisis",
+      "failover",
+      "resilience",
+      "critical service",
+      "bcdr",
+      "disaster",
+      "recovery site",
+      "recovery exercise",
+      "failback",
+      "maximum tolerable disruption"
+    ],
+    "categories": [
+      "business_continuity"
+    ],
+    "exclude_sections": [],
+    "topics": [
+      {
+        "title": "Business Impact Analysis",
+        "keywords": [
+          "impact analysis",
+          "bia",
+          "critical",
+          "priorit",
+          "dependenc"
+        ]
+      },
+      {
+        "title": "Recovery Objectives",
+        "keywords": [
+          "rto",
+          "rpo",
+          "recovery time",
+          "recovery point",
+          "objective"
+        ]
+      },
+      {
+        "title": "Continuity and Recovery Plans",
+        "keywords": [
+          "plan",
+          "procedure",
+          "recover",
+          "failover",
+          "alternate",
+          "restor"
+        ]
+      },
+      {
+        "title": "Crisis Management and Communication",
+        "keywords": [
+          "crisis",
+          "communicat",
+          "escalat",
+          "contact",
+          "team"
+        ]
+      },
+      {
+        "title": "Testing and Exercises",
+        "keywords": [
+          "test",
+          "exercis",
+          "drill",
+          "rehears"
+        ]
+      },
+      {
+        "title": "Technology Disaster Recovery and Failback",
+        "keywords": [
+          "disaster recovery",
+          "recovery site",
+          "failover",
+          "failback",
+          "restoration",
+          "backup",
+          "replication"
+        ]
+      },
+      {
+        "title": "Supplier and Infrastructure Dependencies",
+        "keywords": [
+          "dependency",
+          "supplier outage",
+          "power outage",
+          "telecommunication",
+          "alternate site"
+        ]
+      },
+      {
+        "title": "Customer-Managed Projects and Contractual Compliance",
+        "keywords": [
+          "customer-managed",
+          "client-managed",
+          "customer requirements",
+          "contractual",
+          "shared responsibility",
+          "customer approval"
+        ]
+      }
+    ],
+    "objectives": [
+      "Identify critical services and the resources they depend on.",
+      "Define recovery objectives for critical services.",
+      "Maintain plans that enable recovery within those objectives.",
+      "Prove the plans work through regular testing.",
+      "Coordinate business continuity with technology recovery and verify service and data integrity before returning to normal operations.",
+      "Meet agreed customer-managed project requirements and maintain evidence of contractual compliance within the assigned scope of responsibility."
+    ],
+    "principles": [
+      "The safety of people comes first in any disruption.",
+      "Recovery priorities follow business impact.",
+      "Plans are kept current, accessible and tested.",
+      "Lessons from tests and real events are fed back into the plans."
+    ],
+    "definitions": {
+      "Business continuity": "The capability to continue delivering services at acceptable levels during a disruption.",
+      "Business impact analysis": "Assessing the effect of disruption on activities over time.",
+      "Recovery time objective": "The target time to restore a service after disruption.",
+      "Recovery point objective": "The maximum tolerable period of data loss.",
+      "Disaster recovery": "Restoring technology systems and data after a disruption."
+    },
+    "monitoring": [
+      "Plans are reviewed and tested at the defined frequency.",
+      "Test results and corrective actions are recorded and tracked.",
+      "Readiness is reported to management."
+    ],
+    "management_system": "ISMS",
+    "section_guidance": {
+      "procedures": "Describe activation criteria and declaration authority, crisis communications, continuity workarounds, ordered system and data recovery, dependency checks, validation against RTO/RPO, failback and post-event review.",
+      "risk_controls": "Address site or infrastructure loss, ransomware and unavailable or corrupt backups, dependency and supplier failures, failed failover and missed recovery objectives. Connect each risk to relevant continuity or recovery controls; do not repeat unrelated ISMS risks.",
+      "policy_requirements": "Cover business impact analysis, critical services and dependencies, approved RTO/RPO and tolerable disruption, continuity strategies, recovery sites, backup protection, recovery team responsibilities and accessible recovery plans. Use placeholders for objectives and test frequencies absent from evidence.",
+      "monitoring_compliance": "Require continuity exercises and technical recovery tests, measured RTO/RPO results, corrective-action tracking and plan updates after changes or disruptions."
+    },
+    "customer_project_sections": {
+      "scope": [
+        "This policy applies to work delivered in customer-managed projects and customer-controlled environments as well as internally managed services, including employees, contractors and remote or client-site delivery. Responsibilities must follow the agreed contract and shared-responsibility matrix; customer ownership does not remove the organization's delivery and compliance obligations."
+      ],
+      "roles_responsibilities": [
+        "For customer-managed projects, the Project Manager coordinates contractual BCP/DR requirements, the internal continuity lead maintains delivery continuity, assigned technical personnel support authorized recovery tasks, and the customer-designated continuity/recovery authority directs recovery of customer-controlled systems. Record project-specific responsibilities and hand-offs."
+      ],
+      "policy_requirements": [
+        "At onboarding and after material changes, identify and record each customer-managed project's contractual BCP/DR requirements, service dependencies, agreed RTO/RPO and recovery priorities, customer continuity plans, notification obligations, exercise participation and required compliance evidence. Use [To be confirmed: project recovery objectives and contractual obligations] for unknown values.",
+        "Maintain a shared-responsibility matrix and project continuity arrangements for personnel availability, remote/client-site delivery, alternate working arrangements and communication with the customer. Customer-managed recovery infrastructure does not remove the organization's responsibility to sustain its contracted delivery obligations.",
+        "Personnel must comply with applicable customer BCP/DR plans, participate in agreed exercises and provide permitted evidence. Backup, restore, failover and failback actions on customer-controlled systems require the customer-designated authority's authorization and must remain within the contracted scope."
+      ],
+      "procedures": [
+        "For customer-managed projects, map contractual BCP/DR obligations and service dependencies, agree the shared-responsibility matrix, align project continuity arrangements with customer plans and recovery objectives, record notification contacts and declaration authority, and brief assigned employees and contractors.",
+        "On disruption, notify the internal continuity lead and customer through agreed channels, activate authorized delivery workarounds, coordinate hand-offs and customer-directed recovery, obtain approval before customer-system restore/failover/failback, validate contracted service recovery against agreed objectives, retain permitted evidence and complete a joint post-event review.",
+        "Participate in agreed customer BCP/DR exercises, record attendance and recovery results, track corrective actions to the responsible internal or customer owner, and escalate unavailable customer plans or evidence."
+      ],
+      "risk_controls": [
+        "Assess customer-managed project risks including outage of customer platforms or access, unavailable customer recovery plans, conflicting recovery priorities, unclear declaration authority, missed contractual notification or recovery targets, and dependence on customer-controlled backups; manage them through agreed interfaces, continuity workarounds, responsibility mapping and joint exercises."
+      ],
+      "monitoring_compliance": [
+        "For each customer-managed project, review compliance with contractual BCP/DR requirements, agreed RTO/RPO, exercise participation, notification arrangements, recovery evidence and corrective actions at the agreed frequency. Where the customer owns recovery controls, obtain permitted assurance or attestations and record evidence limitations rather than claiming unverified compliance."
+      ],
+      "incident_reporting": [
+        "During customer-managed project disruptions, follow both internal escalation and customer-agreed notification channels, decision authority and contractual deadlines. Record notifications and hand-offs; use [To be confirmed: project notification contacts and deadlines] where evidence is absent."
+      ],
+      "exceptions": [
+        "Any exception affecting customer-managed project continuity, recovery targets or contractual obligations requires documented risk assessment and internal approval plus customer approval where applicable. Record the agreed workaround, responsibility, expiry and review; internal approval cannot waive customer commitments."
+      ]
+    }
+  }
+]

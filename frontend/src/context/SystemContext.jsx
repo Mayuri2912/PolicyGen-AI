@@ -11,17 +11,25 @@ export function SystemProvider({ children }) {
   const load = useCallback(async () => {
     setState((current) => ({ ...current, loading: true, error: null }));
     try {
-      const health = await api.health();
+      let health;
+      for (let attempt = 0; attempt < 4; attempt += 1) {
+        try { health = await api.health(); break; }
+        catch (error) {
+          if (attempt === 3 || !['network_error', 'timeout', 'server_starting'].includes(error.code)) throw error;
+          await new Promise((resolve) => setTimeout(resolve, 2000 * 2 ** attempt));
+        }
+      }
       if (health.auth_required && !getAccessToken()) {
         setState({ loading: false, error: null, health, config: null, needsToken: true });
         return;
       }
       const config = await api.config();
-      setState({ loading: false, error: null, health, config, needsToken: false });
+      const identity = await api.me().catch(() => ({ user: null }));
+      setState({ loading: false, error: null, health, config, user: identity.user, needsToken: false });
     } catch (error) {
       if (error.status === 401) {
         setAccessToken('');
-        setState((current) => ({ ...current, loading: false, needsToken: true, error: 'The access token was not accepted.' }));
+        setState((current) => ({ ...current, loading: false, needsToken: true, error: 'Your session expired or access was not accepted. Sign in again.' }));
       } else {
         setState((current) => ({ ...current, loading: false, error: error.message }));
       }
@@ -56,6 +64,7 @@ export function SystemProvider({ children }) {
     () => ({
       ...state,
       reload: load,
+      signOut: async () => { try { await api.logout(); } finally { setAccessToken(''); load(); } },
       submitToken: (token) => {
         setAccessToken(token.trim());
         load();

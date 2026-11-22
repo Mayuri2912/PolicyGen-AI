@@ -27,6 +27,12 @@ def clean(text) -> str:
     return _CONTROL.sub("", "" if text is None else str(text))
 
 
+def uses_sapres_brand(organization: str) -> bool:
+    """Use the supplied logo only when the configured organization is Sapres."""
+    words = re.findall(r"[a-z0-9]+", clean(organization).lower())
+    return bool(words and words[0] == "sapres")
+
+
 def split_placeholders(text: str) -> list[tuple[str, bool]]:
     """Split text into (fragment, is_placeholder) pairs."""
     parts, position = [], 0

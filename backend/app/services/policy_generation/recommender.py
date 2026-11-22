@@ -101,6 +101,11 @@ def recommend(findings: dict[str, list[dict]], summary: dict, *, simulated: bool
             + sum(min(n, _KEYWORD_CAP) for n in hits.values())
             + signal_score
         )
+        # Long catalogue guidance must not win merely by supplying many more
+        # keywords. Its identity must be present to outrank a focused policy
+        # match from an otherwise general assessment.
+        if template.management_system and template.code.lower() not in identity and template.name.lower() not in identity:
+            score = int(score * 0.5)
         if template.id == suggested:
             reasons.insert(0, f"{source}: {suggestion.get('rationale') or 'suggested as the best fit for these documents.'}")
         elif template.id in alternatives:

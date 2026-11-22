@@ -11,16 +11,23 @@ from app.api.serializers import analysis_summary, job_dict
 from app.core.config import get_settings
 from app.core.stages import STAGE_LABELS, JobStatus, Stage
 from app.database.session import get_db
-from app.models.entities import Analysis, Job, Policy, UploadedFile
-from app.schemas.analysis import ASSESSMENT_DISCLAIMER, CONTROL_STATUSES, GAP_STATUSES, PRIORITIES, REQUIREMENT_CATEGORIES
+from app.models.entities import Account, Analysis, Job, Policy, UploadedFile
+from app.schemas.analysis import (
+    ASSESSMENT_DISCLAIMER,
+    CONTROL_STATUSES,
+    GAP_STATUSES,
+    PRIORITIES,
+    REQUIREMENT_CATEGORIES,
+)
 from app.schemas.policy import DETAIL_GUIDANCE, STYLE_GUIDANCE
 from app.services.ai_analysis.providers.factory import PROVIDER_LABELS, provider_status
-from app.services.document_generation.model import REVIEW_NOTICE
 from app.services.file_processing.ocr import ocr_status
 from app.services.file_processing.validation import FILE_TYPES
 from app.services.policy_generation import generator
 from app.services.policy_generation.templates import list_policy_types
 from app.services.risk_analysis.scoring import scoring_method
+
+REVIEW_NOTICE = "AI-assisted drafts must be reviewed and approved before adoption. This application does not provide legal advice."
 
 router = APIRouter(tags=["system"])
 
@@ -28,8 +35,13 @@ router = APIRouter(tags=["system"])
 def _privacy(llm: dict, ocr: dict) -> dict:
     settings = get_settings()
     return {
-        "storage": "Uploaded files, extracted text, findings and generated documents are stored on the server running this "
-        "application, in a data directory that is not publicly served.",
+        "storage": (
+            "Uploaded files, extracted text, checkpoints and generated documents are stored in private Supabase storage; "
+            "records are stored in PostgreSQL. Temporary working copies are kept on the application server."
+            if settings.storage_backend == "supabase"
+            else "Uploaded files, extracted text, findings and generated documents are stored on the server running this "
+                 "application, in a data directory that is not publicly served."
+        ),
         "llm": (
             "Mock mode is active: no document content leaves this server."
             if llm.get("simulated")
@@ -69,9 +81,11 @@ def health(db: Session = Depends(get_db)):
         "app": settings.app_name,
         "version": __version__,
         "database": database,
+        "storage": {"backend": settings.storage_backend, "persistent": settings.storage_backend == "supabase"},
         "llm": llm,
         "ocr": ocr,
-        "auth_required": bool(settings.api_access_token),
+        "auth_required": not settings.public_access and (bool(settings.api_access_token) or settings.environment == "production" or bool(db.scalar(select(func.count(Account.id))))),
+        "public_access": settings.public_access,
         "privacy": _privacy(llm, ocr),
     }
 
@@ -110,8 +124,13 @@ def dashboard(db: Session = Depends(get_db)):
     analyses = db.scalars(select(Analysis).order_by(Analysis.created_at.desc()).limit(5)).all()
     recent_jobs = db.scalars(select(Job).order_by(Job.created_at.desc()).limit(8)).all()
     active = (JobStatus.QUEUED.value, JobStatus.RUNNING.value)
+    from datetime import date
+    summaries = [generator.policy_summary(p) for p in db.scalars(select(Policy)).all()]
     return {
         "stats": {
+            "awaiting_review": count(Policy, Policy.review_status.in_(("draft", "in_review", "changes_requested"))),
+            "missing_information": sum(s["missing_information_count"] for s in summaries),
+            "overdue_reviews": sum(bool(s["review_due"] and s["review_due"] < date.today().isoformat()) for s in summaries),
             "files_uploaded": count(UploadedFile),
             "files_processed": count(UploadedFile, UploadedFile.status == Stage.EXTRACTED.value),
             "analyses_completed": count(Analysis, Analysis.status == Stage.ANALYSIS_COMPLETED.value),

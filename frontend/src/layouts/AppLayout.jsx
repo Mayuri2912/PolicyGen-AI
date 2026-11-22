@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { FilePlus2, FileStack, FlaskConical, HelpCircle, LayoutDashboard, Menu, ShieldCheck, X } from 'lucide-react';
 import { ErrorState, LoadingBlock } from '../components/ui.jsx';
+import { SignInGate } from '../components/SignInGate.jsx';
 import { useSystem } from '../context/SystemContext.jsx';
 
 const NAV = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/new', label: 'New policy', icon: FilePlus2 },
   { to: '/reports', label: 'Report history', icon: FileStack },
+  { to: '/account', label: 'Account & administration', icon: ShieldCheck },
   { to: '/help', label: 'Help & privacy', icon: HelpCircle },
 ];
 
@@ -40,7 +42,7 @@ function TokenGate({ error, onSubmit }) {
 }
 
 export default function AppLayout() {
-  const { loading, error, health, config, needsToken, submitToken, reload } = useSystem();
+  const { loading, error, health, config, needsToken, submitToken, reload, user, signOut } = useSystem();
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -50,10 +52,12 @@ export default function AppLayout() {
   }, [location.pathname]);
 
   let content;
-  if (needsToken) content = <TokenGate error={error} onSubmit={submitToken} />;
-  else if (loading && !config) content = <LoadingBlock label="Connecting to the server…" />;
+  if (needsToken) content = <SignInGate onSignedIn={reload} legacyGate={<TokenGate error={error} onSubmit={submitToken} />} />;
+  else if (loading && !config) content = <LoadingBlock label="Connecting to the server… The free API may need a moment to start. Retrying automatically." />;
   else if (error && !config) content = <ErrorState title="The server is not available" message={error} onRetry={reload} />;
+  else if (user && !['admin', 'editor'].includes(user.role) && (location.pathname === '/new' || location.pathname.endsWith('/configure'))) content = <div className="notice notice-info">Your account can review existing work. Ask an editor or administrator to prepare a new draft.</div>;
   else content = <Outlet />;
+
 
   const llm = health?.llm;
   return (
@@ -74,30 +78,18 @@ export default function AppLayout() {
             <span className="brand-tag">Intelligent Policy Generation Agent</span>
           </span>
         </NavLink>
-        {llm && (
-          <span className={`mode-pill ${llm.simulated ? 'mode-mock' : llm.ready ? 'mode-live' : 'mode-off'}`} title={llm.message}>
-            {llm.simulated ? (
-              <>
-                <FlaskConical size={14} aria-hidden="true" /> Mock mode
-              </>
-            ) : llm.ready ? (
-              <span className="mode-text">
-                {llm.display_name || llm.provider}: {llm.model}
-              </span>
-            ) : (
-              <span className="mode-text">{llm.display_name || 'AI provider'} not configured</span>
-            )}
-          </span>
-        )}
+        <div className="badge-row"><span>{user && !health?.public_access ? `${user.name} · ${user.role}` : 'Policy workspace'}</span>
+          {!health?.public_access && (user || !needsToken) && <button className="btn btn-small" onClick={signOut}>Sign out</button>}
+        </div>
       </header>
 
       <nav id="primary-nav" className={`sidebar ${menuOpen ? 'sidebar-open' : ''}`} aria-label="Primary">
         <ul>
-          {NAV.map(({ to, label, icon: Icon, end }) => (
+          {NAV.filter((item) => item.to !== '/new' || !user || ['admin', 'editor'].includes(user.role)).map(({ to, label, icon: Icon, end }) => (
             <li key={to}>
               <NavLink to={to} end={end} className={({ isActive }) => `nav-link ${isActive ? 'nav-active' : ''}`}>
                 <Icon size={18} aria-hidden="true" />
-                {label}
+                {to === '/account' && health?.public_access ? 'System status' : label}
               </NavLink>
             </li>
           ))}

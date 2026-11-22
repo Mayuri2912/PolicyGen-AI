@@ -14,7 +14,8 @@ from difflib import SequenceMatcher
 from app.schemas.policy import PLACEHOLDER_PATTERN
 from app.services.ai_analysis.facts import extract_facts, normalise_value
 from app.services.ai_analysis.standards import CLAIM_PATTERN, STANDARD_PATTERNS
-from app.services.policy_generation import abbreviations, people as people_rules
+from app.services.policy_generation import abbreviations
+from app.services.policy_generation import people as people_rules
 from app.services.policy_generation.content import REF_PATTERN, block_text, section_text
 from app.services.policy_generation.templates import PolicyTemplate, is_retired
 
@@ -23,7 +24,7 @@ REPETITION_THRESHOLD = 0.85
 # Issue codes that a correction round may be able to fix.
 CORRECTABLE = {
     "missing_section", "empty_section", "unsupported_claim", "repetitive_section", "no_statements", "unclear_responsibilities",
-    "personal_name",
+    "personal_name", "out_of_scope_evidence", "empty_subsection", "missing_customer_project_coverage",
 }
 
 
@@ -60,6 +61,57 @@ def validate_policy(
                 issues.append(_issue("missing_section", "error", f"The mandatory section '{spec.heading}' is missing.", spec.id))
         elif len(texts[spec.id].strip()) < MIN_SECTION_CHARS:
             issues.append(_issue("empty_section", "error", f"The section '{spec.heading}' has little or no content.", spec.id))
+
+    # An introduction and empty Objectives/Principles labels are not substantive content.
+    objectives = sections.get("objectives")
+    if objectives is not None:
+        substantive = []
+        for block in objectives["blocks"]:
+            if block["type"] == "subheading":
+                continue
+            text = block_text(block).strip()
+            if re.fullmatch(r"(?:policy )?(?:objectives|principles)(?: and principles)?\s*:?", text, re.IGNORECASE):
+                continue
+            if re.fullmatch(r"(?:the following|below are|these are)\b.*(?:objectives|principles).*:", text, re.IGNORECASE | re.DOTALL):
+                continue
+            substantive.append(text)
+        if len("\n".join(substantive)) < MIN_SECTION_CHARS and not any(
+            i["code"] == "empty_section" and i["section_id"] == "objectives" for i in issues
+        ):
+            issues.append(_issue("empty_section", "error",
+                                 "Policy Objectives and Principles contains only labels or introductory text; add substantive objectives and principles.",
+                                 "objectives"))
+
+    # Subheadings and short introductory labels require actual content beneath them.
+    def label(block: dict) -> bool:
+        return block["type"] == "subheading" or (block["type"] == "paragraph" and
+               block.get("text", "").strip().endswith(":"))
+
+    for sid, section in sections.items():
+        blocks = section["blocks"]
+        for index, block in enumerate(blocks):
+            if not label(block):
+                continue
+            following = []
+            for candidate in blocks[index + 1:]:
+                if label(candidate):
+                    break
+                following.append(candidate)
+            populated = any(block_text(candidate).strip() and
+                            (block["type"] == "subheading" or candidate["type"] in ("bullets", "numbered", "statements", "table"))
+                            for candidate in following)
+            # An introduction can introduce a group of subsections; each child is checked separately.
+            if block["type"] == "paragraph" and index + 1 < len(blocks) and blocks[index + 1]["type"] == "subheading" and len(block.get("text", "")) > 120:
+                populated = True
+            if not populated:
+                issues.append(_issue("empty_subsection", "error",
+                    f"'{section['heading']}' has no content beneath '{block.get('text', '')}'. Add substantive steps, requirements, roles or records as appropriate.", sid))
+
+    applicable = {spec.id for spec in template.sections()}
+    for sid in template.customer_project_sections:
+        if sid in applicable and not re.search(r"\b(?:customer|client)\b", texts.get(sid, ""), re.IGNORECASE):
+            issues.append(_issue("missing_customer_project_coverage", "error",
+                f"'{next(spec.heading for spec in template.sections() if spec.id == sid)}' must address customer-managed projects, contractual obligations and the agreed shared responsibilities.", sid))
 
     # 3. Repetition: near-identical sections and paragraphs reused across sections.
     ids = [sid for sid, text in texts.items() if len(text) >= 200]

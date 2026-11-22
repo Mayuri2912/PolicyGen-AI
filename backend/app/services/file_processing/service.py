@@ -90,7 +90,9 @@ async def store_upload(db: Session, upload: UploadFile) -> UploadOutcome:
             db.refresh(existing)
         return UploadOutcome(display_name, True, duplicate=True, file=existing)
 
-    tmp_path.replace(storage.upload_path(storage_name))
+    stored_path = storage.upload_path(storage_name)
+    tmp_path.replace(stored_path)
+    storage.persist(stored_path)
     record = UploadedFile(
         id=file_id,
         original_name=display_name,
@@ -223,6 +225,7 @@ def run_extraction(ctx: JobContext) -> dict:
         extension, storage_name, name = file.extension, file.storage_name, file.original_name
 
     path = storage.upload_path(storage_name)
+    storage.materialize(path)
     if not path.exists():
         raise JobFailure("The stored file is missing. Upload it again.", "missing_file")
     parser = get_parser(extension)

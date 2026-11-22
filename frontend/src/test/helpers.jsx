@@ -62,7 +62,7 @@ export function mockApi(routes) {
     const method = (options.method || 'GET').toUpperCase();
     const path = String(url).split('?')[0];
     calls.push({ method, url: String(url), body: options.body });
-    const defaults = { 'GET /api/health': HEALTH, 'GET /api/config': CONFIG };
+    const defaults = { 'GET /api/health': HEALTH, 'GET /api/config': CONFIG, 'GET /api/auth/me': { user: { id: 'u1', name: 'Asha Rao', email: 'asha@example.test', role: 'admin' } }, 'GET /api/auth/status': { accounts_enabled: false, setup_available: true } };
     const key = `${method} ${path}`;
     let entry = key in routes ? routes[key] : defaults[key];
     if (entry === undefined) {

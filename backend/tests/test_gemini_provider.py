@@ -12,8 +12,6 @@ from types import SimpleNamespace
 
 import httpx
 import pytest
-from google.genai import errors
-
 from app.schemas.analysis import ChunkFindings, llm_json_schema
 from app.services.ai_analysis.providers.base import (
     LLMConfigurationError,
@@ -25,9 +23,14 @@ from app.services.ai_analysis.providers.base import (
     LLMTimeoutError,
     LLMUnavailableError,
 )
-from app.services.ai_analysis.providers.factory import get_provider, resolve_provider_name, set_provider_override
+from app.services.ai_analysis.providers.factory import (
+    get_provider,
+    resolve_provider_name,
+    set_provider_override,
+)
 from app.services.ai_analysis.providers.gemini_provider import GeminiProvider
 from app.services.ai_analysis.providers.mock_provider import MockProvider
+from google.genai import errors
 from tests.conftest import all_text, analyze, generate, sample, upload_ok
 
 FAKE_KEY = "TEST-GEMINI-KEY-not-real-0123456789"  # deliberately not in the real "AIza..." key format
@@ -219,7 +222,7 @@ def test_provider_selection(settings, monkeypatch):
     monkeypatch.setattr(settings, "llm_provider", "gemini")
     set_provider_override(None)
     provider = get_provider()
-    assert isinstance(provider, GeminiProvider) and provider.model == "gemini-3.8-flash"
+    assert isinstance(getattr(provider, "provider", provider), GeminiProvider) and provider.model == "gemini-3.8-flash"
 
     monkeypatch.setattr(settings, "llm_provider", "mock")  # mock mode still works with keys present
     assert isinstance(get_provider(), MockProvider)
@@ -249,7 +252,7 @@ def test_gemini_selected_without_a_key_fails_clearly_and_mock_still_works(client
 def test_unknown_provider_error_lists_gemini(settings, monkeypatch):
     monkeypatch.setattr(settings, "llm_provider", "skynet")
     set_provider_override(None)
-    with pytest.raises(LLMConfigurationError, match="auto, anthropic, gemini, mock, openrouter"):
+    with pytest.raises(LLMConfigurationError, match="auto, anthropic, gemini, groq, mock, nvidia, openrouter"):
         get_provider()
 
 
@@ -313,13 +316,27 @@ def test_analysis_and_policy_generation_through_the_gemini_provider(client, sett
     report = generate(client, analysis["id"], policy_type="information_security", organization_name="Brightwater Analytics Pvt. Ltd.")
     assert report["status"] == "completed" and report["quality_report"]["counts"]["error"] == 0
     assert (report["provider"], report["model"], report["simulated"]) == ("gemini", "gemini-3.8-flash", False)
-    assert "PolicyGen AI using gemini-3.8-flash (Google Gemini)" in all_text(report)
+    assert "PolicyGen AI using gemini-3.8-flash (Google Gemini)" not in all_text(report)
     assert "SIMULATED OUTPUT" not in all_text(report)  # a real provider's draft is not labelled as mock
     assert client.get(f"/api/reports/{report['id']}/download?format=pdf").content.startswith(b"%PDF-")
 
     # Same prompts and schemas as every other provider; nothing Gemini-specific upstream.
-    assert [r.task for r in provider.sent] == ["extract_findings", "extract_findings", "consolidate", "generate_policy"]
+    assert [r.task for r in provider.sent[:3]] == ["extract_findings", "extract_findings", "consolidate"]
+    assert all(r.task == "generate_policy" for r in provider.sent[3:])
+    assert len(provider.sent[3:]) == 5
     extract = provider.sent[0]
     assert "analysis engine of PolicyGen AI" in extract.system and "<untrusted_document id=" in extract.user
     assert extract.schema == llm_json_schema(ChunkFindings)
     json.dumps(extract.schema)  # the schema is plain JSON, as response_json_schema requires
+
+
+def test_daily_and_zero_quota_do_not_retry_as_minute_limits(settings):
+    from unittest.mock import Mock
+
+    from google.genai import errors
+    provider = GeminiProvider(settings, client=Mock())
+    daily = errors.ClientError(429, {"error": {"message": "Quota GenerateRequestsPerDayPerProject exceeded", "status": "RESOURCE_EXHAUSTED", "details": [{"retryDelay": "30s"}]}})
+    error = provider._client_error(daily)
+    assert error.code == "llm_quota_exceeded" and error.retry_after_seconds == 86400
+    zero = errors.ClientError(429, {"error": {"message": "Quota exceeded, limit: 0, model: unavailable", "status": "RESOURCE_EXHAUSTED"}})
+    assert isinstance(provider._client_error(zero), LLMConfigurationError)

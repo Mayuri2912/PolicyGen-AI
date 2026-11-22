@@ -702,7 +702,11 @@
       "A register of vendors, their criticality and assessment status is maintained.",
       "Vendor assessments and contract obligations are tracked against due dates.",
       "Vendor incidents and performance issues are reported to management."
-    ]
+    ],
+    "section_guidance": {
+      "objectives": "Combine supplier lifecycle objectives and vendor-specific principles. Exclude organization-wide ISMS establishment, internal training, audits and management review objectives.",
+      "risk_controls": "Address supplier data disclosure, vendor privileged access, cloud or supplier outage, subcontractor exposure, concentration or lock-in, missed contractual notification and incomplete data deletion at exit. Map each evidenced risk to treatment and owner. Where no vendor-specific risk is evidenced, write proposed assessment requirements; do not assert incidents or fabricated ratings."
+    }
   },
   {
     "id": "cloud_security",
@@ -1218,13 +1222,25 @@
           "drill",
           "rehears"
         ]
+      },
+      {
+        "title": "Customer-Managed Projects and Contractual Compliance",
+        "keywords": [
+          "customer-managed",
+          "client-managed",
+          "customer requirements",
+          "contractual",
+          "shared responsibility",
+          "customer approval"
+        ]
       }
     ],
     "objectives": [
       "Identify critical services and the resources they depend on.",
       "Define recovery objectives for critical services.",
       "Maintain plans that enable recovery within those objectives.",
-      "Prove the plans work through regular testing."
+      "Prove the plans work through regular testing.",
+      "Meet agreed customer-managed project requirements and maintain evidence of contractual compliance within the assigned scope of responsibility."
     ],
     "principles": [
       "The safety of people comes first in any disruption.",
@@ -1243,7 +1259,37 @@
       "Plans are reviewed and tested at the defined frequency.",
       "Test results and corrective actions are recorded and tracked.",
       "Readiness is reported to management."
-    ]
+    ],
+    "customer_project_sections": {
+      "scope": [
+        "This policy applies to work delivered in customer-managed projects and customer-controlled environments as well as internally managed services, including employees, contractors and remote or client-site delivery. Responsibilities must follow the agreed contract and shared-responsibility matrix; customer ownership does not remove the organization's delivery and compliance obligations."
+      ],
+      "roles_responsibilities": [
+        "For customer-managed projects, the Project Manager coordinates contractual BCP/DR requirements, the internal continuity lead maintains delivery continuity, assigned technical personnel support authorized recovery tasks, and the customer-designated continuity/recovery authority directs recovery of customer-controlled systems. Record project-specific responsibilities and hand-offs."
+      ],
+      "policy_requirements": [
+        "At onboarding and after material changes, identify and record each customer-managed project's contractual BCP/DR requirements, service dependencies, agreed RTO/RPO and recovery priorities, customer continuity plans, notification obligations, exercise participation and required compliance evidence. Use [To be confirmed: project recovery objectives and contractual obligations] for unknown values.",
+        "Maintain a shared-responsibility matrix and project continuity arrangements for personnel availability, remote/client-site delivery, alternate working arrangements and communication with the customer. Customer-managed recovery infrastructure does not remove the organization's responsibility to sustain its contracted delivery obligations.",
+        "Personnel must comply with applicable customer BCP/DR plans, participate in agreed exercises and provide permitted evidence. Backup, restore, failover and failback actions on customer-controlled systems require the customer-designated authority's authorization and must remain within the contracted scope."
+      ],
+      "procedures": [
+        "For customer-managed projects, map contractual BCP/DR obligations and service dependencies, agree the shared-responsibility matrix, align project continuity arrangements with customer plans and recovery objectives, record notification contacts and declaration authority, and brief assigned employees and contractors.",
+        "On disruption, notify the internal continuity lead and customer through agreed channels, activate authorized delivery workarounds, coordinate hand-offs and customer-directed recovery, obtain approval before customer-system restore/failover/failback, validate contracted service recovery against agreed objectives, retain permitted evidence and complete a joint post-event review.",
+        "Participate in agreed customer BCP/DR exercises, record attendance and recovery results, track corrective actions to the responsible internal or customer owner, and escalate unavailable customer plans or evidence."
+      ],
+      "risk_controls": [
+        "Assess customer-managed project risks including outage of customer platforms or access, unavailable customer recovery plans, conflicting recovery priorities, unclear declaration authority, missed contractual notification or recovery targets, and dependence on customer-controlled backups; manage them through agreed interfaces, continuity workarounds, responsibility mapping and joint exercises."
+      ],
+      "monitoring_compliance": [
+        "For each customer-managed project, review compliance with contractual BCP/DR requirements, agreed RTO/RPO, exercise participation, notification arrangements, recovery evidence and corrective actions at the agreed frequency. Where the customer owns recovery controls, obtain permitted assurance or attestations and record evidence limitations rather than claiming unverified compliance."
+      ],
+      "incident_reporting": [
+        "During customer-managed project disruptions, follow both internal escalation and customer-agreed notification channels, decision authority and contractual deadlines. Record notifications and hand-offs; use [To be confirmed: project notification contacts and deadlines] where evidence is absent."
+      ],
+      "exceptions": [
+        "Any exception affecting customer-managed project continuity, recovery targets or contractual obligations requires documented risk assessment and internal approval plus customer approval where applicable. Record the agreed workaround, responsibility, expiry and review; internal approval cannot waive customer commitments."
+      ]
+    }
   },
   {
     "id": "asset_management",

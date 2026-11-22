@@ -91,21 +91,11 @@ export default function Dashboard() {
             </section>
 
             <section className="card">
-              <h2>System status</h2>
-              <ul className="plain-list status-list">
-                <StatusLine ok={health?.database === 'ok'}>Database {health?.database === 'ok' ? 'connected' : 'unavailable'}</StatusLine>
-                <StatusLine ok={Boolean(health?.llm?.ready)}>
-                  {health?.llm?.simulated ? 'Mock mode (no AI model; results are simulated)' : health?.llm?.ready ? `${health.llm.service_name || 'AI provider'} ready (${health.llm.model})` : `${health?.llm?.display_name || 'AI provider'} not configured`}
-                </StatusLine>
-                <StatusLine ok={Boolean(health?.ocr?.available)}>
-                  {health?.ocr?.available ? `OCR available (${health.ocr.engine})` : 'OCR not installed: images and scanned PDFs cannot be read'}
-                </StatusLine>
-              </ul>
-              <h3>Limits</h3>
-              <p className="small">
-                {config?.limits.max_upload_mb} MB per file · {config?.limits.max_files_per_upload} files per upload ·{' '}
-                {config?.policy_types.length} policy types
-              </p>
+              <h2>Next actions</h2>
+              <p><Link to="/reports">Review policies and complete missing information</Link></p>
+              <ul><li>{data.stats.awaiting_review ?? 0} policies awaiting review</li><li>{data.stats.missing_information ?? 0} information fields to complete</li><li>{data.stats.overdue_reviews ?? 0} overdue policy reviews</li></ul>
+              <p className="small">Start with missing information, then resolve blocking issues and record professional review decisions.</p>
+              <Link to="/account">Account & administration</Link>
               <h3>Recent analyses</h3>
               {data.recent_analyses.length === 0 ? (
                 <p className="muted small">No analyses yet.</p>
@@ -170,7 +160,7 @@ export default function Dashboard() {
                 <strong>Review the analysis</strong>: requirements, risks, controls and gaps, each traced to its source. Edit or exclude findings.
               </li>
               <li>
-                <strong>Configure</strong> the policy type, organization details, style and optional appendices.
+                <strong>Configure</strong> the policy type, organization details, style and output format.
               </li>
               <li>
                 <strong>Generate, review and download</strong> the policy as Word and PDF. Have it approved before adoption.

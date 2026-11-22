@@ -38,7 +38,11 @@ def iso(value: datetime | None) -> str | None:
     return value.isoformat(timespec="seconds")
 
 
-class UploadedFile(Base):
+class WorkspaceRecord:
+    workspace_id: Mapped[str] = mapped_column(String(32), default="default", server_default="default", index=True)
+
+
+class UploadedFile(WorkspaceRecord, Base):
     __tablename__ = "uploaded_files"
 
     id: Mapped[str] = mapped_column(String(32), primary_key=True, default=new_id)
@@ -62,7 +66,7 @@ class UploadedFile(Base):
     )
 
 
-class ExtractedDocument(Base):
+class ExtractedDocument(WorkspaceRecord, Base):
     __tablename__ = "extracted_documents"
 
     id: Mapped[str] = mapped_column(String(32), primary_key=True, default=new_id)
@@ -79,7 +83,7 @@ class ExtractedDocument(Base):
     file: Mapped[UploadedFile] = relationship(back_populates="document")
 
 
-class Job(Base):
+class Job(WorkspaceRecord, Base):
     __tablename__ = "jobs"
 
     id: Mapped[str] = mapped_column(String(32), primary_key=True, default=new_id)
@@ -99,7 +103,7 @@ class Job(Base):
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
-class Analysis(Base):
+class Analysis(WorkspaceRecord, Base):
     __tablename__ = "analyses"
 
     id: Mapped[str] = mapped_column(String(32), primary_key=True, default=new_id)
@@ -122,7 +126,7 @@ class Analysis(Base):
     policies: Mapped[list["Policy"]] = relationship(back_populates="analysis", cascade="all, delete-orphan")
 
 
-class AnalysisFinding(Base):
+class AnalysisFinding(WorkspaceRecord, Base):
     __tablename__ = "analysis_findings"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -140,7 +144,7 @@ class AnalysisFinding(Base):
     analysis: Mapped[Analysis] = relationship(back_populates="findings")
 
 
-class Policy(Base):
+class Policy(WorkspaceRecord, Base):
     """A generated report.  Content lives in its versions."""
 
     __tablename__ = "policies"
@@ -172,7 +176,7 @@ class Policy(Base):
     )
 
 
-class PolicyVersion(Base):
+class PolicyVersion(WorkspaceRecord, Base):
     __tablename__ = "policy_versions"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -187,7 +191,7 @@ class PolicyVersion(Base):
     policy: Mapped[Policy] = relationship(back_populates="versions")
 
 
-class ReviewEvent(Base):
+class ReviewEvent(WorkspaceRecord, Base):
     __tablename__ = "review_events"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -201,7 +205,7 @@ class ReviewEvent(Base):
     policy: Mapped[Policy] = relationship(back_populates="review_events")
 
 
-class ProcessingError(Base):
+class ProcessingError(WorkspaceRecord, Base):
     __tablename__ = "processing_errors"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -212,3 +216,22 @@ class ProcessingError(Base):
     code: Mapped[str] = mapped_column(String(64), default="")
     message: Mapped[str] = mapped_column(Text, default="")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class Account(Base):
+    __tablename__ = "accounts"
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, default=new_id)
+    email: Mapped[str] = mapped_column(String(254), unique=True)
+    name: Mapped[str] = mapped_column(String(100))
+    password_hash: Mapped[str] = mapped_column(String(200))
+    role: Mapped[str] = mapped_column(String(16))
+    workspace_id: Mapped[str] = mapped_column(String(32), default="default", index=True)
+    active: Mapped[bool] = mapped_column(Boolean, default=True)
+
+
+class AccountSession(Base):
+    __tablename__ = "account_sessions"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    account_id: Mapped[str] = mapped_column(ForeignKey("accounts.id", ondelete="CASCADE"))
+    token_hash: Mapped[str] = mapped_column(String(64), unique=True)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))

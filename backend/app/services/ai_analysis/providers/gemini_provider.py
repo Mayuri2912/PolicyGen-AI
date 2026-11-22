@@ -12,6 +12,8 @@ key is read from server-side configuration and is sent only to Google.
 
 from __future__ import annotations
 
+import re
+
 import httpx
 from google import genai
 from google.genai import errors, types
@@ -56,7 +58,7 @@ class GeminiProvider(LLMProvider):
                     retry_options=types.HttpRetryOptions(attempts=settings.llm_max_retries + 1),
                 ),
             )
-        except Exception as exc:  # noqa: BLE001 - any construction failure is a configuration problem
+        except Exception as exc:
             raise LLMConfigurationError(
                 "The Gemini client could not be created. Set GEMINI_API_KEY in backend/.env."
             ) from exc
@@ -149,12 +151,18 @@ class GeminiProvider(LLMProvider):
         if exc.code == 404 or "is not found" in detail or "not supported for generatecontent" in detail:
             return LLMConfigurationError(
                 f"The model '{self.model}' is not available to this API key (it may have been retired) or does not support "
-                "text generation. Set GEMINI_MODEL in backend/.env to a current model, for example gemini-3.8-flash."
+                "text generation. Set GEMINI_MODEL in backend/.env to a current model, for example gemini-3.1-flash-lite."
             )
         if exc.code == 429:
+            if re.search(r"limit[:=]\s*0\b", detail) or re.search(r"quota_?value[\"' :]+0\b", detail):
+                return LLMConfigurationError("The configured Gemini model has no available quota for this project. Choose a model with free quota or update the project configuration.")
+            daily = any(marker in detail for marker in ("perday", "per_day", "per day", "daily"))
+            match = re.search(r"retry(?:delay|_delay)[\"' :]+([0-9.]+)s", detail)
+            delay = 86400 if daily else (float(match.group(1)) if match else 60)
             return LLMRateLimitError(
                 "The Gemini quota or rate limit was reached and retries were exhausted. Wait a minute and retry, "
-                "or check the quota of your Google AI project."
+                "or check the quota of your Google AI project.",
+                code="llm_quota_exceeded" if daily else "llm_rate_limited", retry_after_seconds=delay,
             )
         if exc.code == 408:
             return LLMTimeoutError(

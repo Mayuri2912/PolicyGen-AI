@@ -44,12 +44,20 @@ class PolicyConfig(BaseModel):
     review_frequency: str = Field(default="Annually", max_length=60)
     classification: str = Field(default="Internal", max_length=60)
     custom_title: str = Field(default="", max_length=200)
+    delivery_scope: Literal["internal", "customer", "both", "unknown"] = "unknown"
+    customer_obligations: str = Field(default="", max_length=4000)
+    assigned_roles: str = Field(default="", max_length=2000)
+    approved_timings: str = Field(default="", max_length=2000)
+    approved_tools: str = Field(default="", max_length=2000)
+    applicable_obligations: str = Field(default="", max_length=2000)
     writing_style: WritingStyle = "formal"
     detail_level: DetailLevel = "standard"
-    include_risk_register: bool = True
-    include_control_matrix: bool = True
-    include_gap_analysis: bool = True
-    include_source_references: bool = True
+    # Retained for existing saved configurations/API clients. Customer exports
+    # never include appendices, even when an old configuration sets these true.
+    include_risk_register: bool = False
+    include_control_matrix: bool = False
+    include_gap_analysis: bool = False
+    include_source_references: bool = False
     output_formats: list[OutputFormat] = Field(default_factory=lambda: ["docx", "pdf"], min_length=1)
 
     @field_validator(

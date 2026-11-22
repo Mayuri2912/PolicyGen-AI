@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
+from copy import deepcopy
 from pathlib import Path
 
 from docx import Document
-from docx.enum.section import WD_ORIENT
 from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_COLOR_INDEX
 from docx.oxml import OxmlElement
@@ -14,9 +14,10 @@ from docx.shared import Cm, Pt, RGBColor
 
 from app.services.document_generation import theme
 from app.services.document_generation.model import section_label
+from app.services.policy_generation.templates import TEMPLATE_DIR
 
 _FONT = "Calibri"
-_CONTENT_WIDTH_CM = 16.5
+_CONTENT_WIDTH_CM = 21.00086 - 1.27 - 2.59115
 
 
 def _rgb(hex_value: str) -> RGBColor:
@@ -73,58 +74,49 @@ class DocxRenderer:
     def __init__(self, model: dict):
         self.model = model
         self.meta = model["meta"]
-        self.doc = Document()
+        self.doc = Document(TEMPLATE_DIR / "sapres_ims.docx")
+        self.cover_pattern = [deepcopy(p._p) for p in self.doc.paragraphs[:14]]
+        self.history_pattern = deepcopy(self.doc.tables[0]._tbl)
+        for child in list(self.doc._element.body):
+            if child.tag != qn("w:sectPr"):
+                self.doc._element.body.remove(child)
 
     # ------------------------------------------------------------- set-up
     def _styles(self) -> None:
-        styles = self.doc.styles
-        normal = styles["Normal"]
-        normal.font.name = _FONT
-        normal.font.size = Pt(10.5)
-        normal.element.rPr.rFonts.set(qn("w:eastAsia"), _FONT)
-        normal.paragraph_format.space_after = Pt(6)
-        normal.paragraph_format.line_spacing = 1.15
-        for name, size, before in (("Heading 1", 16, 18), ("Heading 2", 12.5, 12), ("Title", 28, 0)):
-            style = styles[name]
-            style.font.name = _FONT
-            style.font.size = Pt(size)
-            style.font.bold = True
-            style.font.color.rgb = _rgb(theme.PRIMARY)
-            style.element.rPr.rFonts.set(qn("w:eastAsia"), _FONT)
-            style.element.rPr.rFonts.set(qn("w:ascii"), _FONT)
-            style.element.rPr.rFonts.set(qn("w:hAnsi"), _FONT)
-            style.paragraph_format.space_before = Pt(before)
-            style.paragraph_format.space_after = Pt(6)
-            style.paragraph_format.keep_with_next = True
+        # Headings already include a number in the neutral document model.
+        # Disable inherited Word numbering to avoid "11. Purpose" after TOC refresh.
+        for name in ("Heading 1", "Heading 2"):
+            num = self.doc.styles[name].element.get_or_add_pPr().get_or_add_numPr()
+            num.get_or_add_numId().val = 0
 
     def _page(self) -> None:
         section = self.doc.sections[0]
-        section.orientation = WD_ORIENT.PORTRAIT
-        section.page_width, section.page_height = Cm(21.0), Cm(29.7)
-        section.left_margin = section.right_margin = Cm(2.25)
-        section.top_margin, section.bottom_margin = Cm(2.3), Cm(2.0)
-        section.different_first_page_header_footer = True  # the cover has no header or footer
+        for part in (section.header, section.first_page_header, section.even_page_header):
+            if not theme.uses_sapres_brand(self.meta["organization"]):
+                for paragraph in part.paragraphs:
+                    if paragraph._p.xpath(".//w:drawing | .//w:pict"):
+                        paragraph.clear()
+                        _write(paragraph, self.meta["organization"], bold=True, size=14)
+            for node in part._element.xpath(".//w:t"):
+                if "Cybercrime" in (node.text or ""):
+                    node.text = f"{self.meta['title']} v{self.meta['document_version']}"
+        for part in (section.footer, section.first_page_footer, section.even_page_footer):
+            for paragraph in part.paragraphs:
+                if "Sapres Technologies" in paragraph.text:
+                    text = paragraph.text.replace("Sapres Technologies", theme.clean(self.meta["organization"]))
+                    nodes = paragraph._p.xpath(".//w:t")
+                    for index, node in enumerate(nodes):
+                        node.text = text if index == 0 else ""
+            if not part.paragraphs:
+                continue
+            paragraph = part.paragraphs[0]
+            paragraph.clear()
+            _write(paragraph, self.meta["classification"], size=8)
+            paragraph.add_run("\t\tPage ")
+            _field(paragraph.add_run(), "PAGE")
+            paragraph.add_run(" of ")
+            _field(paragraph.add_run(), "NUMPAGES")
 
-        header = section.header.paragraphs[0]
-        _write(header, f"{self.meta['organization']}  |  {self.meta['title']}", size=8, color=theme.MUTED)
-        # The built-in Header and Footer styles define a centre and a right tab
-        # stop, so two tabs reach the right edge.
-        header.add_run("\t\t")
-        _write(header, self.meta["classification"], size=8, color=theme.MUTED, bold=True)
-
-        footer = section.footer.paragraphs[0]
-        _write(footer, f"Version {self.meta['document_version']} (rev. {self.meta['revision']})  |  {self.meta['status']}", size=8, color=theme.MUTED)
-        footer.add_run("\t\t")
-        for text, instruction in (("Page ", "PAGE"), (" of ", "NUMPAGES")):
-            run = footer.add_run(text)
-            run.font.size = Pt(8)
-            run.font.color.rgb = _rgb(theme.MUTED)
-            number = footer.add_run()
-            number.font.size = Pt(8)
-            number.font.color.rgb = _rgb(theme.MUTED)
-            _field(number, instruction)
-
-    # ------------------------------------------------------------ elements
     def _notice(self, text: str) -> None:
         table = self.doc.add_table(rows=1, cols=1)
         table.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -147,8 +139,8 @@ class DocxRenderer:
         for index, title in enumerate(columns):
             cell = header.cells[index]
             cell.width = Cm(cm[index])
-            _shade(cell, theme.HEADER_FILL)
-            _write(cell.paragraphs[0], title, bold=True, size=size, color="FFFFFF")
+            _shade(cell, "E7E6E6")
+            _write(cell.paragraphs[0], title, bold=True, size=size, color="000000")
         for number, row in enumerate(rows):
             cells = table.add_row().cells
             for index in range(len(columns)):
@@ -194,22 +186,23 @@ class DocxRenderer:
         elif kind == "subheading":
             self.doc.add_heading(theme.clean(element["text"]), level=2)
         elif kind in ("bullets", "numbered"):
-            style = "List Bullet" if kind == "bullets" else "List Number"
-            for item in element["items"]:
-                _write(self.doc.add_paragraph(style=style), item)
+            # The customer template has no built-in List Bullet/List Number
+            # styles. Use its body style with explicit hanging markers.
+            for number, item in enumerate(element["items"], start=1):
+                paragraph = self.doc.add_paragraph()
+                paragraph.paragraph_format.left_indent = Cm(0.5)
+                paragraph.paragraph_format.first_line_indent = Cm(-0.5)
+                marker = "•" if kind == "bullets" else f"{number}."
+                _write(paragraph, f"{marker} {item}")
         elif kind == "statements":
             for statement in element["statements"]:
                 paragraph = self.doc.add_paragraph()
                 paragraph.paragraph_format.left_indent = Cm(0.4)
                 paragraph.paragraph_format.space_after = Pt(1)
-                paragraph.paragraph_format.keep_with_next = True
+                paragraph.paragraph_format.keep_with_next = False
                 if statement.get("id"):
                     _write(paragraph, f"{statement['id']}  ", bold=True, color=theme.ACCENT)
                 _write(paragraph, statement["text"])
-                detail = self.doc.add_paragraph()
-                detail.paragraph_format.left_indent = Cm(0.4)
-                detail.paragraph_format.space_after = Pt(7)
-                _write(detail, theme.basis_label(statement), italic=True, size=8.5, color=theme.MUTED)
         elif kind == "table":
             self._table(element["columns"], element["rows"], element.get("widths"), size=8 if len(element["columns"]) > 5 else 9)
         elif kind == "risk_matrix":
@@ -219,36 +212,41 @@ class DocxRenderer:
 
     # ---------------------------------------------------------------- parts
     def _cover(self) -> None:
-        for _ in range(5):
-            self.doc.add_paragraph()
-        _write(self.doc.add_paragraph(), self.meta["organization"], size=14, color=theme.MUTED, bold=True)
-        title = self.doc.add_paragraph(style="Title")
-        _write(title, self.meta["title"])
-        for label, value in (
-            ("Document version", f"{self.meta['document_version']} (draft revision {self.meta['revision']})"),
-            ("Status", self.meta["status"]),
-            ("Classification", self.meta["classification"]),
-            ("Policy owner", next(v for k, v in self.model["document_control"] if k == "Policy owner")),
-            ("Effective date", next(v for k, v in self.model["document_control"] if k == "Effective date")),
-        ):
-            paragraph = self.doc.add_paragraph()
-            paragraph.paragraph_format.space_after = Pt(2)
-            _write(paragraph, f"{label}: ", bold=True, color=theme.PRIMARY, size=11)
-            _write(paragraph, value, size=11)
-        for _ in range(3):
-            self.doc.add_paragraph()
-        for notice in self.model["notices"]:
-            self._notice(notice)
-        self.doc.paragraphs[-1].add_run().add_break(WD_BREAK.PAGE)
+        from docx.text.paragraph import Paragraph
+
+        for index, pattern in enumerate(self.cover_pattern):
+            paragraph = Paragraph(deepcopy(pattern), self.doc._body)
+            if index in (9, 11):
+                value = self.meta["title"] if index == 9 else f"Version {self.meta['document_version']}"
+                texts = paragraph._p.xpath(".//w:t")
+                if texts:
+                    texts[0].text = value
+                    for text in texts[1:]:
+                        text.text = ""
+            self.doc._element.body.insert_element_before(paragraph._p, "w:sectPr")
+        self.doc.add_page_break()
 
     def _front_matter(self) -> None:
-        heading = self.doc.add_paragraph()
-        _write(heading, "Document Control", bold=True, size=16, color=theme.PRIMARY)
-        self._table(["Item", "Details"], self.model["document_control"], [28, 72])
-        heading = self.doc.add_paragraph()
-        _write(heading, "Version History", bold=True, size=16, color=theme.PRIMARY)
-        self._table(["Revision", "Date", "Change type", "Change note"], self.model["version_history"], [12, 18, 25, 45])
-        self.doc.paragraphs[-1].add_run().add_break(WD_BREAK.PAGE)
+        from docx.table import Table
+
+        compact = self.meta.get("compact_document_control", False)
+        self.doc.add_paragraph("Document Control" if compact else "Document id", style="Titre 01")
+        if not compact:
+            self.doc.add_paragraph(f"Document ID: {self.meta['policy_code']}")
+            self.doc.add_paragraph(f"Document name: {self.meta['title']}")
+        self._table(["Control Parameter" if compact else "Item", "Details"], self.model["document_control"], [28, 72])
+        self.doc.add_paragraph("Document change history", style="Titre 01")
+        table = Table(deepcopy(self.history_pattern), self.doc._body)
+        self.doc._element.body.insert_element_before(table._tbl, "w:sectPr")
+        for row in list(table.rows)[1:]:
+            table._tbl.remove(row._tr)
+        control = dict(self.model["document_control"])
+        owner = control.get("Document owner", control.get("Policy owner", ""))
+        for values in self.model["version_history"]:
+            cells = table.add_row().cells
+            for cell, value in zip(cells, [values[0], values[1], values[3], owner]):
+                cell.text = value
+        self.doc.add_page_break()
 
     def _contents(self) -> None:
         heading = self.doc.add_paragraph()
@@ -279,8 +277,6 @@ class DocxRenderer:
         closing.set(qn("w:fldCharType"), "end")
         end._r.append(closing)
 
-        hint = self.doc.add_paragraph()
-        _write(hint, "To add page numbers in Word, right-click the list above and choose Update Field.", italic=True, size=8.5, color=theme.MUTED)
         self.doc.paragraphs[-1].add_run().add_break(WD_BREAK.PAGE)
 
     def _body(self) -> None:
@@ -327,9 +323,13 @@ class DocxRenderer:
         self._fix_numbered_lists()
         properties = self.doc.core_properties
         properties.title = theme.clean(self.meta["title"])
-        properties.author = "PolicyGen AI"
+        properties.author = self.meta["organization"]
         properties.subject = theme.clean(self.meta["policy_type"])
-        properties.comments = "AI-assisted draft. Review and approval required before adoption."
+        properties.comments = ""
+        properties.last_modified_by = self.meta["organization"]
+        update = OxmlElement("w:updateFields")
+        update.set(qn("w:val"), "true")
+        self.doc.settings.element.append(update)
         self.doc.save(str(path))
         return path
 

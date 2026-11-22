@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 
 from fastapi import APIRouter, Depends, Query
@@ -14,8 +15,18 @@ from app.core.errors import AppError, ConflictError, NotFoundError
 from app.core.security import sanitize_filename
 from app.database.session import get_db
 from app.models.entities import Policy, PolicyVersion
-from app.schemas.api import RegenerateRequest, ReviewRequest, SectionEdit
-from app.services.document_generation.rendering import MEDIA_TYPES, RenderError, ensure_rendered
+from app.schemas.api import (
+    MissingInformationRequest,
+    RegenerateRequest,
+    ReviewRequest,
+    SectionEdit,
+)
+from app.services import storage
+from app.services.document_generation.rendering import (
+    MEDIA_TYPES,
+    RenderError,
+    ensure_rendered,
+)
 from app.services.policy_generation import generator
 from app.services.policy_generation.versioning import compare_versions
 
@@ -71,6 +82,7 @@ def compare(
 def edit_section(report_id: str, section_id: str, body: SectionEdit, db: Session = Depends(get_db)):
     """Save a user's edit of one section as a new version."""
     policy = get_policy(db, report_id)
+    db.refresh(policy, with_for_update=True)
     version = generator.save_user_edit(db, policy, section_id, body.markup, body.note, body.base_version)
     db.refresh(policy)
     return {"version": version.version_number, "report": generator.policy_detail(policy)}
@@ -88,7 +100,16 @@ def regenerate_sections(report_id: str, body: RegenerateRequest, db: Session = D
 def review(report_id: str, body: ReviewRequest, db: Session = Depends(get_db)):
     """Record a human review decision: submit, approve, request changes, reopen."""
     policy = get_policy(db, report_id)
-    generator.record_review(db, policy, body.action, body.actor, body.comment)
+    from app.api.routes_auth import require_role
+    from app.core.identity import principal
+    user = principal.get()
+    if body.action in ("approve", "request_changes"):
+        user = require_role("admin", "reviewer")
+    if body.action == "approve" and body.base_version is None:
+        raise ConflictError("Reload this version before approving.", code="version_conflict")
+    db.refresh(policy, with_for_update=True)
+    generator.record_review(db, policy, body.action, (user["name"] if user.get("public_access") else user["name"] + " <" + user["email"] + ">") if user else body.actor,
+                            body.comment, body.acknowledged_checks, body.base_version)
     db.refresh(policy)
     return generator.policy_detail(policy)
 
@@ -121,3 +142,48 @@ def delete_report(report_id: str, db: Session = Depends(get_db)):
     policy = get_policy(db, report_id)
     generator.delete_policy(db, policy)
     return {"deleted": True, "id": report_id}
+
+
+@router.post("/{report_id}/missing-information")
+def complete_missing(report_id: str, body: MissingInformationRequest, db: Session = Depends(get_db)):
+    import copy
+
+    from app.core.errors import ValidationFailed
+    from app.schemas.policy import PLACEHOLDER_PATTERN, PolicyConfig
+    from app.services.policy_generation.templates import get_template
+    policy = get_policy(db, report_id)
+    db.refresh(policy, with_for_update=True)
+    if policy.current_version != body.base_version or not policy.versions:
+        raise ConflictError("The policy changed. Reload before completing information.", code="version_conflict")
+    latest = policy.versions[-1]
+    # Freeze legacy metadata before updating the current configuration.
+    latest.content = {**latest.content, "_config": copy.deepcopy(latest.content.get("_config", policy.config))}
+    allowed = {"organization_name", "department", "policy_owner", "approver", "effective_date", "review_frequency", "classification"}
+    if set(body.metadata) - allowed:
+        raise ValidationFailed("Only document-control fields can be updated here.")
+    candidate = copy.deepcopy(latest.content)
+    available = set(PLACEHOLDER_PATTERN.findall(json.dumps(candidate['sections'])))
+    if set(body.replacements) - available:
+        raise ValidationFailed("A placeholder changed. Reload before saving.")
+    if any(not v.strip() or len(v) > 2000 or PLACEHOLDER_PATTERN.search(v) for v in body.replacements.values()):
+        raise ValidationFailed("Enter a confirmed value, up to 2000 characters, for every replacement.")
+    def replace(value):
+        if isinstance(value, str):
+            return PLACEHOLDER_PATTERN.sub(lambda match: body.replacements.get(match.group(0), match.group(0)).strip(), value)
+        if isinstance(value, list):
+            return [replace(v) for v in value]
+        if isinstance(value, dict):
+            return {k: replace(v) for k, v in value.items()}
+        return value
+    candidate['sections'] = replace(candidate['sections'])
+    try:
+        config = PolicyConfig.model_validate({**policy.config, **body.metadata})
+    except ValueError:
+        raise ValidationFailed("Document-control values are invalid. Use a valid date and the displayed field limits.") from None
+    policy.config = config.model_dump()
+    candidate, report = generator._finalise(candidate, get_template(policy.policy_type), policy.analysis, config)
+    generator.add_version(db, policy, candidate, report, origin="user_edit", note="Completed confirmed document information.")
+    db.commit()
+    storage.remove_report_files(policy.id)
+    db.refresh(policy)
+    return generator.policy_detail(policy)

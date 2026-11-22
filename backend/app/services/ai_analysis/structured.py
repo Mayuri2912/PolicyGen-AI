@@ -10,14 +10,20 @@ from __future__ import annotations
 
 import json
 import re
+from collections.abc import Callable
 from dataclasses import replace
-from typing import Callable, TypeVar
+from typing import TypeVar
 
 from pydantic import BaseModel, ValidationError
 
 from app import prompts
 from app.core.logging import get_logger
-from app.services.ai_analysis.providers.base import LLMInvalidResponseError, LLMProvider, LLMRequest, LLMResponse
+from app.services.ai_analysis.providers.base import (
+    LLMInvalidResponseError,
+    LLMProvider,
+    LLMRequest,
+    LLMResponse,
+)
 
 logger = get_logger("llm.structured")
 
@@ -73,9 +79,10 @@ def progress_reporter(update: Callable[..., None], activity: str) -> Callable[[d
     """
 
     def report(info: dict) -> None:
-        doing = {"reasoning": "is reasoning", "writing": "is writing its answer"}.get(info.get("phase"), "has not answered yet")
+        doing = {"reasoning": "is reasoning", "writing": "is writing its answer", "retrying": "will retry automatically after a short delay"}.get(info.get("phase"), "has not answered yet")
         attempt = f", attempt {info['attempt']}" if info.get("attempt", 1) > 1 else ""
-        update(message=f"{activity} {info.get('model') or 'The model'} {doing} ({_duration(info.get('elapsed', 0))}{attempt}).")
+        batch = f" Batch {info['batch']} of {info['batches']}." if info.get("batch") else ""
+        update(message=f"{activity}{batch} {info.get('model') or 'The model'} {doing} ({_duration(info.get('elapsed', 0))}{attempt}).")
 
     return report
 
@@ -86,6 +93,7 @@ def structured_call(
     model: type[T],
     *,
     repair_attempts: int = 1,
+    _fallbacks_left: int | None = None,
 ) -> tuple[T, LLMResponse]:
     """Call the provider and return a validated instance of ``model``.
 
@@ -115,6 +123,16 @@ def structured_call(
                     original=request.user,
                 ),
             )
+    from app.services.ai_analysis.providers.fallback import (
+        FallbackProvider,
+        RetryingProvider,
+    )
+    pool = provider.provider if isinstance(provider, RetryingProvider) else provider
+    if isinstance(pool, FallbackProvider):
+        remaining = len(pool.providers) - 1 if _fallbacks_left is None else _fallbacks_left
+        if remaining > 0:
+            pool.reject_response()
+            return structured_call(provider, request, model, repair_attempts=repair_attempts, _fallbacks_left=remaining - 1)
     raise LLMInvalidResponseError(
         "The AI returned a response that did not match the required structure, and automatic repair did not fix it. "
         "Retry the operation."

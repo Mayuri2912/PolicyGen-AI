@@ -31,10 +31,12 @@ from reportlab.platypus.tableofcontents import TableOfContents
 
 from app.services.document_generation import theme
 from app.services.document_generation.model import section_label
+from app.services.policy_generation.templates import TEMPLATE_DIR
 
 _PAGE_WIDTH, _PAGE_HEIGHT = A4
-_MARGIN = 2.2 * cm
-_CONTENT_WIDTH = _PAGE_WIDTH - 2 * _MARGIN
+_MARGIN = 1.27 * cm
+_RIGHT_MARGIN = 2.59115 * cm
+_CONTENT_WIDTH = _PAGE_WIDTH - _MARGIN - _RIGHT_MARGIN
 
 # A Unicode TrueType font is used when one is installed so characters outside
 # Latin-1 render correctly; otherwise the built-in Helvetica is used.
@@ -151,7 +153,7 @@ class PdfRenderer:
             "h1": ParagraphStyle("PGHeading1", parent=base, fontName=bold, fontSize=15.5, leading=20, spaceBefore=16, spaceAfter=8, textColor=primary, keepWithNext=True),
             "h2": ParagraphStyle("PGHeading2", parent=base, fontName=bold, fontSize=11.5, leading=15, spaceBefore=10, spaceAfter=5, textColor=primary, keepWithNext=True),
             "front": ParagraphStyle("PGFront", parent=base, fontName=bold, fontSize=15.5, leading=20, spaceBefore=4, spaceAfter=8, textColor=primary),
-            "title": ParagraphStyle("PGTitle", parent=base, fontName=bold, fontSize=27, leading=32, spaceAfter=10, textColor=primary),
+            "title": ParagraphStyle("PGTitle", parent=base, fontName=bold, fontSize=22, leading=27, spaceAfter=10, textColor=colors.black, alignment=TA_CENTER),
             "org": ParagraphStyle("PGOrg", parent=base, fontName=bold, fontSize=13.5, leading=18, textColor=muted, spaceAfter=10),
             "meta": ParagraphStyle("PGMeta", parent=base, fontSize=11, leading=16, spaceAfter=2),
             "detail": ParagraphStyle("PGDetail", parent=base, fontName=italic, fontSize=8, leading=10.5, textColor=muted, leftIndent=11, spaceAfter=8),
@@ -182,6 +184,8 @@ class PdfRenderer:
     def _table(self, columns: list[str], rows: list[list[str]], widths: list[int] | None = None):
         tight = len(columns) > 5
         cell, head = (self.styles["cell_tight"], self.styles["cell_head_tight"]) if tight else (self.styles["cell"], self.styles["cell_head"])
+        if self.meta.get("compact_document_control"):
+            head = ParagraphStyle("HRTableHead", parent=head, textColor=colors.black)
         weights = theme.column_weights(columns, rows, widths)
         col_widths = [_CONTENT_WIDTH * w / sum(weights) for w in weights]
         data = [[Paragraph(_markup(c), head) for c in columns]]
@@ -189,7 +193,7 @@ class PdfRenderer:
             data.append([Paragraph(_markup(row[i] if i < len(row) else ""), cell) for i in range(len(columns))])
         table = Table(data, colWidths=col_widths, repeatRows=1, splitByRow=1)
         style = [
-            ("BACKGROUND", (0, 0), (-1, 0), _hex(theme.HEADER_FILL)),
+            ("BACKGROUND", (0, 0), (-1, 0), _hex("E7E6E6" if self.meta.get("compact_document_control") else theme.HEADER_FILL)),
             ("GRID", (0, 0), (-1, -1), 0.4, _hex(theme.RULE)),
             ("VALIGN", (0, 0), (-1, -1), "TOP"),
             ("LEFTPADDING", (0, 0), (-1, -1), 4),
@@ -240,7 +244,6 @@ class PdfRenderer:
                     KeepTogether(
                         [
                             Paragraph(prefix + _markup(statement["text"]), self.styles["statement"]),
-                            Paragraph(_markup(theme.basis_label(statement)), self.styles["detail"]),
                         ]
                     )
                 )
@@ -264,41 +267,43 @@ class PdfRenderer:
         header = theme.clean(f"{self.meta['organization']}  |  {self.meta['title']}")
         pdf.drawString(_MARGIN, top, header[:110])
         pdf.setFont(self.bold, 8)
-        pdf.drawRightString(_PAGE_WIDTH - _MARGIN, top, theme.clean(self.meta["classification"])[:40])
+        pdf.drawRightString(_PAGE_WIDTH - _RIGHT_MARGIN, top, theme.clean(self.meta["classification"])[:40])
         pdf.line(_MARGIN, top - 4, _PAGE_WIDTH - _MARGIN, top - 4)
         pdf.setFont(self.regular, 8)
         bottom = 1.15 * cm
         pdf.line(_MARGIN, bottom + 10, _PAGE_WIDTH - _MARGIN, bottom + 10)
         footer = theme.clean(f"Version {self.meta['document_version']} (rev. {self.meta['revision']})  |  {self.meta['status']}")
         pdf.drawString(_MARGIN, bottom, footer[:120])
-        pdf.drawRightString(_PAGE_WIDTH - _MARGIN, bottom, f"Page {page} of {total}")
+        pdf.drawRightString(_PAGE_WIDTH - _RIGHT_MARGIN, bottom, f"Page {page} of {total}")
+        pdf.setFont(self.regular, 7)
+        from reportlab.lib.utils import simpleSplit
+        ownership = theme.clean(f"{self.meta['organization']} is the owner of this document - Total or partial reproduction cannot be done without prior approval from owner.")
+        lines = simpleSplit(ownership, self.regular, 7, _PAGE_WIDTH - _MARGIN - _RIGHT_MARGIN)
+        for index, line in enumerate(lines):
+            pdf.drawString(_MARGIN, 0.35 * cm + (len(lines) - index - 1) * 9, line)
         pdf.restoreState()
 
     def _story(self) -> list:
         styles = self.styles
         control = dict(self.model["document_control"])
-        story: list = [Spacer(1, 5.2 * cm), Paragraph(_markup(self.meta["organization"]), styles["org"])]
+        from reportlab.platypus import Image
+        if theme.uses_sapres_brand(self.meta["organization"]):
+            brand = Image(str(TEMPLATE_DIR / "sapres_logo.png"), width=5.21 * cm, height=1.12 * cm)
+        else:
+            brand_style = ParagraphStyle("PGOrganizationBrand", parent=styles["meta"], fontSize=14, leading=18)
+            brand = Paragraph(_markup(self.meta["organization"]), brand_style)
+        story: list = [brand, Spacer(1, 4.2 * cm)]
         story.append(Paragraph(_markup(self.meta["title"]), styles["title"]))
-        rule = Table([[""]], colWidths=[_CONTENT_WIDTH], rowHeights=[3])
-        rule.setStyle(TableStyle([("LINEABOVE", (0, 0), (-1, 0), 1.6, _hex(theme.ACCENT))]))
-        story += [rule, Spacer(1, 10)]
-        for label, value in (
-            ("Document version", f"{self.meta['document_version']} (draft revision {self.meta['revision']})"),
-            ("Status", self.meta["status"]),
-            ("Classification", self.meta["classification"]),
-            ("Policy owner", control["Policy owner"]),
-            ("Effective date", control["Effective date"]),
-        ):
-            story.append(Paragraph(f'<font color="#{theme.PRIMARY}"><b>{label}:</b></font> {_markup(value)}', styles["meta"]))
-        story.append(Spacer(1, 2.2 * cm))
-        for notice in self.model["notices"]:
-            story += self._notice(notice)
+        version_style = ParagraphStyle("PGCoverVersion", parent=styles["meta"], fontSize=14, leading=18, alignment=TA_CENTER)
+        story.append(Paragraph(_markup(f"Version {self.meta['document_version']}"), version_style))
         story += [NextPageTemplate("body"), PageBreak()]
 
-        story.append(Paragraph("Document Control", styles["front"]))
-        story += self._table(["Item", "Details"], self.model["document_control"], [28, 72])
-        story.append(Paragraph("Version History", styles["front"]))
-        story += self._table(["Revision", "Date", "Change type", "Change note"], self.model["version_history"], [12, 18, 25, 45])
+        compact = self.meta.get("compact_document_control", False)
+        story.append(Paragraph("Document Control" if compact else "Document id", styles["front"]))
+        story += self._table(["Control Parameter" if compact else "Item", "Details"], self.model["document_control"], [28, 72])
+        story.append(Paragraph("Document change history", styles["front"]))
+        story += self._table(["Version", "Date", "Action / Modifications", "Author"],
+                             [[r[0], r[1], r[3], control.get("Document owner", control.get("Policy owner", ""))] for r in self.model["version_history"]], [10, 16, 44, 30])
         story.append(PageBreak())
 
         story.append(Paragraph("Table of Contents", styles["front"]))
@@ -324,14 +329,14 @@ class PdfRenderer:
             str(path),
             pagesize=A4,
             leftMargin=_MARGIN,
-            rightMargin=_MARGIN,
-            topMargin=2.3 * cm,
-            bottomMargin=2.0 * cm,
+            rightMargin=_RIGHT_MARGIN,
+            topMargin=2.5012 * cm,
+            bottomMargin=2.5012 * cm,
             title=theme.clean(self.meta["title"]),
-            author="PolicyGen AI",
+            author=theme.clean(self.meta["organization"]),
             subject=theme.clean(self.meta["policy_type"]),
         )
-        frame = Frame(_MARGIN, 2.0 * cm, _CONTENT_WIDTH, _PAGE_HEIGHT - 4.3 * cm, id="main", leftPadding=0, rightPadding=0)
+        frame = Frame(_MARGIN, 2.5012 * cm, _CONTENT_WIDTH, _PAGE_HEIGHT - 5.0024 * cm, id="main", leftPadding=0, rightPadding=0)
         document.addPageTemplates([PageTemplate(id="cover", frames=[frame]), PageTemplate(id="body", frames=[frame])])
 
         def make_canvas(*args, **kwargs):

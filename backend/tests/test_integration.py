@@ -94,13 +94,14 @@ def test_complete_workflow_from_upload_to_download(client, settings):
     assert dashboard["stats"] == {
         "files_uploaded": 5, "files_processed": 5, "analyses_completed": 1, "policies_generated": 1,
         "policies_approved": 0, "jobs_active": 0, "jobs_failed": 0,
+        "awaiting_review": 1, "missing_information": report["missing_information_count"], "overdue_reviews": 0,
     }
     assert dashboard["recent_reports"][0]["id"] == report_id
     history = client.get("/api/history").json()["jobs"]
     assert sorted(j["type"] for j in history) == ["analysis"] + ["extraction"] * 5 + ["generation"]
 
     # Delete the report: versions and rendered files go, the analysis stays
-    assert len(list(settings.reports_dir.glob(f"{report_id}_*"))) == 2
+    assert len([p for p in settings.reports_dir.glob(f"{report_id}_*") if p.suffix in (".pdf", ".docx")]) == 2
     assert client.delete(f"/api/reports/{report_id}").json()["deleted"] is True
     assert list(settings.reports_dir.glob(f"{report_id}_*")) == []
     assert client.get(f"/api/reports/{report_id}").status_code == 404
@@ -199,7 +200,7 @@ def test_generation_failure_keeps_the_analysis_and_can_be_retried(client, script
     retried = client.post(f"/api/jobs/{job['id']}/retry").json()
     assert retried["status"] == "completed" and retried["attempts"] == 2
     assert client.get(f"/api/reports/{report['id']}").json()["status"] == "completed"
-    assert provider.tasks().count("generate_policy") == 2
+    assert provider.tasks().count("generate_policy") == 6
     assert client.post(f"/api/jobs/{job['id']}/retry").status_code == 409  # a completed job cannot be retried
 
 
@@ -227,7 +228,7 @@ def test_formatting_failure_keeps_the_draft_and_retry_only_re_renders(client, sc
     assert retried["status"] == "completed" and retried["stage"] == "completed"
     after = client.get(f"/api/reports/{report['id']}").json()
     assert after["status"] == "completed" and after["current_version"] == 1  # no second draft was generated
-    assert provider.tasks().count("generate_policy") == 1
+    assert provider.tasks().count("generate_policy") == 5
     assert client.get(f"/api/reports/{report['id']}/download?format=pdf").status_code == 200
 
 

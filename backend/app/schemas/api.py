@@ -48,5 +48,13 @@ class RegenerateRequest(_Body):
 
 class ReviewRequest(_Body):
     action: Literal["submit", "approve", "request_changes", "reopen"]
+    acknowledged_checks: list[str] = Field(default_factory=list, max_length=50)
+    base_version: int | None = Field(default=None, ge=1)
     actor: str = Field(default="", max_length=120)
     comment: str = Field(default="", max_length=2000)
+
+
+class MissingInformationRequest(_Body):
+    base_version: int = Field(ge=1)
+    replacements: dict[str, str] = Field(default_factory=dict, max_length=100)
+    metadata: dict[str, str] = Field(default_factory=dict, max_length=12)

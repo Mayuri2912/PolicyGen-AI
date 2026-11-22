@@ -130,15 +130,23 @@ export default function UploadPage() {
   const busyIds = files.filter((file) => FILE_BUSY.includes(file.status)).map((file) => file.id).join(',');
   useEffect(() => {
     if (!busyIds) return undefined;
-    const timer = setInterval(async () => {
+    let failures = 0;
+    let retryAfter = 0;
+    let active = true;
+    let timer;
+    const poll = async () => {
       try {
         const { files: list } = await api.listFiles(busyIds.split(','));
-        merge(list);
-      } catch {
-        // A transient polling error is not worth interrupting the user; the next tick retries.
+        if (!active) return;
+        merge(list); failures = 0; retryAfter = 0;
+      } catch (error) {
+        failures += 1; retryAfter = error.retryAfter || 0;
+        if ([401, 403, 404].includes(error.status)) return;
       }
-    }, POLL_MS);
-    return () => clearInterval(timer);
+      if (active) timer = setTimeout(poll, Math.max(retryAfter * 1000, Math.min(30000, POLL_MS * 2 ** failures)));
+    };
+    timer = setTimeout(poll, POLL_MS);
+    return () => { active = false; clearTimeout(timer); };
   }, [busyIds, merge]);
 
   const onFiles = async (picked) => {
@@ -252,7 +260,7 @@ export default function UploadPage() {
         {loading && !files.length && <LoadingBlock label="Loading files…" />}
         {loadError && !files.length && <ErrorState message={loadError} onRetry={loadAll} />}
         {!loading && !loadError && !files.length && (
-          <EmptyState title="No files yet">Upload a document above to get started. Sample files are in the project's sample_files folder.</EmptyState>
+          <EmptyState title="No files yet">Upload a document above to get started. Accepted file types and upload limits are shown above.</EmptyState>
         )}
         <FileList
           files={files}
